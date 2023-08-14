@@ -1,12 +1,21 @@
 #include<iostream>
 #include<SDL2/SDL.h>
+#include<string>
 
 using std::cout;
 using std::endl;
+using std::string;
 
+// Globals
 const int SCREENWIDTH = 640;
 const int SCREENHEIGHT = 480;
 const char* MEDIAPATH = "../media/image.bmp";
+
+SDL_Window* gWindow = NULL;
+SDL_Surface* gScreenSurface = NULL;
+SDL_Surface* gCurrentSurface = NULL;
+
+enum KeyPressSurfaces{KPS_DEFAULT, KPS_UP, KPS_DOWN, KPS_LEFT, KPS_RIGHT, KPS_TOTAL};
 
 // Start up sdl and create a window
 bool init();
@@ -17,15 +26,8 @@ bool loadMedia();
 // Frees media and shuts down SDL
 void close();
 
-// Window to render to
-SDL_Window* gWindow = NULL;
-
-// The surface contained by the window
-SDL_Surface* gScreenSurface = NULL;
-
-// The image to load to screen
-SDL_Surface* gHelloWorld = NULL;
-
+// Load SDL Surfaces
+SDL_Surface* loadSurface(string path);
 
 // ---
 int main(int argc, char* args[]){
@@ -118,4 +120,15 @@ void close(){
 
 	// Quit SDL Subsystems
 	SDL_Quit();
+}
+
+SDL_Surface* loadSurface(string path){
+	// Load image at specified path
+	SDL_Surface* loadedSurface = SDL_LoadBMP(path.c_str());
+	if(loadedSurface == NULL){
+		cout << "Unable to load image " << path.c_str() << " SDL Error : " << SDL_GetError() << endl;
+	}
+
+	return 0;
+
 }
