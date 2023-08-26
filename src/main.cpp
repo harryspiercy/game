@@ -11,11 +11,14 @@ const int SCREENWIDTH = 640;
 const int SCREENHEIGHT = 480;
 const char* MEDIAPATH = "../media/image.bmp";
 
+// Engine globals
 SDL_Window* gWindow = NULL;
 SDL_Surface* gScreenSurface = NULL;
 SDL_Surface* gCurrentSurface = NULL;
 
+// Game globals
 enum KeyPressSurfaces{KPS_DEFAULT, KPS_UP, KPS_DOWN, KPS_LEFT, KPS_RIGHT, KPS_TOTAL};
+SDL_Surface* gKeyPressSurfaces[KPS_TOTAL];
 
 // Start up sdl and create a window
 bool init();
@@ -41,21 +44,56 @@ int main(int argc, char* args[]){
 			cout << "Failed to load media" << endl;
 		}
 		else{
+
 			// Apply the image
-			SDL_BlitSurface(gHelloWorld, NULL, gScreenSurface, NULL);
+			gCurrentSurface = gKeyPressSurfaces[KPS_DEFAULT];
 
 			// Update the surface
 			SDL_UpdateWindowSurface(gWindow);
 
-			// Hold the window open
+			// Create an event handler
 			SDL_Event e;
+
+			// Create an exit flag
 			bool quit = false;
+			// -- Game loop --
 			while(!quit){
+				// Poll hardware events
 				while(SDL_PollEvent(&e)){
+					// Exit event
 					if(e.type == SDL_QUIT){
 						quit = true;
 					}
+					else if(e.type == SDL_KEYDOWN){
+						switch(e.key.keysym.sym){
+							case SDLK_UP:
+							gCurrentSurface = gKeyPressSurfaces[KPS_UP];
+							break;
+
+							case SDLK_DOWN:
+							gCurrentSurface = gKeyPressSurfaces[KPS_DOWN];
+							break;
+
+							case SDLK_LEFT:
+							gCurrentSurface = gKeyPressSurfaces[KPS_LEFT];
+							break;
+
+							case SDLK_RIGHT:
+							gCurrentSurface = gKeyPressSurfaces[KPS_RIGHT];
+							break;
+
+							default:
+							gCurrentSurface = gKeyPressSurfaces[KPS_DEFAULT];
+							break;
+						}
+					}
 				}
+
+				// Apply the current image
+				SDL_BlitSurface(gCurrentSurface, NULL, gScreenSurface, NULL);
+
+				// Update the surface
+				SDL_UpdateWindowSurface(gWindow);
 			}
 		}
 	}
@@ -99,10 +137,36 @@ bool loadMedia(){
 	// Loading success flag
 	bool success = true;
 
+	string filePath;
+
 	// Load splash image
-	gHelloWorld = SDL_LoadBMP(MEDIAPATH);
-	if(gHelloWorld == NULL){
-		cout << "Unable to load image '" << MEDIAPATH << "' SDL Error : " << SDL_GetError() << endl;
+	gKeyPressSurfaces[KPS_DEFAULT]  = loadSurface("../media/image.bmp");
+	if(gKeyPressSurfaces[KPS_DEFAULT] == NULL){
+		cout << "Unable to load image ../media/image.bmp. SDL Error : " << SDL_GetError() << endl;
+		success = false;
+	}
+
+	gKeyPressSurfaces[KPS_UP]  = loadSurface("../media/up.bmp");
+	if(gKeyPressSurfaces[KPS_UP] == NULL){
+		cout << "Unable to load image ../media/up.bmp. SDL Error : " << SDL_GetError() << endl;
+		success = false;
+	}
+
+	gKeyPressSurfaces[KPS_DOWN]  = loadSurface("../media/down.bmp");
+	if(gKeyPressSurfaces[KPS_DOWN] == NULL){
+		cout << "Unable to load image ../media/down.bmp. SDL Error : " << SDL_GetError() << endl;
+		success = false;
+	}
+
+	gKeyPressSurfaces[KPS_LEFT]  = loadSurface("../media/left.bmp");
+	if(gKeyPressSurfaces[KPS_LEFT] == NULL){
+		cout << "Unable to load image ../media/left.bmp. SDL Error : " << SDL_GetError() << endl;
+		success = false;
+	}
+
+	gKeyPressSurfaces[KPS_RIGHT]  = loadSurface("../media/right.bmp");
+	if(gKeyPressSurfaces[KPS_RIGHT] == NULL){
+		cout << "Unable to load image ../media/right.bmp. SDL Error : " << SDL_GetError() << endl;
 		success = false;
 	}
 
@@ -111,8 +175,13 @@ bool loadMedia(){
 
 void close(){
 	// Deallocate the surface
-	SDL_FreeSurface(gHelloWorld);
-	gHelloWorld = NULL;
+	SDL_FreeSurface(gCurrentSurface);
+	gCurrentSurface = NULL;
+
+	for(auto i = 0; i < KPS_TOTAL; i++){
+		SDL_FreeSurface(gKeyPressSurfaces[i]);
+		gKeyPressSurfaces[i] = NULL;
+	}
 
 	// Destroy window
 	SDL_DestroyWindow(gWindow);
@@ -129,6 +198,6 @@ SDL_Surface* loadSurface(string path){
 		cout << "Unable to load image " << path.c_str() << " SDL Error : " << SDL_GetError() << endl;
 	}
 
-	return 0;
+	return loadedSurface;
 
 }
