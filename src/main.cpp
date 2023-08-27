@@ -7,33 +7,41 @@ using std::cout;
 using std::endl;
 using std::string;
 
-// Globals
+//
+// -- Engine globals --
+//
+// Engine window
+SDL_Window* gWindow = NULL;
 const int SCREENWIDTH = 640;
 const int SCREENHEIGHT = 480;
-const char* MEDIAPATH = "../media/image.bmp";
+// Texture renderer to link to window
+SDL_Renderer* gRenderer = NULL;
+// Texture to load image to
+SDL_Texture* gTexture = NULL;
 
-// Engine globals
-SDL_Window* gWindow = NULL;
-SDL_Surface* gScreenSurface = NULL;
-SDL_Surface* gCurrentSurface = NULL;
+//
+// -- Engine methods --
+//
+// Load individual image as texture
+SDL_Texture* loadTexture(string path);
 
-// Game globals
-enum KeyPressSurfaces{KPS_DEFAULT, KPS_UP, KPS_DOWN, KPS_LEFT, KPS_RIGHT, KPS_TOTAL};
-SDL_Surface* gKeyPressSurfaces[KPS_TOTAL];
+//
+// -- Game globals --
+//
 
+//
+// -- Game methods --
+//
 // Start up sdl and create a window
 bool init();
-
 // load media
 bool loadMedia();
-
 // Frees media and shuts down SDL
 void close();
 
-// Load SDL Surfaces
-SDL_Surface* loadSurface(string path);
-
-// ---
+//
+// --- Program --
+//
 int main(int argc, char* args[]){
 	// Start up SDL and create window
 	if(!init()){
@@ -45,19 +53,20 @@ int main(int argc, char* args[]){
 			cout << "Failed to load media" << endl;
 		}
 		else{
+			//
+			// -- Pregame --
+			//
 
-			// Apply the image
-			gCurrentSurface = gKeyPressSurfaces[KPS_DEFAULT];
-
-			// Update the surface
-			SDL_UpdateWindowSurface(gWindow);
+			// Load the default state
 
 			// Create an event handler
 			SDL_Event e;
-
 			// Create an exit flag
 			bool quit = false;
+
+			//
 			// -- Game loop --
+			//
 			while(!quit){
 				// Poll hardware events
 				while(SDL_PollEvent(&e)){
@@ -67,20 +76,17 @@ int main(int argc, char* args[]){
 					}
 					else if(e.type == SDL_KEYDOWN){
 						switch(e.key.keysym.sym){
+
 							case SDLK_UP:
-							gCurrentSurface = gKeyPressSurfaces[KPS_UP];
 							break;
 
 							case SDLK_DOWN:
-							gCurrentSurface = gKeyPressSurfaces[KPS_DOWN];
 							break;
 
 							case SDLK_LEFT:
-							gCurrentSurface = gKeyPressSurfaces[KPS_LEFT];
 							break;
 
 							case SDLK_RIGHT:
-							gCurrentSurface = gKeyPressSurfaces[KPS_RIGHT];
 							break;
 
 							case SDLK_ESCAPE:
@@ -88,25 +94,32 @@ int main(int argc, char* args[]){
 							break;
 
 							default:
-							gCurrentSurface = gKeyPressSurfaces[KPS_DEFAULT];
 							break;
 						}
 					}
 				}
 
-				// Apply the image stretched
-				SDL_Rect stretchRect;
-				stretchRect.x = 0; stretchRect.y = 0;
-				stretchRect.w = SCREENWIDTH; stretchRect.h = SCREENHEIGHT;
+				// Clear the screen
+				SDL_RenderClear(gRenderer);
 
-				// Apply the current image
-				SDL_BlitScaled(gCurrentSurface, NULL, gScreenSurface, &stretchRect);
+				// Render texture to the screen
+				SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);
 
-				// Update the surface
-				SDL_UpdateWindowSurface(gWindow);
+				// Update screen
+				SDL_RenderPresent(gRenderer);
 			}
+
+			//
+			// -- Close game --
+			//
 		}
+		//
+		// -- Close media --
+		//
 	}
+	//
+	// -- Close engine --
+	//
 
 	// Free resources and close SDL
 	close();
@@ -135,17 +148,23 @@ bool init(){
 			success = false;
 		}
 		else{
-			// initialise png loading
-			int imgFlags = IMG_INIT_PNG;
-			if(!(IMG_Init(imgFlags) & imgFlags)){
-				cout << "SDL_image could not be initialised! SDL_image error : " << IMG_GetError() << endl;
+			// create renderer for widow.
+			gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+			if(gRenderer == NULL){
+				cout << "Renderer could not be created! SDL Error : " << SDL_GetError() << endl;
 				success = false;
 			}
 			else{
-				// Get window surface
-				gScreenSurface = SDL_GetWindowSurface(gWindow);
-			}
+				// Initialise renderer colour
+				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
+				// initialise png loading
+				int imgFlags = IMG_INIT_PNG;
+				if(!(IMG_Init(imgFlags) & imgFlags)){
+					cout << "SDL_image could not be initialised! SDL_image error : " << IMG_GetError() << endl;
+					success = false;
+				}
+			}
 		}
 	}
 
@@ -156,41 +175,14 @@ bool loadMedia(){
 	// Loading success flag
 	bool success = true;
 
+	// String to hold the file paths
 	string filePath;
 
-	// Load splash image
-	string tempPath("../media/pngs/image.png");
-	gKeyPressSurfaces[KPS_DEFAULT]  = loadSurface(tempPath.c_str());
-	if(gKeyPressSurfaces[KPS_DEFAULT] == NULL){
-		cout << "Unable to load image. SDL Error : " << SDL_GetError() << endl;
-		success = false;
-	}
-
-	tempPath = string("../media/pngs/up.png");
-	gKeyPressSurfaces[KPS_UP]  = loadSurface(tempPath.c_str());
-	if(gKeyPressSurfaces[KPS_UP] == NULL){
-		cout << "Unable to load image. SDL Error : " << SDL_GetError() << endl;
-		success = false;
-	}
-
-	tempPath = string("../media/pngs/down.png");
-	gKeyPressSurfaces[KPS_DOWN]  = loadSurface(tempPath.c_str());
-	if(gKeyPressSurfaces[KPS_DOWN] == NULL){
-		cout << "Unable to load image. SDL Error : " << SDL_GetError() << endl;
-		success = false;
-	}
-
-	tempPath = string("../media/pngs/left.png");
-	gKeyPressSurfaces[KPS_LEFT]  = loadSurface(tempPath.c_str());
-	if(gKeyPressSurfaces[KPS_LEFT] == NULL){
-		cout << "Unable to load image. SDL Error : " << SDL_GetError() << endl;
-		success = false;
-	}
-
-	tempPath = string("../media/pngs/right.png");
-	gKeyPressSurfaces[KPS_RIGHT]  = loadSurface(tempPath.c_str());
-	if(gKeyPressSurfaces[KPS_RIGHT] == NULL){
-		cout << "Unable to load image. SDL Error : " << SDL_GetError() << endl;
+	// Load a texture
+	filePath = string("media/pngs/texture.png");
+	gTexture = loadTexture(filePath.c_str());
+	if(gTexture == NULL){
+		cout << "Failed to load texture image. SDL Error : " << IMG_GetError() << endl;
 		success = false;
 	}
 
@@ -198,42 +190,42 @@ bool loadMedia(){
 }
 
 void close(){
-	// Deallocate the surface
-	SDL_FreeSurface(gCurrentSurface);
-	gCurrentSurface = NULL;
+	// Free loaded textures
+	SDL_DestroyTexture(gTexture);
+	gTexture = NULL;
 
-//	for(auto i = 0; i < KPS_TOTAL; i++){
-//		SDL_FreeSurface(gKeyPressSurfaces[i]);
-//		gKeyPressSurfaces[i] = NULL;
-//	}
+	// Destroy renderer
+	SDL_DestroyRenderer(gRenderer);
+	gRenderer = NULL;
 
 	// Destroy window
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
 
 	// Quit SDL Subsystems
+	IMG_Quit();
 	SDL_Quit();
 }
 
-SDL_Surface* loadSurface(string path){
-	// Final optimised image.
-	SDL_Surface* optimisedSurface = NULL;
+SDL_Texture* loadTexture(string path){
+	// the final texture.
+	SDL_Texture* newTexture = NULL;
 
-	// Load image at specified path
-//	SDL_Surface* loadedSurface = SDL_LoadBMP(path.c_str());
+	// load image at specified path
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 	if(loadedSurface == NULL){
-		cout << "Unable to load image " << path.c_str() << " IMG Error : " << IMG_GetError() << endl;
+		cout << "Unable to load image. SDL_image Error : " << IMG_GetError() << endl;
 	}
 	else{
-		optimisedSurface = SDL_ConvertSurface(loadedSurface, gScreenSurface->format, 0);
-		if(optimisedSurface == NULL){
-			cout << "Unable to load image " << path.c_str() << " SDL Error : " << SDL_GetError() << endl;
+		// create texture from surface pixels
+		newTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
+		if(newTexture == NULL){
+			cout << "Unable to create texture. SDL Error: " << SDL_GetError() << endl;
 		}
 
-		// Get rid of the old loaded surface.
+		// Get rid of old loaded surface
 		SDL_FreeSurface(loadedSurface);
 	}
 
-	return optimisedSurface;
+	return newTexture;
 }
