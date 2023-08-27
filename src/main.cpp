@@ -102,8 +102,32 @@ int main(int argc, char* args[]){
 				// Clear the screen
 				SDL_RenderClear(gRenderer);
 
-				// Render texture to the screen
+				// Render the texture to the screen
+				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);
+
+				// Render a red rectangle
+				SDL_Rect fillRect = {SCREENWIDTH/4, SCREENHEIGHT/4,
+							SCREENWIDTH/2, SCREENHEIGHT/2};
+				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+				SDL_RenderFillRect(gRenderer, &fillRect);
+
+				// Redner green outlined rectangle
+				SDL_Rect outlineRect = {SCREENWIDTH/6, SCREENHEIGHT/6,
+							SCREENWIDTH*2/3, SCREENHEIGHT*2/3};
+				SDL_SetRenderDrawColor(gRenderer, 0x00, 0xFF, 0x00, 0xFF);
+				SDL_RenderDrawRect(gRenderer, &outlineRect);
+
+				// Render blue horizontal line
+				SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
+				SDL_RenderDrawLine(gRenderer, 0, SCREENHEIGHT/2, SCREENWIDTH,
+							SCREENHEIGHT/2);
+
+				// Draw a vertical line of yellow dots
+				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0x00, 0xFF);
+				for(int i = 0; i < SCREENHEIGHT; i+=4){
+					SDL_RenderDrawPoint(gRenderer, SCREENWIDTH/2, i);
+				}
 
 				// Update screen
 				SDL_RenderPresent(gRenderer);
@@ -155,7 +179,7 @@ bool init(){
 				success = false;
 			}
 			else{
-				// Initialise renderer colour
+				// Initialise renderer colour to white
 				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
 				// initialise png loading
