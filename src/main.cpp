@@ -28,6 +28,9 @@ SDL_Texture* loadTexture(string path);
 //
 // -- Game globals --
 //
+SDL_Rect vp1 = {0, 0, SCREENWIDTH/2, SCREENHEIGHT/2};
+SDL_Rect vp2 = {SCREENWIDTH/2, 0, SCREENWIDTH/2, SCREENHEIGHT/2};
+SDL_Rect vp3 = {0, SCREENHEIGHT/2, SCREENWIDTH, SCREENHEIGHT/2};
 
 //
 // -- Game methods --
@@ -36,6 +39,8 @@ SDL_Texture* loadTexture(string path);
 bool init();
 // load media
 bool loadMedia();
+// create the image to draw to screen
+void createRenderBuffer();
 // Frees media and shuts down SDL
 void close();
 
@@ -102,32 +107,14 @@ int main(int argc, char* args[]){
 				// Clear the screen
 				SDL_RenderClear(gRenderer);
 
-				// Render the texture to the screen
-				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-				SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);
+				createRenderBuffer();
+				SDL_RenderSetViewport(gRenderer, &vp1);
 
-				// Render a red rectangle
-				SDL_Rect fillRect = {SCREENWIDTH/4, SCREENHEIGHT/4,
-							SCREENWIDTH/2, SCREENHEIGHT/2};
-				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
-				SDL_RenderFillRect(gRenderer, &fillRect);
+				createRenderBuffer();
+				SDL_RenderSetViewport(gRenderer, &vp2);
 
-				// Redner green outlined rectangle
-				SDL_Rect outlineRect = {SCREENWIDTH/6, SCREENHEIGHT/6,
-							SCREENWIDTH*2/3, SCREENHEIGHT*2/3};
-				SDL_SetRenderDrawColor(gRenderer, 0x00, 0xFF, 0x00, 0xFF);
-				SDL_RenderDrawRect(gRenderer, &outlineRect);
-
-				// Render blue horizontal line
-				SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
-				SDL_RenderDrawLine(gRenderer, 0, SCREENHEIGHT/2, SCREENWIDTH,
-							SCREENHEIGHT/2);
-
-				// Draw a vertical line of yellow dots
-				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0x00, 0xFF);
-				for(int i = 0; i < SCREENHEIGHT; i+=4){
-					SDL_RenderDrawPoint(gRenderer, SCREENWIDTH/2, i);
-				}
+				createRenderBuffer();
+				SDL_RenderSetViewport(gRenderer, &vp3);
 
 				// Update screen
 				SDL_RenderPresent(gRenderer);
@@ -252,4 +239,33 @@ SDL_Texture* loadTexture(string path){
 	}
 
 	return newTexture;
+}
+
+void createRenderBuffer(){
+	// Render the texture to the screen
+	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+	SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);
+
+	// Render a red rectangle
+	SDL_Rect fillRect = {SCREENWIDTH/4, SCREENHEIGHT/4,
+				SCREENWIDTH/2, SCREENHEIGHT/2};
+	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+	SDL_RenderFillRect(gRenderer, &fillRect);
+
+	// Redner green outlined rectangle
+	SDL_Rect outlineRect = {SCREENWIDTH/6, SCREENHEIGHT/6,
+				SCREENWIDTH*2/3, SCREENHEIGHT*2/3};
+	SDL_SetRenderDrawColor(gRenderer, 0x00, 0xFF, 0x00, 0xFF);
+	SDL_RenderDrawRect(gRenderer, &outlineRect);
+
+	// Render blue horizontal line
+	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
+	SDL_RenderDrawLine(gRenderer, 0, SCREENHEIGHT/2, SCREENWIDTH,
+				SCREENHEIGHT/2);
+
+	// Draw a vertical line of yellow dots
+	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0x00, 0xFF);
+	for(int i = 0; i < SCREENHEIGHT; i+=4){
+		SDL_RenderDrawPoint(gRenderer, SCREENWIDTH/2, i);
+	}
 }
