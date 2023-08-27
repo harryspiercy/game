@@ -1,6 +1,7 @@
-#include<iostream>
 #include<SDL2/SDL.h>
+#include<SDL2/SDL_image.h>
 #include<string>
+#include<iostream>
 
 using std::cout;
 using std::endl;
@@ -82,6 +83,10 @@ int main(int argc, char* args[]){
 							gCurrentSurface = gKeyPressSurfaces[KPS_RIGHT];
 							break;
 
+							case SDLK_ESCAPE:
+							quit = true;
+							break;
+
 							default:
 							gCurrentSurface = gKeyPressSurfaces[KPS_DEFAULT];
 							break;
@@ -89,8 +94,13 @@ int main(int argc, char* args[]){
 					}
 				}
 
+				// Apply the image stretched
+				SDL_Rect stretchRect;
+				stretchRect.x = 0; stretchRect.y = 0;
+				stretchRect.w = SCREENWIDTH; stretchRect.h = SCREENHEIGHT;
+
 				// Apply the current image
-				SDL_BlitSurface(gCurrentSurface, NULL, gScreenSurface, NULL);
+				SDL_BlitScaled(gCurrentSurface, NULL, gScreenSurface, &stretchRect);
 
 				// Update the surface
 				SDL_UpdateWindowSurface(gWindow);
@@ -125,8 +135,17 @@ bool init(){
 			success = false;
 		}
 		else{
-			// Get window surface
-			gScreenSurface = SDL_GetWindowSurface(gWindow);
+			// initialise png loading
+			int imgFlags = IMG_INIT_PNG;
+			if(!(IMG_Init(imgFlags) & imgFlags)){
+				cout << "SDL_image could not be initialised! SDL_image error : " << IMG_GetError() << endl;
+				success = false;
+			}
+			else{
+				// Get window surface
+				gScreenSurface = SDL_GetWindowSurface(gWindow);
+			}
+
 		}
 	}
 
@@ -140,33 +159,38 @@ bool loadMedia(){
 	string filePath;
 
 	// Load splash image
-	gKeyPressSurfaces[KPS_DEFAULT]  = loadSurface("../media/image.bmp");
+	string tempPath("../media/pngs/image.png");
+	gKeyPressSurfaces[KPS_DEFAULT]  = loadSurface(tempPath.c_str());
 	if(gKeyPressSurfaces[KPS_DEFAULT] == NULL){
-		cout << "Unable to load image ../media/image.bmp. SDL Error : " << SDL_GetError() << endl;
+		cout << "Unable to load image. SDL Error : " << SDL_GetError() << endl;
 		success = false;
 	}
 
-	gKeyPressSurfaces[KPS_UP]  = loadSurface("../media/up.bmp");
+	tempPath = string("../media/pngs/up.png");
+	gKeyPressSurfaces[KPS_UP]  = loadSurface(tempPath.c_str());
 	if(gKeyPressSurfaces[KPS_UP] == NULL){
-		cout << "Unable to load image ../media/up.bmp. SDL Error : " << SDL_GetError() << endl;
+		cout << "Unable to load image. SDL Error : " << SDL_GetError() << endl;
 		success = false;
 	}
 
-	gKeyPressSurfaces[KPS_DOWN]  = loadSurface("../media/down.bmp");
+	tempPath = string("../media/pngs/down.png");
+	gKeyPressSurfaces[KPS_DOWN]  = loadSurface(tempPath.c_str());
 	if(gKeyPressSurfaces[KPS_DOWN] == NULL){
-		cout << "Unable to load image ../media/down.bmp. SDL Error : " << SDL_GetError() << endl;
+		cout << "Unable to load image. SDL Error : " << SDL_GetError() << endl;
 		success = false;
 	}
 
-	gKeyPressSurfaces[KPS_LEFT]  = loadSurface("../media/left.bmp");
+	tempPath = string("../media/pngs/left.png");
+	gKeyPressSurfaces[KPS_LEFT]  = loadSurface(tempPath.c_str());
 	if(gKeyPressSurfaces[KPS_LEFT] == NULL){
-		cout << "Unable to load image ../media/left.bmp. SDL Error : " << SDL_GetError() << endl;
+		cout << "Unable to load image. SDL Error : " << SDL_GetError() << endl;
 		success = false;
 	}
 
-	gKeyPressSurfaces[KPS_RIGHT]  = loadSurface("../media/right.bmp");
+	tempPath = string("../media/pngs/right.png");
+	gKeyPressSurfaces[KPS_RIGHT]  = loadSurface(tempPath.c_str());
 	if(gKeyPressSurfaces[KPS_RIGHT] == NULL){
-		cout << "Unable to load image ../media/right.bmp. SDL Error : " << SDL_GetError() << endl;
+		cout << "Unable to load image. SDL Error : " << SDL_GetError() << endl;
 		success = false;
 	}
 
@@ -178,10 +202,10 @@ void close(){
 	SDL_FreeSurface(gCurrentSurface);
 	gCurrentSurface = NULL;
 
-	for(auto i = 0; i < KPS_TOTAL; i++){
-		SDL_FreeSurface(gKeyPressSurfaces[i]);
-		gKeyPressSurfaces[i] = NULL;
-	}
+//	for(auto i = 0; i < KPS_TOTAL; i++){
+//		SDL_FreeSurface(gKeyPressSurfaces[i]);
+//		gKeyPressSurfaces[i] = NULL;
+//	}
 
 	// Destroy window
 	SDL_DestroyWindow(gWindow);
@@ -192,12 +216,24 @@ void close(){
 }
 
 SDL_Surface* loadSurface(string path){
+	// Final optimised image.
+	SDL_Surface* optimisedSurface = NULL;
+
 	// Load image at specified path
-	SDL_Surface* loadedSurface = SDL_LoadBMP(path.c_str());
+//	SDL_Surface* loadedSurface = SDL_LoadBMP(path.c_str());
+	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 	if(loadedSurface == NULL){
-		cout << "Unable to load image " << path.c_str() << " SDL Error : " << SDL_GetError() << endl;
+		cout << "Unable to load image " << path.c_str() << " IMG Error : " << IMG_GetError() << endl;
+	}
+	else{
+		optimisedSurface = SDL_ConvertSurface(loadedSurface, gScreenSurface->format, 0);
+		if(optimisedSurface == NULL){
+			cout << "Unable to load image " << path.c_str() << " SDL Error : " << SDL_GetError() << endl;
+		}
+
+		// Get rid of the old loaded surface.
+		SDL_FreeSurface(loadedSurface);
 	}
 
-	return loadedSurface;
-
+	return optimisedSurface;
 }
