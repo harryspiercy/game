@@ -1,11 +1,38 @@
 #include<SDL2/SDL.h>
 #include<SDL2/SDL_image.h>
-#include<string>
 #include<iostream>
+#include<string>
 
 using std::cout;
 using std::endl;
 using std::string;
+
+//
+// -- Engine classes --
+//
+class LTexture{
+public:
+	// Constructor
+	LTexture();
+	~LTexture();
+	// Write to the hardware texture
+	bool loadFromFile( string path );
+	// Free the hardware texture
+	void free();
+
+	// Draw texture at a given point
+	void render( int x, int y );
+	// Get image details
+	inline int getWidth() { return mWidth; }
+	inline int getHeight() { return mHeight; }
+
+private:
+	// Hardware texture
+	SDL_Texture* mTexture;
+	// Image details
+	int mWidth;
+	int mHeight;
+};
 
 //
 // -- Engine globals --
@@ -17,20 +44,17 @@ const int SCREENHEIGHT = 480;
 // Texture renderer to link to window
 SDL_Renderer* gRenderer = NULL;
 // Texture to load image to
-SDL_Texture* gTexture = NULL;
+LTexture texChar;
+LTexture texBackground;
 
 //
 // -- Engine methods --
 //
-// Load individual image as texture
-SDL_Texture* loadTexture(string path);
 
 //
 // -- Game globals --
 //
-SDL_Rect vp1 = {0, 0, SCREENWIDTH/2, SCREENHEIGHT/2};
-SDL_Rect vp2 = {SCREENWIDTH/2, 0, SCREENWIDTH/2, SCREENHEIGHT/2};
-SDL_Rect vp3 = {0, SCREENHEIGHT/2, SCREENWIDTH, SCREENHEIGHT/2};
+
 
 //
 // -- Game methods --
@@ -39,22 +63,21 @@ SDL_Rect vp3 = {0, SCREENHEIGHT/2, SCREENWIDTH, SCREENHEIGHT/2};
 bool init();
 // load media
 bool loadMedia();
-// create the image to draw to screen
-void createRenderBuffer();
 // Frees media and shuts down SDL
 void close();
 
+
 //
-// --- Program --
+// --- Program --//
 //
-int main(int argc, char* args[]){
+int main( int argc, char* args[] ){
 	// Start up SDL and create window
-	if(!init()){
+	if( !init() ){
 		cout << "Failed to init" << endl;
 	}
 	else{
 		// Load media
-		if(!loadMedia()){
+		if( !loadMedia() ){
 			cout << "Failed to load media" << endl;
 		}
 		else{
@@ -72,15 +95,15 @@ int main(int argc, char* args[]){
 			//
 			// -- Game loop --
 			//
-			while(!quit){
+			while( !quit ){
 				// Poll hardware events
-				while(SDL_PollEvent(&e)){
+				while( SDL_PollEvent( &e )){
 					// Exit event
-					if(e.type == SDL_QUIT){
+					if( e.type == SDL_QUIT ){
 						quit = true;
 					}
-					else if(e.type == SDL_KEYDOWN){
-						switch(e.key.keysym.sym){
+					else if( e.type == SDL_KEYDOWN ){
+						switch( e.key.keysym.sym ){
 
 							case SDLK_UP:
 							break;
@@ -105,21 +128,16 @@ int main(int argc, char* args[]){
 				}
 
 				// Clear the screen
-				SDL_RenderClear(gRenderer);
+				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+				SDL_RenderClear( gRenderer );
 
-				createRenderBuffer();
-				SDL_RenderSetViewport(gRenderer, &vp1);
-
-				createRenderBuffer();
-				SDL_RenderSetViewport(gRenderer, &vp2);
-
-				createRenderBuffer();
-				SDL_RenderSetViewport(gRenderer, &vp3);
+				// Render textures
+				texBackground.render( 0, 0 );
+				texChar.render( 100, 100 );
 
 				// Update screen
-				SDL_RenderPresent(gRenderer);
+				SDL_RenderPresent( gRenderer );
 			}
-
 			//
 			// -- Close game --
 			//
@@ -143,7 +161,7 @@ bool init(){
 	bool success = true;
 
 	// Initialise SDL
-	if(SDL_Init(SDL_INIT_VIDEO) < 0){
+	if( SDL_Init( SDL_INIT_VIDEO ) < 0 ){
 		cout << "SDL could not initialise! SDL Error :" << SDL_GetError() << endl;
 		success = false;
 	}
@@ -154,24 +172,24 @@ bool init(){
 			SCREENWIDTH, SCREENHEIGHT, SDL_WINDOW_SHOWN
 		);
 
-		if(gWindow == NULL){
+		if( gWindow == NULL ){
 			cout << "Window could not be created! SDL Error : " << SDL_GetError() << endl;
 			success = false;
 		}
 		else{
 			// create renderer for widow.
-			gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
-			if(gRenderer == NULL){
+			gRenderer = SDL_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED );
+			if( gRenderer == NULL ){
 				cout << "Renderer could not be created! SDL Error : " << SDL_GetError() << endl;
 				success = false;
 			}
 			else{
 				// Initialise renderer colour to white
-				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 
 				// initialise png loading
 				int imgFlags = IMG_INIT_PNG;
-				if(!(IMG_Init(imgFlags) & imgFlags)){
+				if( !(IMG_Init(imgFlags) & imgFlags) ){
 					cout << "SDL_image could not be initialised! SDL_image error : " << IMG_GetError() << endl;
 					success = false;
 				}
@@ -186,14 +204,15 @@ bool loadMedia(){
 	// Loading success flag
 	bool success = true;
 
-	// String to hold the file paths
-	string filePath;
+	string path( "media/fella.png" );
+	if( !texChar.loadFromFile( path.c_str() ) ){
+		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
+		success = false;
+	}
 
-	// Load a texture
-	filePath = string("media/pngs/texture.png");
-	gTexture = loadTexture(filePath.c_str());
-	if(gTexture == NULL){
-		cout << "Failed to load texture image. SDL Error : " << IMG_GetError() << endl;
+	path = string( "media/background.png" );
+	if( !texBackground.loadFromFile( path.c_str() ) ){
+		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
 		success = false;
 	}
 
@@ -202,15 +221,15 @@ bool loadMedia(){
 
 void close(){
 	// Free loaded textures
-	SDL_DestroyTexture(gTexture);
-	gTexture = NULL;
+	texChar.free();
+	texBackground.free();
 
 	// Destroy renderer
-	SDL_DestroyRenderer(gRenderer);
+	SDL_DestroyRenderer( gRenderer );
 	gRenderer = NULL;
 
 	// Destroy window
-	SDL_DestroyWindow(gWindow);
+	SDL_DestroyWindow( gWindow );
 	gWindow = NULL;
 
 	// Quit SDL Subsystems
@@ -218,54 +237,67 @@ void close(){
 	SDL_Quit();
 }
 
-SDL_Texture* loadTexture(string path){
-	// the final texture.
-	SDL_Texture* newTexture = NULL;
-
-	// load image at specified path
-	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-	if(loadedSurface == NULL){
-		cout << "Unable to load image. SDL_image Error : " << IMG_GetError() << endl;
-	}
-	else{
-		// create texture from surface pixels
-		newTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
-		if(newTexture == NULL){
-			cout << "Unable to create texture. SDL Error: " << SDL_GetError() << endl;
-		}
-
-		// Get rid of old loaded surface
-		SDL_FreeSurface(loadedSurface);
-	}
-
-	return newTexture;
+//
+// -- Texture methods --
+//
+LTexture::LTexture(){
+	// Initialise members
+	mTexture = NULL;
+	mWidth = 0;
+	mHeight = 0;
 }
 
-void createRenderBuffer(){
-	// Render the texture to the screen
-	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-	SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);
+LTexture::~LTexture(){
+	// Free the hardware texture
+	free();
+}
 
-	// Render a red rectangle
-	SDL_Rect fillRect = {SCREENWIDTH/4, SCREENHEIGHT/4,
-				SCREENWIDTH/2, SCREENHEIGHT/2};
-	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
-	SDL_RenderFillRect(gRenderer, &fillRect);
+bool LTexture::loadFromFile( string path ){
+	// Free an image on hardware
+	free();
 
-	// Redner green outlined rectangle
-	SDL_Rect outlineRect = {SCREENWIDTH/6, SCREENHEIGHT/6,
-				SCREENWIDTH*2/3, SCREENHEIGHT*2/3};
-	SDL_SetRenderDrawColor(gRenderer, 0x00, 0xFF, 0x00, 0xFF);
-	SDL_RenderDrawRect(gRenderer, &outlineRect);
-
-	// Render blue horizontal line
-	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
-	SDL_RenderDrawLine(gRenderer, 0, SCREENHEIGHT/2, SCREENWIDTH,
-				SCREENHEIGHT/2);
-
-	// Draw a vertical line of yellow dots
-	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0x00, 0xFF);
-	for(int i = 0; i < SCREENHEIGHT; i+=4){
-		SDL_RenderDrawPoint(gRenderer, SCREENWIDTH/2, i);
+	// create the fianl texture
+	SDL_Texture* newTexture = NULL;
+	// load to a surface from the path
+	SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
+	if( loadedSurface == NULL ){
+		cout << "loadFromFile Failure: " << IMG_GetError() << endl;
 	}
+	else{
+		// Set colour key for the loaded surface to cyan
+		SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB( loadedSurface->format, 0, 0xFF, 0xFF ) );
+		// Create texture from the surface pixels
+		newTexture = SDL_CreateTextureFromSurface( gRenderer, loadedSurface );
+		if( newTexture == NULL ){
+			cout << "loadFromFile Failure: " << SDL_GetError() << endl;
+		}
+		else{
+			mWidth = loadedSurface->w;
+			mHeight = loadedSurface->h;
+		}
+
+		// Get rid of the old surfce
+		SDL_FreeSurface( loadedSurface );
+	}
+
+	// Set the texture and return success
+	mTexture = newTexture;
+	return mTexture != NULL;
+}
+
+void LTexture::free(){
+	// free the texture if it exists
+	if( mTexture != NULL ){
+		SDL_DestroyTexture( mTexture );
+		mTexture = NULL;
+		mWidth = 0;
+		mHeight = 0;
+	}
+}
+
+void LTexture::render(int x, int y){
+	// set the rendering screen space
+	SDL_Rect renderQuad = { x, y, mWidth, mHeight };
+	// copy the texture to the renderer
+	SDL_RenderCopy( gRenderer, mTexture, NULL, &renderQuad );
 }
