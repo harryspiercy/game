@@ -21,7 +21,7 @@ public:
 	void free();
 
 	// Draw texture at a given point
-	void render( int x, int y );
+	void render( int x, int y, SDL_Rect* clip = NULL );
 	// Get image details
 	inline int getWidth() { return mWidth; }
 	inline int getHeight() { return mHeight; }
@@ -44,8 +44,8 @@ const int SCREENHEIGHT = 480;
 // Texture renderer to link to window
 SDL_Renderer* gRenderer = NULL;
 // Texture to load image to
-LTexture texChar;
-LTexture texBackground;
+SDL_Rect gSpriteClips[4];
+LTexture gSpriteTextureSheet;
 
 //
 // -- Engine methods --
@@ -132,8 +132,10 @@ int main( int argc, char* args[] ){
 				SDL_RenderClear( gRenderer );
 
 				// Render textures
-				texBackground.render( 0, 0 );
-				texChar.render( 100, 100 );
+				gSpriteTextureSheet.render( 0, 0, &gSpriteClips[0] );
+				gSpriteTextureSheet.render( SCREENWIDTH - gSpriteClips[1].w, 0, &gSpriteClips[1] );
+				gSpriteTextureSheet.render( 0, SCREENHEIGHT - gSpriteClips[2].h, &gSpriteClips[2] );
+				gSpriteTextureSheet.render( SCREENWIDTH - gSpriteClips[3].w, SCREENHEIGHT - gSpriteClips[3].h, &gSpriteClips[3] );
 
 				// Update screen
 				SDL_RenderPresent( gRenderer );
@@ -204,25 +206,39 @@ bool loadMedia(){
 	// Loading success flag
 	bool success = true;
 
-	string path( "media/fella.png" );
-	if( !texChar.loadFromFile( path.c_str() ) ){
+	string path( "media/spriteSheet.png" );
+	if( !gSpriteTextureSheet.loadFromFile( path.c_str() ) ){
 		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
 		success = false;
 	}
 
-	path = string( "media/background.png" );
-	if( !texBackground.loadFromFile( path.c_str() ) ){
-		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
-		success = false;
-	}
+	// Set top left sprite
+	gSpriteClips[0].x = 0;
+	gSpriteClips[0].y = 0;
+	gSpriteClips[0].w = 200;
+	gSpriteClips[0].h = 200;
+
+	gSpriteClips[1].x = 200;
+	gSpriteClips[1].y = 0;
+	gSpriteClips[1].w = 200;
+	gSpriteClips[1].h = 200;
+
+	gSpriteClips[2].x = 0;
+	gSpriteClips[2].y = 200;
+	gSpriteClips[2].w = 200;
+	gSpriteClips[2].h = 200;
+
+	gSpriteClips[3].x = 200;
+	gSpriteClips[3].y = 200;
+	gSpriteClips[3].w = 200;
+	gSpriteClips[3].h = 200;
 
 	return success;
 }
 
 void close(){
 	// Free loaded textures
-	texChar.free();
-	texBackground.free();
+	gSpriteTextureSheet.free();
 
 	// Destroy renderer
 	SDL_DestroyRenderer( gRenderer );
@@ -295,9 +311,15 @@ void LTexture::free(){
 	}
 }
 
-void LTexture::render(int x, int y){
+void LTexture::render( int x, int y, SDL_Rect* clip ){
 	// set the rendering screen space
 	SDL_Rect renderQuad = { x, y, mWidth, mHeight };
+
+	if( clip != NULL ){
+		renderQuad.w = clip->w;
+		renderQuad.h = clip->h;
+	}
+
 	// copy the texture to the renderer
-	SDL_RenderCopy( gRenderer, mTexture, NULL, &renderQuad );
+	SDL_RenderCopy( gRenderer, mTexture, clip, &renderQuad );
 }
