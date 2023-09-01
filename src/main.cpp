@@ -22,6 +22,7 @@ public:
 
 	// Draw texture at a given point
 	void render( int x, int y, SDL_Rect* clip = NULL );
+	void setColour( Uint8 r, Uint8 g, Uint8 b );
 	// Get image details
 	inline int getWidth() { return mWidth; }
 	inline int getHeight() { return mHeight; }
@@ -92,6 +93,11 @@ int main( int argc, char* args[] ){
 			// Create an exit flag
 			bool quit = false;
 
+			// Modulation components
+			Uint8 red = 255;
+			Uint8 green = 255;
+			Uint8 blue = 255;
+
 			//
 			// -- Game loop --
 			//
@@ -121,6 +127,29 @@ int main( int argc, char* args[] ){
 							quit = true;
 							break;
 
+							case SDLK_q:
+							red += 32;
+							break;
+
+							case SDLK_a:
+							red -= 32;
+							break;
+
+							case SDLK_w:
+							green += 32;
+							break;
+
+							case SDLK_s:
+							green -= 32;
+							break;
+
+							case SDLK_e:
+							blue += 32;
+							break;
+
+							case SDLK_d:
+							blue -= 32;
+							break;
 							default:
 							break;
 						}
@@ -130,6 +159,8 @@ int main( int argc, char* args[] ){
 				// Clear the screen
 				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 				SDL_RenderClear( gRenderer );
+
+				gSpriteTextureSheet.setColour( red, green, blue );
 
 				// Render textures
 				gSpriteTextureSheet.render( 0, 0, &gSpriteClips[0] );
@@ -322,4 +353,8 @@ void LTexture::render( int x, int y, SDL_Rect* clip ){
 
 	// copy the texture to the renderer
 	SDL_RenderCopy( gRenderer, mTexture, clip, &renderQuad );
+}
+
+void LTexture::setColour( Uint8 r, Uint8 g, Uint8 b ){
+	SDL_SetTextureColorMod( mTexture, r, g, b );
 }
