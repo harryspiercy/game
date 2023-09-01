@@ -22,7 +22,14 @@ public:
 
 	// Draw texture at a given point
 	void render( int x, int y, SDL_Rect* clip = NULL );
+
+	// Modify texture colour
 	void setColour( Uint8 r, Uint8 g, Uint8 b );
+	// Modify blend mode
+	void setBlendMode( SDL_BlendMode blending );
+	// Modify alpha
+	void setAlpha( Uint8 a );
+
 	// Get image details
 	inline int getWidth() { return mWidth; }
 	inline int getHeight() { return mHeight; }
@@ -47,6 +54,7 @@ SDL_Renderer* gRenderer = NULL;
 // Texture to load image to
 SDL_Rect gSpriteClips[4];
 LTexture gSpriteTextureSheet;
+LTexture gFadeTexture;
 
 //
 // -- Engine methods --
@@ -98,6 +106,8 @@ int main( int argc, char* args[] ){
 			Uint8 green = 255;
 			Uint8 blue = 255;
 
+			Uint8 alpha = 255;
+
 			//
 			// -- Game loop --
 			//
@@ -112,9 +122,13 @@ int main( int argc, char* args[] ){
 						switch( e.key.keysym.sym ){
 
 							case SDLK_UP:
+							if( alpha + 32 > 255 ) alpha = 255;
+							else alpha += 32;
 							break;
 
 							case SDLK_DOWN:
+							if( alpha - 32 < 0 ) alpha = 0;
+							else alpha -= 32;
 							break;
 
 							case SDLK_LEFT:
@@ -160,13 +174,17 @@ int main( int argc, char* args[] ){
 				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 				SDL_RenderClear( gRenderer );
 
+				// Draw the modular background
 				gSpriteTextureSheet.setColour( red, green, blue );
 
-				// Render textures
 				gSpriteTextureSheet.render( 0, 0, &gSpriteClips[0] );
 				gSpriteTextureSheet.render( SCREENWIDTH - gSpriteClips[1].w, 0, &gSpriteClips[1] );
 				gSpriteTextureSheet.render( 0, SCREENHEIGHT - gSpriteClips[2].h, &gSpriteClips[2] );
 				gSpriteTextureSheet.render( SCREENWIDTH - gSpriteClips[3].w, SCREENHEIGHT - gSpriteClips[3].h, &gSpriteClips[3] );
+
+				// Draw the fader forground
+				gFadeTexture.setAlpha( alpha );
+				gFadeTexture.render( 0, 0 );
 
 				// Update screen
 				SDL_RenderPresent( gRenderer );
@@ -264,6 +282,16 @@ bool loadMedia(){
 	gSpriteClips[3].w = 200;
 	gSpriteClips[3].h = 200;
 
+	path = string( "media/fadeIn.png" );
+	if( !gFadeTexture.loadFromFile( path.c_str() ) ){
+		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
+		success = false;
+	}
+	else{
+		// Setup blending
+		gFadeTexture.setBlendMode( SDL_BLENDMODE_BLEND );
+	}
+
 	return success;
 }
 
@@ -357,4 +385,12 @@ void LTexture::render( int x, int y, SDL_Rect* clip ){
 
 void LTexture::setColour( Uint8 r, Uint8 g, Uint8 b ){
 	SDL_SetTextureColorMod( mTexture, r, g, b );
+}
+
+void LTexture::setBlendMode( SDL_BlendMode blending ){
+	SDL_SetTextureBlendMode( mTexture, blending );
+}
+
+void LTexture::setAlpha( Uint8 a ){
+	SDL_SetTextureAlphaMod( mTexture, a );
 }
