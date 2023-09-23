@@ -1,3 +1,4 @@
+
 #include<SDL2/SDL.h>
 #include<SDL2/SDL_image.h>
 #include<iostream>
@@ -7,37 +8,54 @@ using std::cout;
 using std::endl;
 using std::string;
 
-//
-// -- Engine classes --
-//
+//! Texture wrapper class.
+/*! A class which wraps around the functionailty of the SDL Texture class.
+*/
 class LTexture{
 public:
-	// Constructor
+
+ 	//! Constructor
 	LTexture();
+ 	//! Destructor
 	~LTexture();
-	// Write to the hardware texture
+
+	//! Write to the hardware mTexture
+	/*! Load a texture from a png image at path. set mTexture, mWidth and mHeight
+	* \param path path to the png file containing the texture
+	* \return was the file successfully loaded
+	*/
 	bool loadFromFile( string path );
-	// Free the hardware texture
+	//! Free the hardware texture
 	void free();
 
-	// Draw texture at a given point
+	//! Draw mTexture at the given point
+	/*!
+	* \param x x coord to render to
+	* \param y y coord to render to
+	* \param clip rect to define the area from the loaded texture to render
+	*/
 	void render( int x, int y, SDL_Rect* clip = NULL );
 
-	// Modify texture colour
+	//! Modify texture colour
 	void setColour( Uint8 r, Uint8 g, Uint8 b );
-	// Modify blend mode
+	//! Modify the blend mode
+	/*!
+	* \param blending the SDL_BlendMode to render mTexture with
+	*/
 	void setBlendMode( SDL_BlendMode blending );
-	// Modify alpha
+	//! Modify the alpha
 	void setAlpha( Uint8 a );
 
-	// Get image details
+	//! Get width in pixels
 	inline int getWidth() { return mWidth; }
+	//! Get height in pixels
 	inline int getHeight() { return mHeight; }
 
 private:
-	// Hardware texture
+	//! Hardware texture
 	SDL_Texture* mTexture;
-	// Image details
+
+	//! Image width
 	int mWidth;
 	int mHeight;
 };
