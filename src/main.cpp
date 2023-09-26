@@ -1,4 +1,3 @@
-
 #include<SDL2/SDL.h>
 #include<SDL2/SDL_image.h>
 #include<iostream>
@@ -67,11 +66,17 @@ private:
 SDL_Window* gWindow = NULL;
 const int SCREENWIDTH = 640;
 const int SCREENHEIGHT = 480;
+
 // Texture renderer to link to window
 SDL_Renderer* gRenderer = NULL;
+
 // Texture to load image to
 SDL_Rect gSpriteClips[4];
 LTexture gSpriteTextureSheet;
+const int WALKING_ANIMATION_FRAMES = 4;
+SDL_Rect gAnimSpriteClips[WALKING_ANIMATION_FRAMES];
+
+// Other example content
 LTexture gFadeTexture;
 
 //
@@ -126,6 +131,7 @@ int main( int argc, char* args[] ){
 
 			Uint8 alpha = 255;
 
+			int frame = 0;
 			//
 			// -- Game loop --
 			//
@@ -200,6 +206,16 @@ int main( int argc, char* args[] ){
 				gSpriteTextureSheet.render( 0, SCREENHEIGHT - gSpriteClips[2].h, &gSpriteClips[2] );
 				gSpriteTextureSheet.render( SCREENWIDTH - gSpriteClips[3].w, SCREENHEIGHT - gSpriteClips[3].h, &gSpriteClips[3] );
 
+				// Render the current frame
+				SDL_Rect* currentClip = &gAnimSpriteClips[ frame / 4 ];
+				gSpriteTextureSheet.render( ( SCREENWIDTH - currentClip->w ) / 2, ( SCREENHEIGHT - currentClip->h) / 2, currentClip );
+
+				// Go te the next frame
+				++frame;
+
+				// Cycle Animation
+				if ( frame / 4 >= WALKING_ANIMATION_FRAMES ) frame = 0;
+
 				// Draw the fader forground
 				gFadeTexture.setAlpha( alpha );
 				gFadeTexture.render( 0, 0 );
@@ -247,7 +263,7 @@ bool init(){
 		}
 		else{
 			// create renderer for widow.
-			gRenderer = SDL_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED );
+			gRenderer = SDL_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
 			if( gRenderer == NULL ){
 				cout << "Renderer could not be created! SDL Error : " << SDL_GetError() << endl;
 				success = false;
@@ -273,32 +289,16 @@ bool loadMedia(){
 	// Loading success flag
 	bool success = true;
 
-	string path( "media/spriteSheet.png" );
+	string path( "media/SpriteSheetTemplate.png" );
 	if( !gSpriteTextureSheet.loadFromFile( path.c_str() ) ){
 		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
 		success = false;
 	}
 
-	// Set top left sprite
-	gSpriteClips[0].x = 0;
-	gSpriteClips[0].y = 0;
-	gSpriteClips[0].w = 200;
-	gSpriteClips[0].h = 200;
-
-	gSpriteClips[1].x = 200;
-	gSpriteClips[1].y = 0;
-	gSpriteClips[1].w = 200;
-	gSpriteClips[1].h = 200;
-
-	gSpriteClips[2].x = 0;
-	gSpriteClips[2].y = 200;
-	gSpriteClips[2].w = 200;
-	gSpriteClips[2].h = 200;
-
-	gSpriteClips[3].x = 200;
-	gSpriteClips[3].y = 200;
-	gSpriteClips[3].w = 200;
-	gSpriteClips[3].h = 200;
+	gSpriteClips[0] = { 0, 0, 200, 200 };
+	gSpriteClips[1] = { 200, 0, 200, 200 };
+	gSpriteClips[2] = { 0, 200, 200, 200 };
+	gSpriteClips[3] = { 200, 200, 200, 200 };
 
 	path = string( "media/fadeIn.png" );
 	if( !gFadeTexture.loadFromFile( path.c_str() ) ){
@@ -308,6 +308,11 @@ bool loadMedia(){
 	else{
 		// Setup blending
 		gFadeTexture.setBlendMode( SDL_BLENDMODE_BLEND );
+
+		gAnimSpriteClips[0] = { 0, 0, 100, 200 };
+		gAnimSpriteClips[1] = { 100, 0, 100, 200 };
+		gAnimSpriteClips[2] = { 200, 0, 100, 200 };
+		gAnimSpriteClips[3] = { 300, 0, 100, 200 };
 	}
 
 	return success;
