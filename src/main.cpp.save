@@ -2,11 +2,62 @@
 #include<SDL2/SDL_image.h>
 #include<iostream>
 #include<string>
-#include"texture.h"
 
 using std::cout;
 using std::endl;
 using std::string;
+
+//! Texture wrapper class.
+/*! A class which wraps around the functionailty of the SDL Texture class.
+*/
+class LTexture{
+public:
+
+ 	//! Constructor
+	LTexture();
+ 	//! Destructor
+	~LTexture();
+
+	//! Write to the hardware mTexture
+	/*! Load a texture from a png image at path. set mTexture, mWidth and mHeight
+	* \param path path to the png file containing the texture
+	* \return was the file successfully loaded
+	*/
+	bool loadFromFile( string path );
+	//! Free the hardware texture
+	void free();
+
+	//! Draw mTexture at the given point
+	/*!
+	* \param x x coord to render to
+	* \param y y coord to render to
+	* \param clip rect to define the area from the loaded texture to render
+	*/
+	void render( int x, int y, SDL_Rect* clip = NULL );
+
+	//! Modify texture colour
+	void setColour( Uint8 r, Uint8 g, Uint8 b );
+	//! Modify the blend mode
+	/*!
+	* \param blending the SDL_BlendMode to render mTexture with
+	*/
+	void setBlendMode( SDL_BlendMode blending );
+	//! Modify the alpha
+	void setAlpha( Uint8 a );
+
+	//! Get width in pixels
+	inline int getWidth() { return mWidth; }
+	//! Get height in pixels
+	inline int getHeight() { return mHeight; }
+
+private:
+	//! Hardware texture
+	SDL_Texture* mTexture;
+
+	//! Image width
+	int mWidth;
+	int mHeight;
+};
 
 //
 // -- Engine globals --
@@ -30,8 +81,6 @@ SDL_Rect gAnimSpriteClips[ WALKING_ANIMATION_FRAMES ];
 
 // Other example content
 LTexture gFadeTexture;
-
-
 
 //
 // -- Engine methods --
@@ -155,14 +204,14 @@ int main( int argc, char* args[] ){
 				// Draw the modular background
 				gColourCircleClipSheet.setColour( red, green, blue );
 
-				gColourCircleClipSheet.render( gRenderer, 0, 0, &gColourCircleClips[0] );
-				gColourCircleClipSheet.render( gRenderer, SCREENWIDTH - gColourCircleClips[1].w, 0, &gColourCircleClips[1] );
-				gColourCircleClipSheet.render( gRenderer, 0, SCREENHEIGHT - gColourCircleClips[2].h, &gColourCircleClips[2] );
-				gColourCircleClipSheet.render( gRenderer, SCREENWIDTH - gColourCircleClips[3].w, SCREENHEIGHT - gColourCircleClips[3].h, &gColourCircleClips[3] );
+				gColourCircleClipSheet.render( 0, 0, &gColourCircleClips[0] );
+				gColourCircleClipSheet.render( SCREENWIDTH - gColourCircleClips[1].w, 0, &gColourCircleClips[1] );
+				gColourCircleClipSheet.render( 0, SCREENHEIGHT - gColourCircleClips[2].h, &gColourCircleClips[2] );
+				gColourCircleClipSheet.render( SCREENWIDTH - gColourCircleClips[3].w, SCREENHEIGHT - gColourCircleClips[3].h, &gColourCircleClips[3] );
 
 				// Render the current frame
 				SDL_Rect* currentClip = &gAnimSpriteClips[ frame / 4 ];
-				gSpriteTextureSheet.render( gRenderer, ( SCREENWIDTH - currentClip->w ) / 2, ( SCREENHEIGHT - currentClip->h) / 2, currentClip );
+				gSpriteTextureSheet.render( ( SCREENWIDTH - currentClip->w ) / 2, ( SCREENHEIGHT - currentClip->h) / 2, currentClip );
 
 				// Go te the next frame
 				++frame;
@@ -172,7 +221,7 @@ int main( int argc, char* args[] ){
 
 				// Draw the fader forground
 				gFadeTexture.setAlpha( alpha );
-				gFadeTexture.render( gRenderer, 0, 0 );
+				gFadeTexture.render( 0, 0 );
 
 				// Update screen
 				SDL_RenderPresent( gRenderer );
@@ -244,13 +293,13 @@ bool loadMedia(){
 	bool success = true;
 
 	string path( "media/SpriteSheetTemplate.png" );
-	if( !gSpriteTextureSheet.loadFromFile( gRenderer, path.c_str() ) ){
+	if( !gSpriteTextureSheet.loadFromFile( path.c_str() ) ){
 		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
 		success = false;
 	}
 
 	path = string( "media/spriteSheet.png" );
-	if( !gColourCircleClipSheet.loadFromFile( gRenderer, path.c_str() ) ){
+	if( !gColourCircleClipSheet.loadFromFile( path.c_str() ) ){
 		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
 		success = false;
 	}
@@ -266,7 +315,7 @@ bool loadMedia(){
 	gAnimSpriteClips[3] = { 300, 0, 100, 200 };
 
 	path = string( "media/fadeIn.png" );
-	if( !gFadeTexture.loadFromFile( gRenderer, path.c_str() ) ){
+	if( !gFadeTexture.loadFromFile( path.c_str() ) ){
 		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
 		success = false;
 	}
@@ -293,4 +342,87 @@ void close(){
 	// Quit SDL Subsystems
 	IMG_Quit();
 	SDL_Quit();
+}
+
+//
+// -- Texture methods --
+//
+LTexture::LTexture(){
+	// Initialise members
+	mTexture = NULL;
+	mWidth = 0;
+	mHeight = 0;
+}
+
+LTexture::~LTexture(){
+	// Free the hardware texture
+	free();
+}
+
+bool LTexture::loadFromFile( string path ){
+	// Free an image on hardware
+	free();
+
+	// create the fianl texture
+	SDL_Texture* newTexture = NULL;
+	// load to a surface from the path
+	SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
+	if( loadedSurface == NULL ){
+		cout << "loadFromFile Failure: " << IMG_GetError() << endl;
+	}
+	else{
+		// Set colour key for the loaded surface to cyan
+		SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB( loadedSurface->format, 0, 0xFF, 0xFF ) );
+		// Create texture from the surface pixels
+		newTexture = SDL_CreateTextureFromSurface( gRenderer, loadedSurface );
+		if( newTexture == NULL ){
+			cout << "loadFromFile Failure: " << SDL_GetError() << endl;
+		}
+		else{
+			mWidth = loadedSurface->w;
+			mHeight = loadedSurface->h;
+		}
+
+		// Get rid of the old surfce
+		SDL_FreeSurface( loadedSurface );
+	}
+
+	// Set the texture and return success
+	mTexture = newTexture;
+	return mTexture != NULL;
+}
+
+void LTexture::free(){
+	// free the texture if it exists
+	if( mTexture != NULL ){
+		SDL_DestroyTexture( mTexture );
+		mTexture = NULL;
+		mWidth = 0;
+		mHeight = 0;
+	}
+}
+
+void LTexture::render( int x, int y, SDL_Rect* clip ){
+	// set the rendering screen space
+	SDL_Rect renderQuad = { x, y, mWidth, mHeight };
+
+	if( clip != NULL ){
+		renderQuad.w = clip->w;
+		renderQuad.h = clip->h;
+	}
+
+	// copy the texture to the renderer
+	SDL_RenderCopy( gRenderer, mTexture, clip, &renderQuad );
+}
+
+void LTexture::setColour( Uint8 r, Uint8 g, Uint8 b ){
+	SDL_SetTextureColorMod( mTexture, r, g, b );
+}
+
+void LTexture::setBlendMode( SDL_BlendMode blending ){
+	SDL_SetTextureBlendMode( mTexture, blending );
+}
+
+void LTexture::setAlpha( Uint8 a ){
+	SDL_SetTextureAlphaMod( mTexture, a );
 }
