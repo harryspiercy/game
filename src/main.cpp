@@ -71,10 +71,13 @@ const int SCREENHEIGHT = 480;
 SDL_Renderer* gRenderer = NULL;
 
 // Texture to load image to
-SDL_Rect gSpriteClips[4];
+LTexture gColourCircleClipSheet;
+const int COLOUR_CIRCLE_CLIPS = 4;
+SDL_Rect gColourCircleClips[ COLOUR_CIRCLE_CLIPS ];
+
 LTexture gSpriteTextureSheet;
 const int WALKING_ANIMATION_FRAMES = 4;
-SDL_Rect gAnimSpriteClips[WALKING_ANIMATION_FRAMES];
+SDL_Rect gAnimSpriteClips[ WALKING_ANIMATION_FRAMES ];
 
 // Other example content
 LTexture gFadeTexture;
@@ -199,12 +202,12 @@ int main( int argc, char* args[] ){
 				SDL_RenderClear( gRenderer );
 
 				// Draw the modular background
-				gSpriteTextureSheet.setColour( red, green, blue );
+				gColourCircleClipSheet.setColour( red, green, blue );
 
-				gSpriteTextureSheet.render( 0, 0, &gSpriteClips[0] );
-				gSpriteTextureSheet.render( SCREENWIDTH - gSpriteClips[1].w, 0, &gSpriteClips[1] );
-				gSpriteTextureSheet.render( 0, SCREENHEIGHT - gSpriteClips[2].h, &gSpriteClips[2] );
-				gSpriteTextureSheet.render( SCREENWIDTH - gSpriteClips[3].w, SCREENHEIGHT - gSpriteClips[3].h, &gSpriteClips[3] );
+				gColourCircleClipSheet.render( 0, 0, &gColourCircleClips[0] );
+				gColourCircleClipSheet.render( SCREENWIDTH - gColourCircleClips[1].w, 0, &gColourCircleClips[1] );
+				gColourCircleClipSheet.render( 0, SCREENHEIGHT - gColourCircleClips[2].h, &gColourCircleClips[2] );
+				gColourCircleClipSheet.render( SCREENWIDTH - gColourCircleClips[3].w, SCREENHEIGHT - gColourCircleClips[3].h, &gColourCircleClips[3] );
 
 				// Render the current frame
 				SDL_Rect* currentClip = &gAnimSpriteClips[ frame / 4 ];
@@ -295,10 +298,21 @@ bool loadMedia(){
 		success = false;
 	}
 
-	gSpriteClips[0] = { 0, 0, 200, 200 };
-	gSpriteClips[1] = { 200, 0, 200, 200 };
-	gSpriteClips[2] = { 0, 200, 200, 200 };
-	gSpriteClips[3] = { 200, 200, 200, 200 };
+	path = string( "media/spriteSheet.png" );
+	if( !gColourCircleClipSheet.loadFromFile( path.c_str() ) ){
+		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
+		success = false;
+	}
+
+	gColourCircleClips[0] = { 0, 0, 200, 200 };
+	gColourCircleClips[1] = { 200, 0, 200, 200 };
+	gColourCircleClips[2] = { 0, 200, 200, 200 };
+	gColourCircleClips[3] = { 200, 200, 200, 200 };
+
+	gAnimSpriteClips[0] = { 0, 0, 100, 200 };
+	gAnimSpriteClips[1] = { 100, 0, 100, 200 };
+	gAnimSpriteClips[2] = { 200, 0, 100, 200 };
+	gAnimSpriteClips[3] = { 300, 0, 100, 200 };
 
 	path = string( "media/fadeIn.png" );
 	if( !gFadeTexture.loadFromFile( path.c_str() ) ){
@@ -308,11 +322,6 @@ bool loadMedia(){
 	else{
 		// Setup blending
 		gFadeTexture.setBlendMode( SDL_BLENDMODE_BLEND );
-
-		gAnimSpriteClips[0] = { 0, 0, 100, 200 };
-		gAnimSpriteClips[1] = { 100, 0, 100, 200 };
-		gAnimSpriteClips[2] = { 200, 0, 100, 200 };
-		gAnimSpriteClips[3] = { 300, 0, 100, 200 };
 	}
 
 	return success;
