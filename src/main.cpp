@@ -13,25 +13,33 @@ using std::string;
 //
 // Engine window
 SDL_Window* gWindow = NULL;
-const int SCREENWIDTH = 640;
-const int SCREENHEIGHT = 480;
+const int SCREENWIDTH = 800;
+const int SCREENHEIGHT = 600;
 
 // Texture renderer to link to window
 SDL_Renderer* gRenderer = NULL;
 
-// Texture to load image to
+// Texture for the title
+LTexture gTitleTexture;
+
+// Sprites: the coloured cirles sprite sheet
 LTexture gColourCircleClipSheet;
 const int COLOUR_CIRCLE_CLIPS = 4;
 SDL_Rect gColourCircleClips[ COLOUR_CIRCLE_CLIPS ];
 
+// Sprites: the animated man running
 LTexture gSpriteTextureSheet;
 const int WALKING_ANIMATION_FRAMES = 4;
 SDL_Rect gAnimSpriteClips[ WALKING_ANIMATION_FRAMES ];
 
-// Other example content
+// Overlay: example of alpha blending
 LTexture gFadeTexture;
 
+// Overlay: example of rotation and flipping the texture
+LTexture gCompassTexture;
 
+// Overlay: example of using text
+LTexture gSceneGuideText;
 
 //
 // -- Engine methods --
@@ -83,9 +91,19 @@ int main( int argc, char* args[] ){
 			Uint8 green = 255;
 			Uint8 blue = 255;
 
+			// Fade alpha variable
 			Uint8 alpha = 255;
 
+			// Animation frame
 			int frame = 0;
+
+			// Scene ids
+			int scene = 0;
+
+			// Texture rotational angle
+			double angle = 0;
+			SDL_RendererFlip flipType = SDL_FLIP_NONE;
+
 			//
 			// -- Game loop --
 			//
@@ -107,12 +125,6 @@ int main( int argc, char* args[] ){
 							case SDLK_DOWN:
 							if( alpha - 32 < 0 ) alpha = 0;
 							else alpha -= 32;
-							break;
-
-							case SDLK_LEFT:
-							break;
-
-							case SDLK_RIGHT:
 							break;
 
 							case SDLK_ESCAPE:
@@ -142,6 +154,45 @@ int main( int argc, char* args[] ){
 							case SDLK_d:
 							blue -= 32;
 							break;
+
+							case SDLK_z:
+							if( flipType != SDL_FLIP_HORIZONTAL ) flipType = SDL_FLIP_HORIZONTAL;
+							else flipType = SDL_FLIP_NONE;
+							break;
+
+							case SDLK_x:
+							if ( flipType != SDL_FLIP_VERTICAL ) flipType = SDL_FLIP_VERTICAL;
+							else flipType = SDL_FLIP_NONE;
+							break;
+
+							case SDLK_LEFT:
+							angle += 20;
+							break;
+
+							case SDLK_RIGHT:
+							angle -= 20;
+							break;
+
+							case SDLK_0:
+							scene = 0;
+							break;
+							
+							case SDLK_1:
+							scene = 1;
+							break;
+
+							case SDLK_2:
+							scene = 2;
+							break;
+
+							case SDLK_3:
+							scene = 3;
+							break;
+
+							case SDLK_4:
+							scene = 4;
+							break;
+
 							default:
 							break;
 						}
@@ -152,27 +203,46 @@ int main( int argc, char* args[] ){
 				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 				SDL_RenderClear( gRenderer );
 
-				// Draw the modular background
-				gColourCircleClipSheet.setColour( red, green, blue );
+				if( scene == 0 ){
+					// Draw the title
+					gTitleTexture.render( gRenderer, 0, 0 );
+				}
+				else if( scene == 1 ){
+					// Render the current frame
+					SDL_Rect* currentClip = &gAnimSpriteClips[ frame / 4 ];
+					gSpriteTextureSheet.render( gRenderer, ( SCREENWIDTH - currentClip->w ) / 2, ( SCREENHEIGHT - currentClip->h) / 2, currentClip);
 
-				gColourCircleClipSheet.render( gRenderer, 0, 0, &gColourCircleClips[0] );
-				gColourCircleClipSheet.render( gRenderer, SCREENWIDTH - gColourCircleClips[1].w, 0, &gColourCircleClips[1] );
-				gColourCircleClipSheet.render( gRenderer, 0, SCREENHEIGHT - gColourCircleClips[2].h, &gColourCircleClips[2] );
-				gColourCircleClipSheet.render( gRenderer, SCREENWIDTH - gColourCircleClips[3].w, SCREENHEIGHT - gColourCircleClips[3].h, &gColourCircleClips[3] );
+					// Go te the next frame
+					++frame;
 
-				// Render the current frame
-				SDL_Rect* currentClip = &gAnimSpriteClips[ frame / 4 ];
-				gSpriteTextureSheet.render( gRenderer, ( SCREENWIDTH - currentClip->w ) / 2, ( SCREENHEIGHT - currentClip->h) / 2, currentClip );
+					// Cycle Animation
+					if ( frame / 4 >= WALKING_ANIMATION_FRAMES ) frame = 0;
+				}
+				else if( scene == 2 ){
+					// Modular code example
+					gColourCircleClipSheet.setColour( red, green, blue );
 
-				// Go te the next frame
-				++frame;
+					gColourCircleClipSheet.render( gRenderer, 0, 0, &gColourCircleClips[0] );
+					gColourCircleClipSheet.render( gRenderer, SCREENWIDTH - gColourCircleClips[1].w, 0, &gColourCircleClips[1] );
+					gColourCircleClipSheet.render( gRenderer, 0, SCREENHEIGHT - gColourCircleClips[2].h, &gColourCircleClips[2] );
+					gColourCircleClipSheet.render( gRenderer, SCREENWIDTH - gColourCircleClips[3].w, SCREENHEIGHT - gColourCircleClips[3].h, &gColourCircleClips[3] );
+				}
+				else if( scene == 3){
+					// Draw the fader forground
+					gFadeTexture.setAlpha( alpha );
+					gFadeTexture.render( gRenderer, 0, 0 );
+				}
+				else if( scene == 4){
+					// Draw the compass texture
+					gCompassTexture.render( gRenderer, 0, 0, NULL, angle, NULL, flipType );
+				}
+				else if( scene == 0 ){
+					// Draw the title
+					gTitleTexture.render( gRenderer, 0, 0 );
+				}
 
-				// Cycle Animation
-				if ( frame / 4 >= WALKING_ANIMATION_FRAMES ) frame = 0;
-
-				// Draw the fader forground
-				gFadeTexture.setAlpha( alpha );
-				gFadeTexture.render( gRenderer, 0, 0 );
+				// Render the text
+				if( scene ) gSceneGuideText.render( gRenderer, ( SCREENWIDTH - gSceneGuideText.getWidth() ) / 2, ( SCREENHEIGHT - gSceneGuideText.getHeight() - 20 ) );
 
 				// Update screen
 				SDL_RenderPresent( gRenderer );
@@ -199,9 +269,19 @@ bool init(){
 	// Inisitialise flag
 	bool success = true;
 
+	int imgFlags = IMG_INIT_PNG;
+
 	// Initialise SDL
 	if( SDL_Init( SDL_INIT_VIDEO ) < 0 ){
 		cout << "SDL could not initialise! SDL Error :" << SDL_GetError() << endl;
+		success = false;
+	}
+	else if( !( IMG_Init( imgFlags ) & imgFlags ) ){
+		cout << "SDL Image could not initialise! SDL Error :" << IMG_GetError() << endl;
+		success = false;
+	}
+	else if( TTF_Init() == -1 ){
+		cout << "SDL_ ttf could not initialise! SDL Error :" << TTF_GetError() << endl;
 		success = false;
 	}
 	else{
@@ -225,13 +305,6 @@ bool init(){
 			else{
 				// Initialise renderer colour to white
 				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-
-				// initialise png loading
-				int imgFlags = IMG_INIT_PNG;
-				if( !(IMG_Init(imgFlags) & imgFlags) ){
-					cout << "SDL_image could not be initialised! SDL_image error : " << IMG_GetError() << endl;
-					success = false;
-				}
 			}
 		}
 	}
@@ -243,7 +316,13 @@ bool loadMedia(){
 	// Loading success flag
 	bool success = true;
 
-	string path( "media/SpriteSheetTemplate.png" );
+	string path( "media/title.png" );
+	if( !gTitleTexture.loadFromFile( gRenderer, path.c_str() ) ){
+		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
+		success = false;
+	}
+
+	path = string( "media/SpriteSheetTemplate.png" );
 	if( !gSpriteTextureSheet.loadFromFile( gRenderer, path.c_str() ) ){
 		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
 		success = false;
@@ -275,12 +354,42 @@ bool loadMedia(){
 		gFadeTexture.setBlendMode( SDL_BLENDMODE_BLEND );
 	}
 
+	path = string( "media/lazy.ttf" );
+	gSceneGuideText.mFont = TTF_OpenFont( path.c_str(), 18 );
+	if( gSceneGuideText.mFont == NULL ){
+		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
+		success = false;
+	}
+	else{
+		// Render text
+		SDL_Color textColour = { 0, 0, 0 };
+		if( !gSceneGuideText.loadFromRenderedText( gRenderer, "1. Anim - 2. Colour Modulation - 3. Alpha fade - 4. Rotation and flipping", textColour ) ){
+			cout << "Failed to render text texture!" << endl;
+			success = false;
+		}
+	}
+
+	path = string( "media/compass.png" );
+	if( !gCompassTexture.loadFromFile( gRenderer, path.c_str() ) ){
+		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
+		success = false;
+	}
+
 	return success;
 }
 
 void close(){
 	// Free loaded textures
+	gTitleTexture.free();
+	gColourCircleClipSheet.free();
 	gSpriteTextureSheet.free();
+	gFadeTexture.free();
+	gSceneGuideText.free();
+	gCompassTexture.free();
+
+	// Free global font
+	TTF_CloseFont( gSceneGuideText.mFont );
+	gSceneGuideText.mFont = NULL;
 
 	// Destroy renderer
 	SDL_DestroyRenderer( gRenderer );
@@ -291,6 +400,7 @@ void close(){
 	gWindow = NULL;
 
 	// Quit SDL Subsystems
+	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
 }

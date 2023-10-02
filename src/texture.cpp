@@ -10,6 +10,7 @@ LTexture::LTexture(){
 	// Initialise members
 	mTexture = NULL;
 	mWidth = 0;
+
 	mHeight = 0;
 }
 
@@ -51,6 +52,34 @@ bool LTexture::loadFromFile( SDL_Renderer* renderer, string path ){
 	return mTexture != NULL;
 }
 
+bool LTexture::loadFromRenderedText( SDL_Renderer* renderer, string textureText, SDL_Color textColour ){
+	// Remove exisitng texture
+	free();
+
+	// Render text surface
+	SDL_Surface* textSurface = TTF_RenderText_Solid( mFont, textureText.c_str(), textColour );
+	if ( textSurface == NULL ){
+		cout << "loadFromRenderedText Failure: Didn't load surface. " << SDL_GetError() << endl;
+	}
+	else {
+		// Create texture from the surface
+		mTexture = SDL_CreateTextureFromSurface( renderer, textSurface );
+		if( mTexture == NULL ){
+			cout << "loadFromRenderedText Failure: Didn't load texture. " << SDL_GetError() << endl;
+		}
+		else{
+			//Get image dimensions
+			mWidth = textSurface->w;
+			mHeight = textSurface->h;
+		}
+		
+		// Get rid of used surface
+		SDL_FreeSurface( textSurface );
+	}
+
+	return mTexture != NULL;
+}
+
 void LTexture::free(){
 	// free the texture if it exists
 	if( mTexture != NULL ){
@@ -61,7 +90,7 @@ void LTexture::free(){
 	}
 }
 
-void LTexture::render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip ){
+void LTexture::render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip,  double angle, SDL_Point* centre, SDL_RendererFlip flip ){
 	// set the rendering screen space
 	SDL_Rect renderQuad = { x, y, mWidth, mHeight };
 
@@ -71,7 +100,7 @@ void LTexture::render( SDL_Renderer* renderer, int x, int y, SDL_Rect* clip ){
 	}
 
 	// copy the texture to the renderer
-	SDL_RenderCopy( renderer, mTexture, clip, &renderQuad );
+	SDL_RenderCopyEx( renderer, mTexture, clip, &renderQuad, angle, centre, flip );
 }
 
 void LTexture::setColour( Uint8 r, Uint8 g, Uint8 b ){

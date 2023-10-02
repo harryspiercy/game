@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['setalpha_6',['setAlpha',['../classLTexture.html#a62b5fe1af726c58d15ede4cdf8b1cede',1,'LTexture']]],
-  ['setblendmode_7',['setBlendMode',['../classLTexture.html#aa1fe07070f715bf3981c129ae1619a4e',1,'LTexture']]],
-  ['setcolour_8',['setColour',['../classLTexture.html#a04647eea8f785b53820b3931b32e4ed9',1,'LTexture']]]
+  ['render_7',['render',['../classLTexture.html#a057b7906c2117301639012d22c052085',1,'LTexture']]]
 ];
