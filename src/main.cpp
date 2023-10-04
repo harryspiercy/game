@@ -3,6 +3,7 @@
 #include<iostream>
 #include<string>
 #include"texture.h"
+#include"button.h"
 
 using std::cout;
 using std::endl;
@@ -33,6 +34,7 @@ const int WALKING_ANIMATION_FRAMES = 4;
 SDL_Rect gAnimSpriteClips[ WALKING_ANIMATION_FRAMES ];
 
 // Overlay: example of alpha blending
+LTexture gBackground;
 LTexture gFadeTexture;
 
 // Overlay: example of rotation and flipping the texture
@@ -40,6 +42,9 @@ LTexture gCompassTexture;
 
 // Overlay: example of using text
 LTexture gSceneGuideText;
+
+// Overlay: example of some mouse inputs
+LButton gButtons[TOTAL_BUTTONS];
 
 //
 // -- Engine methods --
@@ -114,6 +119,7 @@ int main( int argc, char* args[] ){
 					if( e.type == SDL_QUIT ){
 						quit = true;
 					}
+					// Handle key down events
 					else if( e.type == SDL_KEYDOWN ){
 						switch( e.key.keysym.sym ){
 
@@ -193,9 +199,17 @@ int main( int argc, char* args[] ){
 							scene = 4;
 							break;
 
+							case SDLK_5:
+							scene = 5;
+							break;
+
 							default:
 							break;
 						}
+					}
+					// Handle button events
+					for( int i = 0; i < TOTAL_BUTTONS; ++i ){
+						gButtons[ i ].handleEvent( &e );
 					}
 				}
 
@@ -228,6 +242,8 @@ int main( int argc, char* args[] ){
 					gColourCircleClipSheet.render( gRenderer, SCREENWIDTH - gColourCircleClips[3].w, SCREENHEIGHT - gColourCircleClips[3].h, &gColourCircleClips[3] );
 				}
 				else if( scene == 3){
+					// Draw the background
+					gBackground.render( gRenderer, 0, 0);
 					// Draw the fader forground
 					gFadeTexture.setAlpha( alpha );
 					gFadeTexture.render( gRenderer, 0, 0 );
@@ -235,6 +251,12 @@ int main( int argc, char* args[] ){
 				else if( scene == 4){
 					// Draw the compass texture
 					gCompassTexture.render( gRenderer, 0, 0, NULL, angle, NULL, flipType );
+				}
+				else if( scene == 5){
+					// Mouse testing scene
+					for( int i = 0; i < TOTAL_BUTTONS; ++i){
+						gButtons[ i ].render( gRenderer );
+					}
 				}
 				else if( scene == 0 ){
 					// Draw the title
@@ -344,6 +366,12 @@ bool loadMedia(){
 	gAnimSpriteClips[2] = { 200, 0, 100, 200 };
 	gAnimSpriteClips[3] = { 300, 0, 100, 200 };
 
+	path = string( "media/background.png" );
+	if( !gBackground.loadFromFile( gRenderer, path.c_str() ) ){
+		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
+		success = false;
+	}
+
 	path = string( "media/fadeIn.png" );
 	if( !gFadeTexture.loadFromFile( gRenderer, path.c_str() ) ){
 		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
@@ -373,6 +401,39 @@ bool loadMedia(){
 	if( !gCompassTexture.loadFromFile( gRenderer, path.c_str() ) ){
 		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
 		success = false;
+	}
+
+
+	if( !gButtons[ 0 ].loadButtonSprites( gRenderer )){
+		cout << "Button failed to open" << endl;
+		success = false;
+	}
+	else{
+		gButtons[ 0 ].setPosition( 0, 0 );
+	}
+
+	if( !gButtons[ 1 ].loadButtonSprites( gRenderer )){
+		cout << "Button failed to open" << endl;
+		success = false;
+	}
+	else{
+		gButtons[ 1 ].setPosition( SCREENWIDTH / 2, 0 );
+	}
+
+	if( !gButtons[ 2 ].loadButtonSprites( gRenderer )){
+		cout << "Button failed to open" << endl;
+		success = false;
+	}
+	else{
+		gButtons[ 2 ].setPosition( 0, SCREENHEIGHT / 2 );
+	}
+
+	if( !gButtons[ 3 ].loadButtonSprites( gRenderer )){
+		cout << "Button failed to open" << endl;
+		success = false;
+	}
+	else{
+		gButtons[ 3 ].setPosition( SCREENWIDTH / 2, SCREENHEIGHT / 2 );
 	}
 
 	return success;

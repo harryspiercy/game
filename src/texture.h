@@ -28,6 +28,7 @@ public:
 	*/
 	bool loadFromFile( SDL_Renderer* renderer, string path );
 
+	#if defined(SDL_TTF_MAJOR_VERSION)
 	//! Load the required texture clips from the ttf file for the provided string
 	/*! 
 	* \param renderer Global renderer
@@ -36,6 +37,7 @@ public:
 	* \return success of loading text
 	*/
 	bool loadFromRenderedText( SDL_Renderer* renderer, string textureText, SDL_Color textColour );
+	#endif
 
 	//! Free the hardware texture
 	void free();

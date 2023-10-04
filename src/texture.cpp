@@ -52,6 +52,7 @@ bool LTexture::loadFromFile( SDL_Renderer* renderer, string path ){
 	return mTexture != NULL;
 }
 
+#if defined(SDL_TTF_MAJOR_VERSION)
 bool LTexture::loadFromRenderedText( SDL_Renderer* renderer, string textureText, SDL_Color textColour ){
 	// Remove exisitng texture
 	free();
@@ -79,6 +80,7 @@ bool LTexture::loadFromRenderedText( SDL_Renderer* renderer, string textureText,
 
 	return mTexture != NULL;
 }
+#endif
 
 void LTexture::free(){
 	// free the texture if it exists
