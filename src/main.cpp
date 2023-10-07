@@ -125,13 +125,13 @@ int main( int argc, char* args[] ){
 				}
 
 				// Get the current key states
-				//const Uint8* currentKeyStates = SDL_GetKeyboardState( NULL );
 				core.updateKeyState();
 
 				// Set exit flag
 				if( core.getKeyState( SDL_SCANCODE_ESCAPE ) == KEY_RELEASED ){
 					quit = true;
 				}
+
 				// Test key states to change scene
 				if( core.getKeyState( SDL_SCANCODE_0 ) == KEY_PRESSED ){
 					scene = 0;
@@ -214,11 +214,11 @@ int main( int argc, char* args[] ){
 				// ---
 				// Alpha fading example
 				else if( scene == 3 ){
-					if( core.getKeyState( SDL_SCANCODE_W ) == KEY_DOWN ){
+					if( core.getKeyState( SDL_SCANCODE_UP ) == KEY_DOWN ){
 						if( alpha + 32 > 255 ) alpha = 255;
 						else alpha += 32;
 					}
-					else if( core.getKeyState( SDL_SCANCODE_S ) == KEY_DOWN ){
+					else if( core.getKeyState( SDL_SCANCODE_DOWN ) == KEY_DOWN ){
 						if( alpha - 32 < 0 ) alpha = 0;
 						else alpha -= 32;
 					}
@@ -262,13 +262,6 @@ int main( int argc, char* args[] ){
 					for( int i = 0; i < TOTAL_BUTTONS; ++i){
 						gButtons[ i ].render( gRenderer );
 					}
-				}
-
-				// ---
-				// Title scene
-				else if( scene == 0 ){
-					// Draw the title
-					gTitleTexture.render( gRenderer, 0, 0 );
 				}
 
 				// Render the text

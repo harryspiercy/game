@@ -87,7 +87,6 @@ void Core::present(){
 }
 
 KeyState Core::getKeyState( SDL_Scancode scancode ){
-  
     // Is the key currently down?
     bool currentDownState = currentKeyStates[ scancode ];
 
