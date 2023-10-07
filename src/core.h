@@ -4,6 +4,7 @@
 #include "common.h"
 
 struct Resolution{
+    Resolution() : x( 0 ), y( 0 ) {}
     Resolution( int newX, int newY ) : x( newX ), y( newY ) {}
     int x; int y;
 };
@@ -38,7 +39,6 @@ class Core{
 
     const Uint8* currentKeyStates;
 
-
 public:
     //! Initialise variables
     /*!
@@ -53,7 +53,7 @@ public:
     //! Initialise SDL and create window
     /*! 
     */
-   bool init();
+    bool init();
 
     //! Shutdown SDL and destroy window.
     /*! 

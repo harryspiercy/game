@@ -17,6 +17,7 @@ using std::endl;
 using std::vector;
 using std::array;
 using std::map;
+using std::pair;
 
 #include "core.h"
 

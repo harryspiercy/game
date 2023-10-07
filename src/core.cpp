@@ -93,19 +93,19 @@ KeyState Core::getKeyState( SDL_Scancode scancode ){
 
     // Was the key marked as down in the map?
     bool previousDownState = false;
-    std::map<SDL_Scancode, bool>::iterator pos = downKeys.find( scancode );
-    if( pos != downKeys.end() ){
-        previousDownState = pos->second;
+    map<SDL_Scancode, bool>::iterator mapEntry = downKeys.find( scancode );
+    if( mapEntry != downKeys.end() ){
+        previousDownState = mapEntry->second;
     }
     // If not present insert the scancode to the map.
     else{
-        downKeys.insert( std::pair<SDL_Scancode, bool>( scancode, false ) );
+        downKeys.insert( pair<SDL_Scancode, bool>( scancode, false ) );
         previousDownState = false;
     }
 
     // If key was just pressed
     if( currentDownState && !previousDownState ){
-        pos->second = true;
+        mapEntry->second = true;
         return KEY_PRESSED;
     }
     // If key is held down
@@ -114,7 +114,7 @@ KeyState Core::getKeyState( SDL_Scancode scancode ){
     }
     // If key is just released
     else if( !currentDownState && previousDownState ){
-        pos->second = false;
+        mapEntry->second = false;
         return KEY_RELEASED;
     }
     // If key is up
