@@ -5,14 +5,14 @@
 //
 // -- Engine globals --
 //
-// Engine window
-SDL_Window* gWindow = NULL;
-const int SCREENWIDTH = 800;
-const int SCREENHEIGHT = 600;
-
-// Texture renderer to link to window
+// Create the core object
+Core core;
 SDL_Renderer* gRenderer = NULL;
+Resolution* gResolution = NULL;
 
+//
+// -- Game globals --
+//
 // Texture for the title
 LTexture gTitleTexture;
 
@@ -37,7 +37,7 @@ LTexture gCompassTexture;
 LTexture gSceneGuideText;
 
 // Overlay: example of some mouse inputs
-LButton gButtons[TOTAL_BUTTONS];
+LButton gButtons[ TOTAL_BUTTONS ];
 
 // Overlay: textures for keyboard input example
 LTexture gPTexture;
@@ -45,46 +45,40 @@ LTexture gOTexture;
 LTexture gITexture;
 LTexture gUTexture;
 
-
-//
-// -- Engine methods --
-//
-
-//
-// -- Game globals --
-//
-
-
 //
 // -- Game methods --
 //
-// Start up sdl and create a window
-bool init();
 // load media
 bool loadMedia();
 // Frees media and shuts down SDL
-void close();
+void closeMedia();
 
 
 //
 // --- Program --//
 //
 int main( int argc, char* args[] ){
+
+	cout << "Entered" << endl;
 	// Start up SDL and create window
-	if( !init() ){
+	if( !core.init() ){
 		cout << "Failed to init" << endl;
 	}
 	else{
+		// Set engine globals once successfully initialised
+		gRenderer = core.getRenderer();
+		gResolution = core.getResolution();
+
 		// Load media
 		if( !loadMedia() ){
 			cout << "Failed to load media" << endl;
 		}
 		else{
+			cout << "Successfully loaded media" << endl;
 			//
 			// -- Pregame --
+			// Load the default state of the game loop
 			//
-
-			// Load the default state
 
 			// Create an event handler
 			SDL_Event e;
@@ -109,151 +103,92 @@ int main( int argc, char* args[] ){
 			double angle = 0;
 			SDL_RendererFlip flipType = SDL_FLIP_NONE;
 
+			// Button positions
+			gButtons[ 0 ].setPosition( 0, 0 );
+			gButtons[ 1 ].setPosition( gResolution->x / 2, 0 );
+			gButtons[ 2 ].setPosition( 0, gResolution->y / 2 );
+			gButtons[ 3 ].setPosition( gResolution->x / 2, gResolution->y / 2 );
+
 			// Current rendered texture
 			LTexture* currentTexture = NULL;
+
+			if ( gRenderer == NULL ){
+				cout << "gRenderer is null" << endl;
+			}
+			else {
+				cout << "gRenderer is valid" << endl;
+			}
 
 			//
 			// -- Game loop --
 			//
 			while( !quit ){
+
 				// Poll hardware events
 				while( SDL_PollEvent( &e ) != 0 ){
-					// Exit event
+
+					// Handle exit event
 					if( e.type == SDL_QUIT ){
 						quit = true;
 					}
-					// Handle key down events
-					else if( e.type == SDL_KEYDOWN ){
-						switch( e.key.keysym.sym ){
 
-							case SDLK_UP:
-							if( alpha + 32 > 255 ) alpha = 255;
-							else alpha += 32;
-							break;
-
-							case SDLK_DOWN:
-							if( alpha - 32 < 0 ) alpha = 0;
-							else alpha -= 32;
-							break;
-
-							case SDLK_ESCAPE:
-							quit = true;
-							break;
-
-							case SDLK_q:
-							red += 32;
-							break;
-
-							case SDLK_a:
-							red -= 32;
-							break;
-
-							case SDLK_w:
-							green += 32;
-							break;
-
-							case SDLK_s:
-							green -= 32;
-							break;
-
-							case SDLK_e:
-							blue += 32;
-							break;
-
-							case SDLK_d:
-							blue -= 32;
-							break;
-
-							case SDLK_z:
-							if( flipType != SDL_FLIP_HORIZONTAL ) flipType = SDL_FLIP_HORIZONTAL;
-							else flipType = SDL_FLIP_NONE;
-							break;
-
-							case SDLK_x:
-							if ( flipType != SDL_FLIP_VERTICAL ) flipType = SDL_FLIP_VERTICAL;
-							else flipType = SDL_FLIP_NONE;
-							break;
-
-							case SDLK_LEFT:
-							angle += 20;
-							break;
-
-							case SDLK_RIGHT:
-							angle -= 20;
-							break;
-
-							case SDLK_0:
-							scene = 0;
-							break;
-							
-							case SDLK_1:
-							scene = 1;
-							break;
-
-							case SDLK_2:
-							scene = 2;
-							break;
-
-							case SDLK_3:
-							scene = 3;
-							break;
-
-							case SDLK_4:
-							scene = 4;
-							break;
-
-							case SDLK_5:
-							scene = 5;
-							break;
-
-							case SDLK_6:
-							scene = 6;
-							break;
-
-							default:
-							break;
-						}
-					}
 					// Handle button events
 					for( int i = 0; i < TOTAL_BUTTONS; ++i ){
 						gButtons[ i ].handleEvent( &e );
 					}
 				}
 
-				// Set texture based on current keystate
+				// Get the current key states
 				const Uint8* currentKeyStates = SDL_GetKeyboardState( NULL );
-				if( currentKeyStates[ SDL_SCANCODE_P ] ){
-					cout << "p Down" << endl;
-					currentTexture = &gPTexture;
+
+				// Set exit flag
+				if( currentKeyStates[ SDL_SCANCODE_ESCAPE ] ){
+					quit = true;
 				}
-				else if( currentKeyStates[ SDL_SCANCODE_O ] ){
-					cout << "o Down" << endl;
-					currentTexture = &gOTexture;
+				// Test key states to change scene
+				if( currentKeyStates[ SDL_SCANCODE_0 ] ){
+					scene = 0;
 				}
-				else if( currentKeyStates[ SDL_SCANCODE_I ] ){
-					cout << "i Down" << endl;
-					currentTexture = &gITexture;
+				else if( currentKeyStates[ SDL_SCANCODE_1 ] ){
+					scene = 1;
 				}
-				else if( currentKeyStates[ SDL_SCANCODE_U ] ){
-					cout << "u Down" << endl;
-					currentTexture = &gUTexture;
+				else if( currentKeyStates[ SDL_SCANCODE_2 ] ){
+					scene = 2;
 				}
-				else{
-					currentTexture = NULL;
+				else if( currentKeyStates[ SDL_SCANCODE_3 ] ){
+					scene = 3;
 				}
+				else if( currentKeyStates[ SDL_SCANCODE_4 ] ){
+					scene = 4;
+				}
+				else if( currentKeyStates[ SDL_SCANCODE_5 ] ){
+					scene = 5;
+				}
+				else if( currentKeyStates[ SDL_SCANCODE_6 ] ){
+					scene = 6;
+				}
+
+				// ------
+				// Start of draw call
+				// ------
 
 				// Clear the screen
-				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-				SDL_RenderClear( gRenderer );
+				core.setDrawColour( 0xFF, 0xFF, 0xFF, 0xFF );
+				core.clearRenderer();
 
+				// ---
+				// Title screen scene
 				if( scene == 0 ){
 					// Draw the title
 					gTitleTexture.render( gRenderer, 0, 0 );
 				}
+
+				// ---
+				// Sprite animation example
 				else if( scene == 1 ){
 					// Render the current frame
 					SDL_Rect* currentClip = &gAnimSpriteClips[ frame / 4 ];
-					gSpriteTextureSheet.render( gRenderer, ( SCREENWIDTH - currentClip->w ) / 2, ( SCREENHEIGHT - currentClip->h) / 2, currentClip);
+					gSpriteTextureSheet.render( gRenderer, ( gResolution->x - currentClip->w ) / 2, ( gResolution->y - currentClip->h) / 2, currentClip);
 
 					// Go te the next frame
 					++frame;
@@ -261,47 +196,135 @@ int main( int argc, char* args[] ){
 					// Cycle Animation
 					if ( frame / 4 >= WALKING_ANIMATION_FRAMES ) frame = 0;
 				}
+
+				// ---
+				// Colour mod example
 				else if( scene == 2 ){
-					// Modular code example
+					if( currentKeyStates[ SDL_SCANCODE_Q ] ){
+						red += 4;
+					}
+					else if( currentKeyStates[ SDL_SCANCODE_A ] ){
+						red -= 4;
+					}
+					if( currentKeyStates[ SDL_SCANCODE_W ] ){
+						green += 4;
+					}
+					else if( currentKeyStates[ SDL_SCANCODE_S ] ){
+						green -= 4;
+					}
+					if( currentKeyStates[ SDL_SCANCODE_E ] ){
+						blue += 4;
+					}
+					else if( currentKeyStates[ SDL_SCANCODE_D ] ){
+						blue -= 4;
+					}
+
 					gColourCircleClipSheet.setColour( red, green, blue );
 
 					gColourCircleClipSheet.render( gRenderer, 0, 0, &gColourCircleClips[0] );
-					gColourCircleClipSheet.render( gRenderer, SCREENWIDTH - gColourCircleClips[1].w, 0, &gColourCircleClips[1] );
-					gColourCircleClipSheet.render( gRenderer, 0, SCREENHEIGHT - gColourCircleClips[2].h, &gColourCircleClips[2] );
-					gColourCircleClipSheet.render( gRenderer, SCREENWIDTH - gColourCircleClips[3].w, SCREENHEIGHT - gColourCircleClips[3].h, &gColourCircleClips[3] );
+					gColourCircleClipSheet.render( gRenderer, gResolution->x - gColourCircleClips[1].w, 0, &gColourCircleClips[1] );
+					gColourCircleClipSheet.render( gRenderer, 0, gResolution->y - gColourCircleClips[2].h, &gColourCircleClips[2] );
+					gColourCircleClipSheet.render( gRenderer, gResolution->x - gColourCircleClips[3].w, gResolution->y - gColourCircleClips[3].h, &gColourCircleClips[3] );
 				}
+
+				// ---
+				// Alpha fading example
 				else if( scene == 3 ){
+					if( currentKeyStates[ SDL_SCANCODE_W ] ){
+						if( alpha + 32 > 255 ) alpha = 255;
+						else alpha += 32;
+					}
+					else if( currentKeyStates[ SDL_SCANCODE_S ] ){
+						if( alpha - 32 < 0 ) alpha = 0;
+						else alpha -= 32;
+					}
+
 					// Draw the background
 					gBackground.render( gRenderer, 0, 0);
 					// Draw the fader forground
 					gFadeTexture.setAlpha( alpha );
 					gFadeTexture.render( gRenderer, 0, 0 );
 				}
+
+				// ---
+				// Texture flip and rotation example
 				else if( scene == 4 ){
+					if( currentKeyStates[ SDL_SCANCODE_A ] ){
+						angle -= 20;
+					}
+					else if ( currentKeyStates[ SDL_SCANCODE_D ] ){
+						angle += 20;
+					}
+
+					if( currentKeyStates[ SDL_SCANCODE_LEFT ] 
+					|| currentKeyStates[ SDL_SCANCODE_RIGHT ] ){
+						if( flipType != SDL_FLIP_HORIZONTAL ) flipType = SDL_FLIP_HORIZONTAL;
+						else flipType = SDL_FLIP_NONE;
+					}
+					if( currentKeyStates[ SDL_SCANCODE_UP ] 
+					|| currentKeyStates[ SDL_SCANCODE_DOWN ] ){
+						if ( flipType != SDL_FLIP_VERTICAL ) flipType = SDL_FLIP_VERTICAL;
+						else flipType = SDL_FLIP_NONE;
+					}
+
 					// Draw the compass texture
 					gCompassTexture.render( gRenderer, 0, 0, NULL, angle, NULL, flipType );
 				}
+
+				// ---
+				// Mouse button example
 				else if( scene == 5 ){
-					// Mouse testing scene
+					// Render all the buttons
 					for( int i = 0; i < TOTAL_BUTTONS; ++i){
 						gButtons[ i ].render( gRenderer );
 					}
 				}
+
+				// ---
+				// Key state example
 				else if( scene == 6 ){
+					// Check for key inputs 
+					if( currentKeyStates[ SDL_SCANCODE_P ] ){
+						cout << "p Down" << endl;
+						currentTexture = &gPTexture;
+					}
+					else if( currentKeyStates[ SDL_SCANCODE_O ] ){
+						cout << "o Down" << endl;
+						currentTexture = &gOTexture;
+					}
+					else if( currentKeyStates[ SDL_SCANCODE_I ] ){
+						cout << "i Down" << endl;
+						currentTexture = &gITexture;
+					}
+					else if( currentKeyStates[ SDL_SCANCODE_U ] ){
+						cout << "u Down" << endl;
+						currentTexture = &gUTexture;
+					}
+					else{
+						currentTexture = NULL;
+					}
+
 					if( currentTexture ){
 						currentTexture->render( gRenderer, 0, 0 );
 					}
 				}
+
+				// ---
+				// Title scene
 				else if( scene == 0 ){
 					// Draw the title
 					gTitleTexture.render( gRenderer, 0, 0 );
 				}
 
 				// Render the text
-				if( scene ) gSceneGuideText.render( gRenderer, ( SCREENWIDTH - gSceneGuideText.getWidth() ) / 2, ( SCREENHEIGHT - gSceneGuideText.getHeight() - 20 ) );
+				if( scene ) gSceneGuideText.render( gRenderer, ( gResolution->x - gSceneGuideText.getWidth() ) / 2, ( gResolution->y - gSceneGuideText.getHeight() - 20 ) );
 
 				// Update screen
-				SDL_RenderPresent( gRenderer );
+				core.present();
+
+				// -----
+				// End of draw call
+				// -----
 			}
 			//
 			// -- Close game --
@@ -310,95 +333,48 @@ int main( int argc, char* args[] ){
 		//
 		// -- Close media --
 		//
+		closeMedia();
 	}
 	//
 	// -- Close engine --
 	//
-
-	// Free resources and close SDL
-	close();
+	core.close();
 
 	return 0;
-}
-
-bool init(){
-	// Inisitialise flag
-	bool success = true;
-
-	int imgFlags = IMG_INIT_PNG;
-
-	// Initialise SDL
-	if( SDL_Init( SDL_INIT_VIDEO ) < 0 ){
-		cout << "SDL could not initialise! SDL Error :" << SDL_GetError() << endl;
-		success = false;
-	}
-	else if( !( IMG_Init( imgFlags ) & imgFlags ) ){
-		cout << "SDL Image could not initialise! SDL Error :" << IMG_GetError() << endl;
-		success = false;
-	}
-	else if( TTF_Init() == -1 ){
-		cout << "SDL_ ttf could not initialise! SDL Error :" << TTF_GetError() << endl;
-		success = false;
-	}
-	else{
-		// Create window
-		gWindow = SDL_CreateWindow(
-			"SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-			SCREENWIDTH, SCREENHEIGHT, SDL_WINDOW_SHOWN
-		);
-
-		if( gWindow == NULL ){
-			cout << "Window could not be created! SDL Error : " << SDL_GetError() << endl;
-			success = false;
-		}
-		else{
-			// create renderer for widow.
-			gRenderer = SDL_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
-			if( gRenderer == NULL ){
-				cout << "Renderer could not be created! SDL Error : " << SDL_GetError() << endl;
-				success = false;
-			}
-			else{
-				// Initialise renderer colour to white
-				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-			}
-		}
-	}
-
-	return success;
 }
 
 bool loadMedia(){
 	// Loading success flag
 	bool success = true;
 
+	// Load title page
 	string path( "media/title.png" );
 	if( !gTitleTexture.loadFromFile( gRenderer, path.c_str() ) ){
 		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
 		success = false;
 	}
 
+	// Load animation example media
 	path = string( "media/SpriteSheetTemplate.png" );
 	if( !gSpriteTextureSheet.loadFromFile( gRenderer, path.c_str() ) ){
 		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
 		success = false;
 	}
+	gAnimSpriteClips[0] = { 0, 0, 100, 200 };
+	gAnimSpriteClips[1] = { 100, 0, 100, 200 };
+	gAnimSpriteClips[2] = { 200, 0, 100, 200 };
+	gAnimSpriteClips[3] = { 300, 0, 100, 200 };
 
+	// Load circle sprite sheet for colour mod example
 	path = string( "media/spriteSheet.png" );
 	if( !gColourCircleClipSheet.loadFromFile( gRenderer, path.c_str() ) ){
 		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
 		success = false;
 	}
-
 	gColourCircleClips[0] = { 0, 0, 200, 200 };
 	gColourCircleClips[1] = { 200, 0, 200, 200 };
 	gColourCircleClips[2] = { 0, 200, 200, 200 };
 	gColourCircleClips[3] = { 200, 200, 200, 200 };
-
-	gAnimSpriteClips[0] = { 0, 0, 100, 200 };
-	gAnimSpriteClips[1] = { 100, 0, 100, 200 };
-	gAnimSpriteClips[2] = { 200, 0, 100, 200 };
-	gAnimSpriteClips[3] = { 300, 0, 100, 200 };
 
 	path = string( "media/background.png" );
 	if( !gBackground.loadFromFile( gRenderer, path.c_str() ) ){
@@ -442,32 +418,17 @@ bool loadMedia(){
 		cout << "Button failed to open" << endl;
 		success = false;
 	}
-	else{
-		gButtons[ 0 ].setPosition( 0, 0 );
-	}
-
 	if( !gButtons[ 1 ].loadButtonSprites( gRenderer )){
 		cout << "Button failed to open" << endl;
 		success = false;
 	}
-	else{
-		gButtons[ 1 ].setPosition( SCREENWIDTH / 2, 0 );
-	}
-
 	if( !gButtons[ 2 ].loadButtonSprites( gRenderer )){
 		cout << "Button failed to open" << endl;
 		success = false;
 	}
-	else{
-		gButtons[ 2 ].setPosition( 0, SCREENHEIGHT / 2 );
-	}
-
 	if( !gButtons[ 3 ].loadButtonSprites( gRenderer )){
 		cout << "Button failed to open" << endl;
 		success = false;
-	}
-	else{
-		gButtons[ 3 ].setPosition( SCREENWIDTH / 2, SCREENHEIGHT / 2 );
 	}
 
 	if( !gPTexture.loadFromFile( gRenderer, "media/ptex.png" ) ){
@@ -486,7 +447,7 @@ bool loadMedia(){
 	return success;
 }
 
-void close(){
+void closeMedia(){
 	// Free loaded textures
 	gTitleTexture.free();
 	gColourCircleClipSheet.free();
@@ -498,21 +459,4 @@ void close(){
 	gOTexture.free();
 	gITexture.free();
 	gUTexture.free();
-
-	// Free global font
-	TTF_CloseFont( gSceneGuideText.mFont );
-	gSceneGuideText.mFont = NULL;
-
-	// Destroy renderer
-	SDL_DestroyRenderer( gRenderer );
-	gRenderer = NULL;
-
-	// Destroy window
-	SDL_DestroyWindow( gWindow );
-	gWindow = NULL;
-
-	// Quit SDL Subsystems
-	TTF_Quit();
-	IMG_Quit();
-	SDL_Quit();
 }

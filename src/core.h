@@ -35,7 +35,7 @@ public:
     //! Initialise variables
     /*!
     */
-    Core();
+    Core( int x = 800, int y = 600 );
 
     //! Release variable memeory
     /*! 
@@ -50,22 +50,37 @@ public:
     //! Shutdown SDL and destroy window.
     /*! 
     */
-   void close();
+    void close();
 
     //! Return the address of the game window
     /*! 
     */
-   const inline SDL_Window* getWindow() { return window; }
+    inline SDL_Window* getWindow() { return window; }
 
     //! Return the address of the game window renderer
     /*! 
     */
-    const inline SDL_Renderer* getRenderer() { return renderer; }
+    inline SDL_Renderer* getRenderer() { return renderer; }
 
     //! Return the resolution of the display
     /*! 
     */
-    const inline Resolution getResolution() { return resolution; }
+    inline Resolution* getResolution() { return &resolution; }
+
+    //! Clear the renderer
+    /*! Use as the start of a new draw call
+    */
+   void clearRenderer();
+
+    //! Set the renderer draw colour
+    /*! 
+    */
+   void setDrawColour( Uint8 x, Uint8 y, Uint8 z, Uint8 a );
+
+    //! Present the renderer to the window.
+    /*!
+    */
+   void present();
 
 };
 

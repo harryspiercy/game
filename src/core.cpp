@@ -1,7 +1,7 @@
 #include "core.h"
 
-Core::Core() : 
-    window( NULL ), resolution(Resolution( 0, 0 ) ),
+Core::Core( int x, int y) : 
+    window( NULL ), resolution( x, y ),
     renderer( NULL ){
 }
 
@@ -73,4 +73,16 @@ void Core::close(){
 	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
+}
+
+void Core::clearRenderer(){
+    SDL_RenderClear( renderer );
+}
+
+void Core::setDrawColour( Uint8 x, Uint8 y, Uint8 z, Uint8 a ){
+    SDL_SetRenderDrawColor( renderer, x, y, z, a );
+}
+
+void Core::present(){
+    SDL_RenderPresent( renderer );
 }
