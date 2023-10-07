@@ -1,13 +1,9 @@
 #ifndef _BUTTON_H_
 #define _BUTTON_H_
 
-#include <SDL2/SDL.h>
-#include <vector>
-#include <string>
-#include "texture.h"
+#include "common.h"
 
-using std::vector;
-using std::string;
+#include "texture.h"
 
 const int BUTTON_WIDTH = 400;
 const int BUTTON_HEIGHT = 300;
@@ -26,6 +22,12 @@ public:
     *
     */
     LButton();
+
+    //! Close down the button
+    /*!
+    *
+    */
+    ~LButton();
 
     //! Load the button clips
     /*!

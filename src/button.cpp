@@ -1,11 +1,11 @@
 #include "button.h"
-#include <iostream>
-using std::cout; using std::endl;
 
-LButton::LButton(){
-    mPosition = { 0, 0 };
+LButton::LButton() : mPosition( SDL_Point({ 0, 0 }) ), 
+    mCurrentSprite( BUTTON_SPRITE_MOUSE_OUT ){
+}
 
-    mCurrentSprite = BUTTON_SPRITE_MOUSE_OUT;
+LButton::~LButton(){
+    mButtonSpriteSheet.free();
 }
 
 bool LButton::loadButtonSprites( SDL_Renderer* renderer, string path ){

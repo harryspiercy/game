@@ -1,13 +1,7 @@
 #ifndef _TEXTURE_H_
 #define _TEXTURE_H_
 
-#include<string>
-#include<iostream>
-#include<SDL2/SDL.h>
-#include<SDL2/SDL_image.h>
-#include<SDL2/SDL_ttf.h>
-
-using std::string;
+#include "common.h"
 
 //! Texture wrapper class.texture.h
 /*! A class which wraps around the functionailty of the SDL Texture class.

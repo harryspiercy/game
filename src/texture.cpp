@@ -3,15 +3,7 @@
 using std::cout;
 using std::endl;
 
-//
-// -- Texture methods --
-//
-LTexture::LTexture(){
-	// Initialise members
-	mTexture = NULL;
-	mWidth = 0;
-
-	mHeight = 0;
+LTexture::LTexture() : mTexture( NULL ), mWidth( 0 ), mHeight( 0 ) {
 }
 
 LTexture::~LTexture(){

@@ -1,13 +1,6 @@
-#include<SDL2/SDL.h>
-#include<SDL2/SDL_image.h>
-#include<iostream>
-#include<string>
-#include"texture.h"
-#include"button.h"
-
-using std::cout;
-using std::endl;
-using std::string;
+#include "common.h"
+#include "texture.h"
+#include "button.h"
 
 //
 // -- Engine globals --
@@ -45,6 +38,13 @@ LTexture gSceneGuideText;
 
 // Overlay: example of some mouse inputs
 LButton gButtons[TOTAL_BUTTONS];
+
+// Overlay: textures for keyboard input example
+LTexture gPTexture;
+LTexture gOTexture;
+LTexture gITexture;
+LTexture gUTexture;
+
 
 //
 // -- Engine methods --
@@ -109,12 +109,15 @@ int main( int argc, char* args[] ){
 			double angle = 0;
 			SDL_RendererFlip flipType = SDL_FLIP_NONE;
 
+			// Current rendered texture
+			LTexture* currentTexture = NULL;
+
 			//
 			// -- Game loop --
 			//
 			while( !quit ){
 				// Poll hardware events
-				while( SDL_PollEvent( &e )){
+				while( SDL_PollEvent( &e ) != 0 ){
 					// Exit event
 					if( e.type == SDL_QUIT ){
 						quit = true;
@@ -203,6 +206,10 @@ int main( int argc, char* args[] ){
 							scene = 5;
 							break;
 
+							case SDLK_6:
+							scene = 6;
+							break;
+
 							default:
 							break;
 						}
@@ -211,6 +218,28 @@ int main( int argc, char* args[] ){
 					for( int i = 0; i < TOTAL_BUTTONS; ++i ){
 						gButtons[ i ].handleEvent( &e );
 					}
+				}
+
+				// Set texture based on current keystate
+				const Uint8* currentKeyStates = SDL_GetKeyboardState( NULL );
+				if( currentKeyStates[ SDL_SCANCODE_P ] ){
+					cout << "p Down" << endl;
+					currentTexture = &gPTexture;
+				}
+				else if( currentKeyStates[ SDL_SCANCODE_O ] ){
+					cout << "o Down" << endl;
+					currentTexture = &gOTexture;
+				}
+				else if( currentKeyStates[ SDL_SCANCODE_I ] ){
+					cout << "i Down" << endl;
+					currentTexture = &gITexture;
+				}
+				else if( currentKeyStates[ SDL_SCANCODE_U ] ){
+					cout << "u Down" << endl;
+					currentTexture = &gUTexture;
+				}
+				else{
+					currentTexture = NULL;
 				}
 
 				// Clear the screen
@@ -241,21 +270,26 @@ int main( int argc, char* args[] ){
 					gColourCircleClipSheet.render( gRenderer, 0, SCREENHEIGHT - gColourCircleClips[2].h, &gColourCircleClips[2] );
 					gColourCircleClipSheet.render( gRenderer, SCREENWIDTH - gColourCircleClips[3].w, SCREENHEIGHT - gColourCircleClips[3].h, &gColourCircleClips[3] );
 				}
-				else if( scene == 3){
+				else if( scene == 3 ){
 					// Draw the background
 					gBackground.render( gRenderer, 0, 0);
 					// Draw the fader forground
 					gFadeTexture.setAlpha( alpha );
 					gFadeTexture.render( gRenderer, 0, 0 );
 				}
-				else if( scene == 4){
+				else if( scene == 4 ){
 					// Draw the compass texture
 					gCompassTexture.render( gRenderer, 0, 0, NULL, angle, NULL, flipType );
 				}
-				else if( scene == 5){
+				else if( scene == 5 ){
 					// Mouse testing scene
 					for( int i = 0; i < TOTAL_BUTTONS; ++i){
 						gButtons[ i ].render( gRenderer );
+					}
+				}
+				else if( scene == 6 ){
+					if( currentTexture ){
+						currentTexture->render( gRenderer, 0, 0 );
 					}
 				}
 				else if( scene == 0 ){
@@ -391,7 +425,7 @@ bool loadMedia(){
 	else{
 		// Render text
 		SDL_Color textColour = { 0, 0, 0 };
-		if( !gSceneGuideText.loadFromRenderedText( gRenderer, "1. Anim - 2. Colour Modulation - 3. Alpha fade - 4. Rotation and flipping", textColour ) ){
+		if( !gSceneGuideText.loadFromRenderedText( gRenderer, "1. Anim - 2. Colour Modulation - 3. Alpha fade - 4. Rotation and flipping - 5. Mouse - 6. Keys", textColour ) ){
 			cout << "Failed to render text texture!" << endl;
 			success = false;
 		}
@@ -436,6 +470,19 @@ bool loadMedia(){
 		gButtons[ 3 ].setPosition( SCREENWIDTH / 2, SCREENHEIGHT / 2 );
 	}
 
+	if( !gPTexture.loadFromFile( gRenderer, "media/ptex.png" ) ){
+		success = false;
+	}
+	if( !gOTexture.loadFromFile( gRenderer, "media/otex.png" ) ){
+		success = false;
+	}
+	if( !gITexture.loadFromFile( gRenderer, "media/itex.png" ) ){
+		success = false;
+	}
+	if( !gUTexture.loadFromFile( gRenderer, "media/utex.png" ) ){
+		success = false;
+	}
+
 	return success;
 }
 
@@ -447,6 +494,10 @@ void close(){
 	gFadeTexture.free();
 	gSceneGuideText.free();
 	gCompassTexture.free();
+	gPTexture.free();
+	gOTexture.free();
+	gITexture.free();
+	gUTexture.free();
 
 	// Free global font
 	TTF_CloseFont( gSceneGuideText.mFont );
