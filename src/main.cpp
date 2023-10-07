@@ -39,12 +39,6 @@ LTexture gSceneGuideText;
 // Overlay: example of some mouse inputs
 LButton gButtons[ TOTAL_BUTTONS ];
 
-// Overlay: textures for keyboard input example
-LTexture gPTexture;
-LTexture gOTexture;
-LTexture gITexture;
-LTexture gUTexture;
-
 //
 // -- Game methods --
 //
@@ -53,13 +47,11 @@ bool loadMedia();
 // Frees media and shuts down SDL
 void closeMedia();
 
-
 //
 // --- Program --//
 //
 int main( int argc, char* args[] ){
 
-	cout << "Entered" << endl;
 	// Start up SDL and create window
 	if( !core.init() ){
 		cout << "Failed to init" << endl;
@@ -112,16 +104,10 @@ int main( int argc, char* args[] ){
 			// Current rendered texture
 			LTexture* currentTexture = NULL;
 
-			if ( gRenderer == NULL ){
-				cout << "gRenderer is null" << endl;
-			}
-			else {
-				cout << "gRenderer is valid" << endl;
-			}
-
 			//
 			// -- Game loop --
 			//
+			cout << "Entering the game loop" << endl;
 			while( !quit ){
 
 				// Poll hardware events
@@ -139,33 +125,31 @@ int main( int argc, char* args[] ){
 				}
 
 				// Get the current key states
-				const Uint8* currentKeyStates = SDL_GetKeyboardState( NULL );
+				//const Uint8* currentKeyStates = SDL_GetKeyboardState( NULL );
+				core.updateKeyState();
 
 				// Set exit flag
-				if( currentKeyStates[ SDL_SCANCODE_ESCAPE ] ){
+				if( core.getKeyState( SDL_SCANCODE_ESCAPE ) == KEY_RELEASED ){
 					quit = true;
 				}
 				// Test key states to change scene
-				if( currentKeyStates[ SDL_SCANCODE_0 ] ){
+				if( core.getKeyState( SDL_SCANCODE_0 ) == KEY_PRESSED ){
 					scene = 0;
 				}
-				else if( currentKeyStates[ SDL_SCANCODE_1 ] ){
+				else if( core.getKeyState( SDL_SCANCODE_1 ) == KEY_PRESSED ){
 					scene = 1;
 				}
-				else if( currentKeyStates[ SDL_SCANCODE_2 ] ){
+				else if( core.getKeyState( SDL_SCANCODE_2 ) == KEY_PRESSED ){
 					scene = 2;
 				}
-				else if( currentKeyStates[ SDL_SCANCODE_3 ] ){
+				else if( core.getKeyState( SDL_SCANCODE_3 ) == KEY_PRESSED ){
 					scene = 3;
 				}
-				else if( currentKeyStates[ SDL_SCANCODE_4 ] ){
+				else if( core.getKeyState( SDL_SCANCODE_4 ) == KEY_PRESSED ){
 					scene = 4;
 				}
-				else if( currentKeyStates[ SDL_SCANCODE_5 ] ){
+				else if( core.getKeyState( SDL_SCANCODE_5 ) == KEY_PRESSED ){
 					scene = 5;
-				}
-				else if( currentKeyStates[ SDL_SCANCODE_6 ] ){
-					scene = 6;
 				}
 
 				// ------
@@ -200,22 +184,22 @@ int main( int argc, char* args[] ){
 				// ---
 				// Colour mod example
 				else if( scene == 2 ){
-					if( currentKeyStates[ SDL_SCANCODE_Q ] ){
+					if( core.getKeyState( SDL_SCANCODE_Q ) == KEY_DOWN ){
 						red += 4;
 					}
-					else if( currentKeyStates[ SDL_SCANCODE_A ] ){
+					else if( core.getKeyState( SDL_SCANCODE_A ) == KEY_DOWN ){
 						red -= 4;
 					}
-					if( currentKeyStates[ SDL_SCANCODE_W ] ){
+					if( core.getKeyState( SDL_SCANCODE_W ) == KEY_DOWN ){
 						green += 4;
 					}
-					else if( currentKeyStates[ SDL_SCANCODE_S ] ){
+					else if( core.getKeyState( SDL_SCANCODE_S ) == KEY_DOWN ){
 						green -= 4;
 					}
-					if( currentKeyStates[ SDL_SCANCODE_E ] ){
+					if( core.getKeyState( SDL_SCANCODE_E ) == KEY_DOWN ){
 						blue += 4;
 					}
-					else if( currentKeyStates[ SDL_SCANCODE_D ] ){
+					else if( core.getKeyState( SDL_SCANCODE_D ) == KEY_DOWN ){
 						blue -= 4;
 					}
 
@@ -230,11 +214,11 @@ int main( int argc, char* args[] ){
 				// ---
 				// Alpha fading example
 				else if( scene == 3 ){
-					if( currentKeyStates[ SDL_SCANCODE_W ] ){
+					if( core.getKeyState( SDL_SCANCODE_W ) == KEY_DOWN ){
 						if( alpha + 32 > 255 ) alpha = 255;
 						else alpha += 32;
 					}
-					else if( currentKeyStates[ SDL_SCANCODE_S ] ){
+					else if( core.getKeyState( SDL_SCANCODE_S ) == KEY_DOWN ){
 						if( alpha - 32 < 0 ) alpha = 0;
 						else alpha -= 32;
 					}
@@ -249,20 +233,20 @@ int main( int argc, char* args[] ){
 				// ---
 				// Texture flip and rotation example
 				else if( scene == 4 ){
-					if( currentKeyStates[ SDL_SCANCODE_A ] ){
+					if( core.getKeyState( SDL_SCANCODE_A ) == KEY_DOWN ){
 						angle -= 20;
 					}
-					else if ( currentKeyStates[ SDL_SCANCODE_D ] ){
+					else if ( core.getKeyState( SDL_SCANCODE_D ) == KEY_DOWN ){
 						angle += 20;
 					}
 
-					if( currentKeyStates[ SDL_SCANCODE_LEFT ] 
-					|| currentKeyStates[ SDL_SCANCODE_RIGHT ] ){
+					if( core.getKeyState( SDL_SCANCODE_LEFT ) == KEY_PRESSED
+					|| core.getKeyState( SDL_SCANCODE_RIGHT ) == KEY_PRESSED ){
 						if( flipType != SDL_FLIP_HORIZONTAL ) flipType = SDL_FLIP_HORIZONTAL;
 						else flipType = SDL_FLIP_NONE;
 					}
-					if( currentKeyStates[ SDL_SCANCODE_UP ] 
-					|| currentKeyStates[ SDL_SCANCODE_DOWN ] ){
+					if( core.getKeyState( SDL_SCANCODE_UP ) == KEY_PRESSED
+					|| core.getKeyState( SDL_SCANCODE_DOWN ) == KEY_PRESSED ){
 						if ( flipType != SDL_FLIP_VERTICAL ) flipType = SDL_FLIP_VERTICAL;
 						else flipType = SDL_FLIP_NONE;
 					}
@@ -277,35 +261,6 @@ int main( int argc, char* args[] ){
 					// Render all the buttons
 					for( int i = 0; i < TOTAL_BUTTONS; ++i){
 						gButtons[ i ].render( gRenderer );
-					}
-				}
-
-				// ---
-				// Key state example
-				else if( scene == 6 ){
-					// Check for key inputs 
-					if( currentKeyStates[ SDL_SCANCODE_P ] ){
-						cout << "p Down" << endl;
-						currentTexture = &gPTexture;
-					}
-					else if( currentKeyStates[ SDL_SCANCODE_O ] ){
-						cout << "o Down" << endl;
-						currentTexture = &gOTexture;
-					}
-					else if( currentKeyStates[ SDL_SCANCODE_I ] ){
-						cout << "i Down" << endl;
-						currentTexture = &gITexture;
-					}
-					else if( currentKeyStates[ SDL_SCANCODE_U ] ){
-						cout << "u Down" << endl;
-						currentTexture = &gUTexture;
-					}
-					else{
-						currentTexture = NULL;
-					}
-
-					if( currentTexture ){
-						currentTexture->render( gRenderer, 0, 0 );
 					}
 				}
 
@@ -401,7 +356,7 @@ bool loadMedia(){
 	else{
 		// Render text
 		SDL_Color textColour = { 0, 0, 0 };
-		if( !gSceneGuideText.loadFromRenderedText( gRenderer, "1. Anim - 2. Colour Modulation - 3. Alpha fade - 4. Rotation and flipping - 5. Mouse - 6. Keys", textColour ) ){
+		if( !gSceneGuideText.loadFromRenderedText( gRenderer, "1. Anim - 2. Colour Modulation - 3. Alpha fade - 4. Rotation and flipping - 5. Mouse", textColour ) ){
 			cout << "Failed to render text texture!" << endl;
 			success = false;
 		}
@@ -431,19 +386,6 @@ bool loadMedia(){
 		success = false;
 	}
 
-	if( !gPTexture.loadFromFile( gRenderer, "media/ptex.png" ) ){
-		success = false;
-	}
-	if( !gOTexture.loadFromFile( gRenderer, "media/otex.png" ) ){
-		success = false;
-	}
-	if( !gITexture.loadFromFile( gRenderer, "media/itex.png" ) ){
-		success = false;
-	}
-	if( !gUTexture.loadFromFile( gRenderer, "media/utex.png" ) ){
-		success = false;
-	}
-
 	return success;
 }
 
@@ -455,8 +397,7 @@ void closeMedia(){
 	gFadeTexture.free();
 	gSceneGuideText.free();
 	gCompassTexture.free();
-	gPTexture.free();
-	gOTexture.free();
-	gITexture.free();
-	gUTexture.free();
+
+	TTF_CloseFont( gSceneGuideText.mFont );
+	gSceneGuideText.mFont = NULL;
 }

@@ -58,8 +58,7 @@ bool Core::init(){
 
 void Core::close(){
 	// Free global font
-	//TTF_CloseFont( gSceneGuideText.mFont );
-	//gSceneGuideText.mFont = NULL;
+    downKeys.clear();
 
 	// Destroy renderer
 	SDL_DestroyRenderer( renderer );
@@ -85,4 +84,45 @@ void Core::setDrawColour( Uint8 x, Uint8 y, Uint8 z, Uint8 a ){
 
 void Core::present(){
     SDL_RenderPresent( renderer );
+}
+
+KeyState Core::getKeyState( SDL_Scancode scancode ){
+  
+    // Is the key currently down?
+    bool currentDownState = currentKeyStates[ scancode ];
+
+    // Was the key marked as down in the map?
+    bool previousDownState = false;
+    std::map<SDL_Scancode, bool>::iterator pos = downKeys.find( scancode );
+    if( pos != downKeys.end() ){
+        previousDownState = pos->second;
+    }
+    // If not present insert the scancode to the map.
+    else{
+        downKeys.insert( std::pair<SDL_Scancode, bool>( scancode, false ) );
+        previousDownState = false;
+    }
+
+    // If key was just pressed
+    if( currentDownState && !previousDownState ){
+        pos->second = true;
+        return KEY_PRESSED;
+    }
+    // If key is held down
+    else if( currentDownState && previousDownState ){
+        return KEY_DOWN;
+    }
+    // If key is just released
+    else if( !currentDownState && previousDownState ){
+        pos->second = false;
+        return KEY_RELEASED;
+    }
+    // If key is up
+    else{
+        return KEY_UP;
+    }
+}
+
+void Core::updateKeyState(){
+    currentKeyStates = SDL_GetKeyboardState( NULL );
 }

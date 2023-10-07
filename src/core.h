@@ -8,6 +8,10 @@ struct Resolution{
     int x; int y;
 };
 
+enum KeyState{
+    KEY_PRESSED, KEY_DOWN, KEY_RELEASED, KEY_UP
+};
+
 //! Core engine class
 /*! Class to handle engine interactions.
 */
@@ -15,21 +19,25 @@ class Core{
     //! Global window address
     /*!
     */
-   SDL_Window* window;
+    SDL_Window* window;
 
     //! Window x resolution
     /*!
     */
-   Resolution resolution;
+    Resolution resolution;
 
     //! Global renderer address
     /*!
     */
-   SDL_Renderer* renderer;
+    SDL_Renderer* renderer;
 
-    //! 
+    //! List of keys that are down
     /*!
     */
+    map<SDL_Scancode, bool> downKeys;
+
+    const Uint8* currentKeyStates;
+
 
 public:
     //! Initialise variables
@@ -70,17 +78,24 @@ public:
     //! Clear the renderer
     /*! Use as the start of a new draw call
     */
-   void clearRenderer();
+    void clearRenderer();
 
     //! Set the renderer draw colour
     /*! 
     */
-   void setDrawColour( Uint8 x, Uint8 y, Uint8 z, Uint8 a );
+    void setDrawColour( Uint8 x, Uint8 y, Uint8 z, Uint8 a );
 
     //! Present the renderer to the window.
     /*!
     */
-   void present();
+    void present();
+
+    //! Get the pressed state of a spefified key
+    /*!
+    */
+    KeyState getKeyState( SDL_Scancode scancode );
+
+    void updateKeyState();
 
 };
 
