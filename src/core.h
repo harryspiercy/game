@@ -37,6 +37,9 @@ class Core{
     */
     map<SDL_Scancode, bool> downKeys;
 
+    //! Address of the current state of the keys
+    /*!
+    */
     const Uint8* currentKeyStates;
 
 public:
@@ -90,11 +93,14 @@ public:
     */
     void present();
 
-    //! Get the pressed state of a spefified key
+    //! Get the pressed state of a spefified key scancode
     /*!
     */
     KeyState getKeyState( SDL_Scancode scancode );
 
+    //! Get the latest key states for the core
+    /*!
+    */
     void updateKeyState();
 
 };

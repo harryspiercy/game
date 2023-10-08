@@ -39,6 +39,10 @@ LTexture gSceneGuideText;
 // Overlay: example of some mouse inputs
 LButton gButtons[ TOTAL_BUTTONS ];
 
+// Overlay: example of timers
+LTexture gPromptTexture;
+LTexture gTimerTexture;
+
 //
 // -- Game methods --
 //
@@ -54,9 +58,10 @@ int main( int argc, char* args[] ){
 
 	// Start up SDL and create window
 	if( !core.init() ){
-		cout << "Failed to init" << endl;
+		cout << "Failed to init core" << endl;
 	}
 	else{
+		cout << "Successfully initialised core" << endl;
 		// Set engine globals once successfully initialised
 		gRenderer = core.getRenderer();
 		gResolution = core.getResolution();
@@ -104,6 +109,10 @@ int main( int argc, char* args[] ){
 			// Current rendered texture
 			LTexture* currentTexture = NULL;
 
+			Uint32 startTime = 0;
+			std::stringstream timeText;
+			SDL_Color textColour = { 0, 0, 0, 255 };
+
 			//
 			// -- Game loop --
 			//
@@ -150,6 +159,9 @@ int main( int argc, char* args[] ){
 				}
 				else if( core.getKeyState( SDL_SCANCODE_5 ) == KEY_PRESSED ){
 					scene = 5;
+				}
+				else if( core.getKeyState( SDL_SCANCODE_6 ) == KEY_PRESSED ){
+					scene = 6;
 				}
 
 				// ------
@@ -264,6 +276,29 @@ int main( int argc, char* args[] ){
 					}
 				}
 
+				// ---
+				// Timer example
+				else if( scene == 6 ){
+					// Reset the start time if enter is pressed
+					if( core.getKeyState( SDL_SCANCODE_RETURN ) == KEY_PRESSED ){
+						startTime = SDL_GetTicks();
+					}
+
+					timeText.str( "" );
+					timeText << "Milliseconds scince start: " << SDL_GetTicks() - startTime << endl;
+					if( !gTimerTexture.loadFromRenderedText( gRenderer, timeText.str().c_str(), textColour ) ){
+						cout << "Unable to dynamically load text" << endl;
+					}
+					else{
+						gPromptTexture.render( gRenderer, 
+						gResolution->x - gPromptTexture.getWidth(), 0 );
+
+						gTimerTexture.render( gRenderer, 
+						gResolution->x - gTimerTexture.getWidth(),
+						gTimerTexture.getHeight() );
+					}
+				}
+
 				// Render the text
 				if( scene ) gSceneGuideText.render( gRenderer, ( gResolution->x - gSceneGuideText.getWidth() ) / 2, ( gResolution->y - gSceneGuideText.getHeight() - 20 ) );
 
@@ -282,11 +317,13 @@ int main( int argc, char* args[] ){
 		// -- Close media --
 		//
 		closeMedia();
+		cout << "Shutdown media" << endl;
 	}
 	//
 	// -- Close engine --
 	//
 	core.close();
+	cout << "Shutdown the core" << endl;
 
 	return 0;
 }
@@ -349,10 +386,21 @@ bool loadMedia(){
 	else{
 		// Render text
 		SDL_Color textColour = { 0, 0, 0 };
-		if( !gSceneGuideText.loadFromRenderedText( gRenderer, "1. Anim - 2. Colour Modulation - 3. Alpha fade - 4. Rotation and flipping - 5. Mouse", textColour ) ){
+		if( !gSceneGuideText.loadFromRenderedText( gRenderer, 
+		"1. Anim - 2. Colour Modulation - 3. Alpha fade - 4. Rotation and flipping - 5. Mouse", 
+		textColour ) ){
 			cout << "Failed to render text texture!" << endl;
 			success = false;
 		}
+
+		gPromptTexture.mFont = gSceneGuideText.mFont;
+		if( !gPromptTexture.loadFromRenderedText( gRenderer, 
+		"Press enter to restart the start time", textColour) ){
+			cout << "Failed to render text texture" << endl;
+			success = false;
+		}
+
+		gTimerTexture.mFont = gSceneGuideText.mFont;
 	}
 
 	path = string( "media/compass.png" );
