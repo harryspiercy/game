@@ -42,11 +42,26 @@ class Core{
     */
     const Uint8* currentKeyStates;
 
+    //! FPS Cap
+    /*!
+    */
+    int fps;
+
+    //! Min ticks per frame
+    /*!
+    */
+    int ticksPerFrame;
+
+    //! Use VSync to cap fps automatically
+    /*!
+    */
+    bool useVSync;
+
 public:
     //! Initialise variables
     /*!
     */
-    Core( int x = 800, int y = 600 );
+    Core( int x = 800, int y = 600 , int fpscap = -1 );
 
     //! Release variable memeory
     /*! 
@@ -82,6 +97,8 @@ public:
     /*! Use as the start of a new draw call
     */
     void clearRenderer();
+
+    inline int getTicksPerFrame() { return ticksPerFrame; }
 
     //! Set the renderer draw colour
     /*! 

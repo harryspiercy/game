@@ -1,8 +1,18 @@
 #include "core.h"
 
-Core::Core( int x, int y) : 
-    window( NULL ), resolution( x, y ),
-    renderer( NULL ){
+Core::Core( int x, int y, int fpscap ) : 
+window( NULL ), resolution( x, y ), fps( fpscap ), renderer( NULL ){
+	
+	if( fps == -1 ){
+		useVSync = true;
+		ticksPerFrame = 0;
+		cout << "Using VSync" << endl;
+	}
+	else{
+		useVSync = false;
+		ticksPerFrame = 1000 / fps;
+		cout << "Using user def frame cap of " << fps << " fps" << endl;
+	}
 }
 
 Core::~Core(){
@@ -41,7 +51,9 @@ bool Core::init(){
 		}
 		else{
 			// create renderer for widow.
-			renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
+			if( useVSync ) renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
+			else renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
+			
 			if( renderer == NULL ){
 				cout << "Renderer could not be created! SDL Error : " << SDL_GetError() << endl;
 				success = false;

@@ -6,7 +6,7 @@
 // -- Engine globals --
 //
 // Create the core object
-Core core;
+Core core( 800, 600, 30 );
 SDL_Renderer* gRenderer = NULL;
 Resolution* gResolution = NULL;
 
@@ -41,7 +41,8 @@ LButton gButtons[ TOTAL_BUTTONS ];
 
 // Overlay: example of timers
 LTexture gPromptTexture;
-LTexture gTimerTexture;
+LTexture gUserTimerTexture;
+LTexture gFpsTimerTexture;
 
 //
 // -- Game methods --
@@ -106,19 +107,35 @@ int main( int argc, char* args[] ){
 			gButtons[ 2 ].setPosition( 0, gResolution->y / 2 );
 			gButtons[ 3 ].setPosition( gResolution->x / 2, gResolution->y / 2 );
 
-			// Current rendered texture
-			LTexture* currentTexture = NULL;
-
-			LTimer timer;
-			std::stringstream timeText;
+			// Global text colour
 			SDL_Color textColour = { 0, 0, 0, 255 };
 
+			// Timer example
+			LTimer userTimer;
+			std::stringstream userTimerText;
+
+			// FPS timer
+			LTimer fpsTimer;
+			std::stringstream fpsTimerText;
+			bool showFps = true;
+			int countedFrames = 0;
+			fpsTimer.start();
+
+			// FPS capper
+			LTimer capTimer;
 
 			//
 			// -- Game loop --
 			//
 			cout << "Entering the game loop" << endl;
 			while( !quit ){
+				
+				// Calculate and correct fps
+				capTimer.start();
+				float avgFps = countedFrames / ( fpsTimer.getTicks() / 1000.f );
+				if( avgFps > 2000000){
+					avgFps = 0;
+				}
 
 				// Poll hardware events
 				while( SDL_PollEvent( &e ) != 0 ){
@@ -164,6 +181,10 @@ int main( int argc, char* args[] ){
 				else if( core.getKeyState( SDL_SCANCODE_6 ) == KEY_PRESSED ){
 					scene = 6;
 				}
+
+				if( core.getKeyState( SDL_SCANCODE_F ) == KEY_PRESSED ){
+					showFps = !showFps;
+				} 
 
 				// ------
 				// Start of draw call
@@ -281,33 +302,51 @@ int main( int argc, char* args[] ){
 				// Timer example
 				else if( scene == 6 ){
 					if( core.getKeyState( SDL_SCANCODE_S ) == KEY_PRESSED ){
-						if( timer.isStarted() ) timer.stop();
-						else timer.start();
+						if( userTimer.isStarted() ) userTimer.stop();
+						else userTimer.start();
 					}
 					else if( core.getKeyState( SDL_SCANCODE_P ) == KEY_PRESSED ){
-						if( timer.isPaused() ) timer.unpause();
-						else timer.pause();
+						if( userTimer.isPaused() ) userTimer.unpause();
+						else userTimer.pause();
 					}
 
 					// Set text to be rendered
-					timeText.str( "" );
-					timeText << "Seconds since start time " << ( timer.getTicks() / 1000.f );
+					userTimerText.str( "" );
+					userTimerText << "Seconds since start time " << ( userTimer.getTicks() / 1000.f );
 
 					// Render text
-					if( !gTimerTexture.loadFromRenderedText( gRenderer, timeText.str().c_str(), textColour)){
-						cout << "Unable to render time texture" << endl;
+					if( !gUserTimerTexture.loadFromRenderedText( gRenderer, userTimerText.str().c_str(), textColour)){
+						cout << "Unable to render user time texture" << endl;
 					}
-
 					gPromptTexture.render( gRenderer, ( gResolution->x - gPromptTexture.getWidth() ) / 2, 0 ); 
-					gTimerTexture.render( gRenderer, ( gResolution->x - gTimerTexture.getWidth() ) / 2, gPromptTexture.getHeight() );
-
+					gUserTimerTexture.render( gRenderer, ( gResolution->x - gUserTimerTexture.getWidth() ) / 2, gPromptTexture.getHeight() );
 				}
 
 				// Render the text
 				if( scene ) gSceneGuideText.render( gRenderer, ( gResolution->x - gSceneGuideText.getWidth() ) / 2, ( gResolution->y - gSceneGuideText.getHeight() - 20 ) );
 
+				// Show FPS
+				fpsTimerText.str( "" );
+				if( showFps ) fpsTimerText << "Average FPS " << avgFps;
+				else fpsTimerText << "Press F to see FPS";
+
+				if( !gFpsTimerTexture.loadFromRenderedText( gRenderer,
+				fpsTimerText.str().c_str(), textColour ) ){
+					cout << "Unable to render fps time texture" << endl;
+				}
+				gFpsTimerTexture.render( gRenderer, 10, 10 );
+
 				// Update screen
 				core.present();
+
+				// Increment frame count;
+				++countedFrames;
+
+				// Cap frame rate
+				int frameTicks = capTimer.getTicks();
+				if( frameTicks < core.getTicksPerFrame() ){
+					SDL_Delay( core.getTicksPerFrame() - frameTicks );
+				}
 
 				// -----
 				// End of draw call
@@ -399,12 +438,13 @@ bool loadMedia(){
 
 		gPromptTexture.mFont = gSceneGuideText.mFont;
 		if( !gPromptTexture.loadFromRenderedText( gRenderer, 
-		"Press S to start, P to pause timer", textColour) ){
+		"Press S to start, P to pause userTimer", textColour) ){
 			cout << "Failed to render text texture" << endl;
 			success = false;
 		}
 
-		gTimerTexture.mFont = gSceneGuideText.mFont;
+		gUserTimerTexture.mFont = gSceneGuideText.mFont;
+		gFpsTimerTexture.mFont = gSceneGuideText.mFont;
 	}
 
 	path = string( "media/compass.png" );
