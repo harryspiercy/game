@@ -109,9 +109,10 @@ int main( int argc, char* args[] ){
 			// Current rendered texture
 			LTexture* currentTexture = NULL;
 
-			Uint32 startTime = 0;
+			LTimer timer;
 			std::stringstream timeText;
 			SDL_Color textColour = { 0, 0, 0, 255 };
+
 
 			//
 			// -- Game loop --
@@ -279,24 +280,27 @@ int main( int argc, char* args[] ){
 				// ---
 				// Timer example
 				else if( scene == 6 ){
-					// Reset the start time if enter is pressed
-					if( core.getKeyState( SDL_SCANCODE_RETURN ) == KEY_PRESSED ){
-						startTime = SDL_GetTicks();
+					if( core.getKeyState( SDL_SCANCODE_S ) == KEY_PRESSED ){
+						if( timer.isStarted() ) timer.stop();
+						else timer.start();
+					}
+					else if( core.getKeyState( SDL_SCANCODE_P ) == KEY_PRESSED ){
+						if( timer.isPaused() ) timer.unpause();
+						else timer.pause();
 					}
 
+					// Set text to be rendered
 					timeText.str( "" );
-					timeText << "Milliseconds scince start: " << SDL_GetTicks() - startTime << endl;
-					if( !gTimerTexture.loadFromRenderedText( gRenderer, timeText.str().c_str(), textColour ) ){
-						cout << "Unable to dynamically load text" << endl;
-					}
-					else{
-						gPromptTexture.render( gRenderer, 
-						gResolution->x - gPromptTexture.getWidth(), 0 );
+					timeText << "Seconds since start time " << ( timer.getTicks() / 1000.f );
 
-						gTimerTexture.render( gRenderer, 
-						gResolution->x - gTimerTexture.getWidth(),
-						gTimerTexture.getHeight() );
+					// Render text
+					if( !gTimerTexture.loadFromRenderedText( gRenderer, timeText.str().c_str(), textColour)){
+						cout << "Unable to render time texture" << endl;
 					}
+
+					gPromptTexture.render( gRenderer, ( gResolution->x - gPromptTexture.getWidth() ) / 2, 0 ); 
+					gTimerTexture.render( gRenderer, ( gResolution->x - gTimerTexture.getWidth() ) / 2, gPromptTexture.getHeight() );
+
 				}
 
 				// Render the text
@@ -395,7 +399,7 @@ bool loadMedia(){
 
 		gPromptTexture.mFont = gSceneGuideText.mFont;
 		if( !gPromptTexture.loadFromRenderedText( gRenderer, 
-		"Press enter to restart the start time", textColour) ){
+		"Press S to start, P to pause timer", textColour) ){
 			cout << "Failed to render text texture" << endl;
 			success = false;
 		}
