@@ -1,17 +1,23 @@
 #include "core.h"
 
 Core::Core( int x, int y, int fpscap ) : 
-window( NULL ), resolution( x, y ), fps( fpscap ), renderer( NULL ){
+window( NULL ), resolution( x, y ), fps( fpscap ), renderer( NULL ),
+showFps( false ), countedFrames( 0 ){
 	
-	if( fps == -1 ){
+	if( fps == FPS_VSYNC ){
 		useVSync = true;
 		ticksPerFrame = 0;
 		cout << "Using VSync" << endl;
 	}
+	else if ( fps == FPS_FREERUN ){
+		useVSync = false;
+		ticksPerFrame = 0;
+		cout << "Free run" << endl;
+	}
 	else{
 		useVSync = false;
 		ticksPerFrame = 1000 / fps;
-		cout << "Using user def frame cap of " << fps << " fps" << endl;
+		cout << "Frame cap to " << fps << " fps" << endl;
 	}
 }
 
@@ -61,6 +67,11 @@ bool Core::init(){
 			else{
 				// Initialise renderer colour to white
 				SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+
+				// Initilaie the font for the core out
+				fpsTexture[0].mFont = TTF_OpenFont( string( "media/lazy.ttf" ).c_str(), 18 );
+				fpsTimer.start();
+				capTimer.start();
 			}
 		}
 	}
@@ -68,8 +79,19 @@ bool Core::init(){
 	return success;
 }
 
+void Core::tick(){
+	updateKeyState();
+
+	KeyState fState = getKeyState( SDL_SCANCODE_F );
+	KeyState laltState = getKeyState( SDL_SCANCODE_LALT );
+	if( fState == KEY_PRESSED && ( laltState == KEY_DOWN || laltState == KEY_PRESSED ) ){
+		showFps = !showFps;
+	}
+
+}
+
 void Core::close(){
-	// Free global font
+	// Clear values from the down key map
     downKeys.clear();
 
 	// Destroy renderer
@@ -136,4 +158,41 @@ KeyState Core::getKeyState( SDL_Scancode scancode ){
 
 void Core::updateKeyState(){
     currentKeyStates = SDL_GetKeyboardState( NULL );
+}
+
+void Core::toggleFpsDisplay(){
+	showFps = !showFps;
+}
+
+void Core::startFrameTimer(){
+	capTimer.start();
+
+	avgFps = countedFrames / ( fpsTimer.getTicks() / 1000.f );
+
+	if( avgFps > 2000000){
+		avgFps = 0;
+	}
+}
+
+void Core::stopFrameTimer(){
+	// Show FPS
+	fpsTimerText.str( "" );
+	if( showFps ) fpsTimerText << "Average FPS " << avgFps;
+	else fpsTimerText << "Press F to see FPS";
+
+	if( !fpsTexture[0].loadFromRenderedText( renderer,
+	fpsTimerText.str().c_str(), fpsTextColour ) ){
+		cout << "Unable to render fps time texture" << endl;
+	}
+	fpsTexture[0].render( renderer, 10, 10 );
+
+	++countedFrames;
+}
+
+void Core::capFrameRate(){
+	// Cap frame rate
+	int frameTicks = capTimer.getTicks();
+	if( frameTicks < getTicksPerFrame() ){
+		SDL_Delay( getTicksPerFrame() - frameTicks );
+	}
 }

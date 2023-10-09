@@ -1,4 +1,5 @@
 #include "common.h"
+#include "core.h"
 #include "texture.h"
 #include "button.h"
 
@@ -131,11 +132,12 @@ int main( int argc, char* args[] ){
 			while( !quit ){
 				
 				// Calculate and correct fps
-				capTimer.start();
-				float avgFps = countedFrames / ( fpsTimer.getTicks() / 1000.f );
-				if( avgFps > 2000000){
-					avgFps = 0;
-				}
+				core.startFrameTimer();
+				//capTimer.start();
+				//float avgFps = countedFrames / ( fpsTimer.getTicks() / 1000.f );
+				//if( avgFps > 2000000){
+				//	avgFps = 0;
+				//}
 
 				// Poll hardware events
 				while( SDL_PollEvent( &e ) != 0 ){
@@ -152,7 +154,7 @@ int main( int argc, char* args[] ){
 				}
 
 				// Get the current key states
-				core.updateKeyState();
+				core.tick();
 
 				// Set exit flag
 				if( core.getKeyState( SDL_SCANCODE_ESCAPE ) == KEY_RELEASED ){
@@ -181,10 +183,6 @@ int main( int argc, char* args[] ){
 				else if( core.getKeyState( SDL_SCANCODE_6 ) == KEY_PRESSED ){
 					scene = 6;
 				}
-
-				if( core.getKeyState( SDL_SCANCODE_F ) == KEY_PRESSED ){
-					showFps = !showFps;
-				} 
 
 				// ------
 				// Start of draw call
@@ -325,28 +323,13 @@ int main( int argc, char* args[] ){
 				// Render the text
 				if( scene ) gSceneGuideText.render( gRenderer, ( gResolution->x - gSceneGuideText.getWidth() ) / 2, ( gResolution->y - gSceneGuideText.getHeight() - 20 ) );
 
-				// Show FPS
-				fpsTimerText.str( "" );
-				if( showFps ) fpsTimerText << "Average FPS " << avgFps;
-				else fpsTimerText << "Press F to see FPS";
-
-				if( !gFpsTimerTexture.loadFromRenderedText( gRenderer,
-				fpsTimerText.str().c_str(), textColour ) ){
-					cout << "Unable to render fps time texture" << endl;
-				}
-				gFpsTimerTexture.render( gRenderer, 10, 10 );
+				core.stopFrameTimer();
 
 				// Update screen
 				core.present();
 
-				// Increment frame count;
-				++countedFrames;
-
-				// Cap frame rate
-				int frameTicks = capTimer.getTicks();
-				if( frameTicks < core.getTicksPerFrame() ){
-					SDL_Delay( core.getTicksPerFrame() - frameTicks );
-				}
+				// Apply any frame rate capping
+				core.capFrameRate();
 
 				// -----
 				// End of draw call
@@ -420,15 +403,16 @@ bool loadMedia(){
 		gFadeTexture.setBlendMode( SDL_BLENDMODE_BLEND );
 	}
 
-	path = string( "media/lazy.ttf" );
-	gSceneGuideText.mFont = TTF_OpenFont( path.c_str(), 18 );
-	if( gSceneGuideText.mFont == NULL ){
+	TTF_Font* font = TTF_OpenFont(string( "media/lazy.ttf" ).c_str(), 18 );
+	if( font == NULL ){
 		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
 		success = false;
 	}
 	else{
 		// Render text
 		SDL_Color textColour = { 0, 0, 0 };
+
+		gSceneGuideText.mFont = font;
 		if( !gSceneGuideText.loadFromRenderedText( gRenderer, 
 		"1. Anim - 2. Colour Modulation - 3. Alpha fade - 4. Rotation and flipping - 5. Mouse", 
 		textColour ) ){
@@ -436,15 +420,15 @@ bool loadMedia(){
 			success = false;
 		}
 
-		gPromptTexture.mFont = gSceneGuideText.mFont;
+		gPromptTexture.mFont = font;
 		if( !gPromptTexture.loadFromRenderedText( gRenderer, 
 		"Press S to start, P to pause userTimer", textColour) ){
 			cout << "Failed to render text texture" << endl;
 			success = false;
 		}
 
-		gUserTimerTexture.mFont = gSceneGuideText.mFont;
-		gFpsTimerTexture.mFont = gSceneGuideText.mFont;
+		gUserTimerTexture.mFont = font;
+		gFpsTimerTexture.mFont = font;
 	}
 
 	path = string( "media/compass.png" );
