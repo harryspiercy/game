@@ -4,16 +4,25 @@
 #include "common.h"
 #include "texture.h"
 #include "timer.h"
+#include "button.h"
+
+typedef int IButton;
 
 static const int FPS_VSYNC = -1;
 static const int FPS_FREERUN = -2;
 
+//! Struct to hold a window resolution
+/*!
+*/
 struct Resolution{
+    //! Create a resolution of 0, 0.
     Resolution() : x( 0 ), y( 0 ) {}
+    //! Create a custom resolution.
     Resolution( int newX, int newY ) : x( newX ), y( newY ) {}
     int x; int y;
 };
 
+//! Enum to represent key states
 enum KeyState{
     KEY_PRESSED, KEY_DOWN, KEY_RELEASED, KEY_UP
 };
@@ -25,6 +34,9 @@ class Core{
 public:
     //! Initialise variables
     /*!
+    * \param x width of the window
+    * \param y height of the window
+    * \param fpscap frames per second. FPS_VSYNC or FPS_FREERUN
     */
     Core( int x = 800, int y = 600 , int fpscap = -1 );
 
@@ -32,6 +44,14 @@ public:
     /*! 
     */
     ~Core();
+
+public:
+    //! Is the game loop still running
+    bool quit = false;
+
+public:
+    //! Initialise the core
+    static bool start();
 
 private:
     //! Global window address
@@ -49,13 +69,23 @@ private:
     */
     SDL_Renderer* renderer;
 
+    //! Input events
+    SDL_Event event; 
+
 public:
     //! Initialise SDL and create window
     /*! 
     */
     bool init();
 
+    //! Poll and handle events
+    /*! \param event Reference to the polled SDL event
+    */
+    void handleEvents();
+
     //! Update the core
+    /*!
+    */
     void tick();
 
     //! Shutdown SDL and destroy window.
@@ -63,8 +93,8 @@ public:
     */
     void close();
 
-    //! Return the address of the game window
-    /*! 
+    //! get the address of the game window
+    /*! \return window 
     */
     inline SDL_Window* getWindow() { return window; }
 
@@ -93,25 +123,32 @@ public:
     */
     void present();
 
-private:
-    //! List of keys that are down
+    //! Render all of the core elements.
     /*!
+    */
+   void render();
+
+private:
+    //! Map of keys that have been pressed in their current state
+    /*! This key consists of keys have been pressed since the creation of Core
+    * The map is updated by the 
     */
     map<SDL_Scancode, bool> downKeys;
 
-    //! Address of the current state of the keys
-    /*!
+    //! Uint8 array with the describing the state of the keyboard
+    /*! Each Uint8 value is the down value of each key on the keybaord.
     */
     const Uint8* currentKeyStates;
 
 public:
     //! Get the latest key states for the core
-    /*!
+    /*! Set currentKeyStates to a new value using SDL_KeyboardState
     */
     void updateKeyState();
 
     //! Get the pressed state of a spefified key scancode
-    /*!
+    /*! \param scancode the SDL scan code of a key
+    * \return the state of the queried key. [ KEY_PRESSED, KEY_DOWN, KEY RELEASED, KEY_UP ]
     */
     KeyState getKeyState( SDL_Scancode scancode );
 
@@ -134,7 +171,7 @@ private:
     //! Number of lines required to write out the FPS log
     /*!
     */
-    static const int FPSLINES_COUNT = 4;
+    static const int FPSLINES_COUNT = 1;
 
 public:
     //! Return the required ticks perframe
@@ -188,6 +225,24 @@ public:
 
     //! Cap the framerate
     void capFrameRate();
+
+private:
+    //! List of buttons in the scene
+    list<LButton*> buttons;
+
+public:
+    LButton* makeButton( int x, int y, string path = string( "../media/buttonSpriteSheet.png" ) );
+
+private:
+    //! A global font for all others to be set against
+    TTF_Font* font;
+
+public:
+    //! Getter for the default font
+    inline const TTF_Font* GetFont() { return font; }
+
+    //! TEMP
+    bool renderButton = false;
 };
 
 #endif

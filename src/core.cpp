@@ -25,6 +25,10 @@ Core::~Core(){
     close();
 }
 
+bool Core::start(){
+	return 0;
+}
+
 bool Core::init(){
 	// Inisitialise flag
 	bool success = true;
@@ -69,7 +73,14 @@ bool Core::init(){
 				SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 
 				// Initilaie the font for the core out
-				fpsTexture[0].mFont = TTF_OpenFont( string( "media/lazy.ttf" ).c_str(), 18 );
+				font = TTF_OpenFont( string( "../media/lazy.ttf" ).c_str(), 18 );
+				if (!font ){
+					cout << "Failed to load the global default font!" << endl;
+				}
+				else{
+					fpsTexture[0].mFont = font;
+				}
+
 				fpsTimer.start();
 				capTimer.start();
 			}
@@ -79,7 +90,34 @@ bool Core::init(){
 	return success;
 }
 
+void Core::handleEvents(){
+
+	// Poll hardware events
+	while( SDL_PollEvent( &event ) != 0 ){
+	
+		// Handle exit event
+		if( event.type == SDL_QUIT ){
+			quit = true;
+		}
+	
+		// Update the buttons on screen
+		for( auto const& b : buttons ){
+			b->handleEvent( &event );
+		}
+	}
+
+}
+
 void Core::tick(){
+
+	// Calculate and correct the fps
+	startFrameTimer();
+
+	// Handle input events
+	handleEvents();
+
+
+	// Update the keyboard inputs
 	updateKeyState();
 
 	KeyState fState = getKeyState( SDL_SCANCODE_F );
@@ -118,6 +156,17 @@ void Core::setDrawColour( Uint8 x, Uint8 y, Uint8 z, Uint8 a ){
 
 void Core::present(){
     SDL_RenderPresent( renderer );
+}
+
+void Core::render(){
+
+	if( renderButton ){
+		for( auto& button :  buttons ) {
+			button->render( renderer );
+		}
+	}
+
+	present();
 }
 
 KeyState Core::getKeyState( SDL_Scancode scancode ){
@@ -178,13 +227,18 @@ void Core::stopFrameTimer(){
 	// Show FPS
 	fpsTimerText.str( "" );
 	if( showFps ) fpsTimerText << "Average FPS " << avgFps;
-	else fpsTimerText << "Press F to see FPS";
+	else fpsTimerText << "Press alt+F to see FPS";
+
+	if( renderer == NULL ){
+	}
 
 	if( !fpsTexture[0].loadFromRenderedText( renderer,
 	fpsTimerText.str().c_str(), fpsTextColour ) ){
 		cout << "Unable to render fps time texture" << endl;
 	}
-	fpsTexture[0].render( renderer, 10, 10 );
+	else{
+		fpsTexture[0].render( renderer, 10, 10 );
+	}
 
 	++countedFrames;
 }
@@ -195,4 +249,13 @@ void Core::capFrameRate(){
 	if( frameTicks < getTicksPerFrame() ){
 		SDL_Delay( getTicksPerFrame() - frameTicks );
 	}
+}
+
+LButton* Core::makeButton( int x, int y, string path ){
+	// Create a button object and then add to buttons list
+	LButton* rtn = new LButton();
+	rtn->setPosition( x, y );
+	rtn->loadButtonSprites( renderer, path );
+	buttons.push_back( rtn );
+	return rtn;
 }

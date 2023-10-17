@@ -1,13 +1,10 @@
-#include "common.h"
-#include "core.h"
-#include "texture.h"
-#include "button.h"
+#include "engine.h"
 
 //
 // -- Engine globals --
 //
 // Create the core object
-Core core( 800, 600, 30 );
+//Core core( 800, 600, 30 );
 SDL_Renderer* gRenderer = NULL;
 Resolution* gResolution = NULL;
 
@@ -38,7 +35,7 @@ LTexture gCompassTexture;
 LTexture gSceneGuideText;
 
 // Overlay: example of some mouse inputs
-LButton gButtons[ TOTAL_BUTTONS ];
+LButton* gButtons[ TOTAL_BUTTONS ];
 
 // Overlay: example of timers
 LTexture gPromptTexture;
@@ -59,14 +56,14 @@ void closeMedia();
 int main( int argc, char* args[] ){
 
 	// Start up SDL and create window
-	if( !core.init() ){
+	if( !ENG::core->init() ){
 		cout << "Failed to init core" << endl;
 	}
 	else{
 		cout << "Successfully initialised core" << endl;
 		// Set engine globals once successfully initialised
-		gRenderer = core.getRenderer();
-		gResolution = core.getResolution();
+		gRenderer = ENG::core->getRenderer();
+		gResolution = ENG::core->getResolution();
 
 		// Load media
 		if( !loadMedia() ){
@@ -79,10 +76,6 @@ int main( int argc, char* args[] ){
 			// Load the default state of the game loop
 			//
 
-			// Create an event handler
-			SDL_Event e;
-			// Create an exit flag
-			bool quit = false;
 
 			// Modulation components
 			Uint8 red = 255;
@@ -103,10 +96,10 @@ int main( int argc, char* args[] ){
 			SDL_RendererFlip flipType = SDL_FLIP_NONE;
 
 			// Button positions
-			gButtons[ 0 ].setPosition( 0, 0 );
-			gButtons[ 1 ].setPosition( gResolution->x / 2, 0 );
-			gButtons[ 2 ].setPosition( 0, gResolution->y / 2 );
-			gButtons[ 3 ].setPosition( gResolution->x / 2, gResolution->y / 2 );
+			ENG::core->makeButton( 0, 0 );
+			ENG::core->makeButton( gResolution->x / 2, 0 );
+			ENG::core->makeButton( 0, gResolution->y / 2 );
+			ENG::core->makeButton( gResolution->x / 2, gResolution->y / 2 );
 
 			// Global text colour
 			SDL_Color textColour = { 0, 0, 0, 255 };
@@ -122,65 +115,41 @@ int main( int argc, char* args[] ){
 			int countedFrames = 0;
 			fpsTimer.start();
 
-			// FPS capper
-			LTimer capTimer;
-
 			//
 			// -- Game loop --
 			//
 			cout << "Entering the game loop" << endl;
-			while( !quit ){
-				
-				// Calculate and correct fps
-				core.startFrameTimer();
-				//capTimer.start();
-				//float avgFps = countedFrames / ( fpsTimer.getTicks() / 1000.f );
-				//if( avgFps > 2000000){
-				//	avgFps = 0;
-				//}
-
-				// Poll hardware events
-				while( SDL_PollEvent( &e ) != 0 ){
-
-					// Handle exit event
-					if( e.type == SDL_QUIT ){
-						quit = true;
-					}
-
-					// Handle button events
-					for( int i = 0; i < TOTAL_BUTTONS; ++i ){
-						gButtons[ i ].handleEvent( &e );
-					}
-				}
+			while( !ENG::core->quit ){
 
 				// Get the current key states
-				core.tick();
+				ENG::core->tick();
 
 				// Set exit flag
-				if( core.getKeyState( SDL_SCANCODE_ESCAPE ) == KEY_RELEASED ){
-					quit = true;
+				if( ENG::core->getKeyState( SDL_SCANCODE_ESCAPE ) == KEY_RELEASED ){
+					ENG::core->quit = true;
 				}
 
 				// Test key states to change scene
-				if( core.getKeyState( SDL_SCANCODE_0 ) == KEY_PRESSED ){
+				if( ENG::core->getKeyState( SDL_SCANCODE_0 ) == KEY_PRESSED ){
 					scene = 0;
 				}
-				else if( core.getKeyState( SDL_SCANCODE_1 ) == KEY_PRESSED ){
+				else if( ENG::core->getKeyState( SDL_SCANCODE_1 ) == KEY_PRESSED ){
 					scene = 1;
 				}
-				else if( core.getKeyState( SDL_SCANCODE_2 ) == KEY_PRESSED ){
+				else if( ENG::core->getKeyState( SDL_SCANCODE_2 ) == KEY_PRESSED ){
 					scene = 2;
 				}
-				else if( core.getKeyState( SDL_SCANCODE_3 ) == KEY_PRESSED ){
+				else if( ENG::core->getKeyState( SDL_SCANCODE_3 ) == KEY_PRESSED ){
 					scene = 3;
 				}
-				else if( core.getKeyState( SDL_SCANCODE_4 ) == KEY_PRESSED ){
+				else if( ENG::core->getKeyState( SDL_SCANCODE_4 ) == KEY_PRESSED ){
 					scene = 4;
 				}
-				else if( core.getKeyState( SDL_SCANCODE_5 ) == KEY_PRESSED ){
+				else if( ENG::core->getKeyState( SDL_SCANCODE_5 ) == KEY_PRESSED ){
 					scene = 5;
+					ENG::core->renderButton = !ENG::core->renderButton;
 				}
-				else if( core.getKeyState( SDL_SCANCODE_6 ) == KEY_PRESSED ){
+				else if( ENG::core->getKeyState( SDL_SCANCODE_6 ) == KEY_PRESSED ){
 					scene = 6;
 				}
 
@@ -189,8 +158,8 @@ int main( int argc, char* args[] ){
 				// ------
 
 				// Clear the screen
-				core.setDrawColour( 0xFF, 0xFF, 0xFF, 0xFF );
-				core.clearRenderer();
+				ENG::core->setDrawColour( 0xFF, 0xFF, 0xFF, 0xFF );
+				ENG::core->clearRenderer();
 
 				// ---
 				// Title screen scene
@@ -216,22 +185,22 @@ int main( int argc, char* args[] ){
 				// ---
 				// Colour mod example
 				else if( scene == 2 ){
-					if( core.getKeyState( SDL_SCANCODE_Q ) == KEY_DOWN ){
+					if( ENG::core->getKeyState( SDL_SCANCODE_Q ) == KEY_DOWN ){
 						red += 4;
 					}
-					else if( core.getKeyState( SDL_SCANCODE_A ) == KEY_DOWN ){
+					else if( ENG::core->getKeyState( SDL_SCANCODE_A ) == KEY_DOWN ){
 						red -= 4;
 					}
-					if( core.getKeyState( SDL_SCANCODE_W ) == KEY_DOWN ){
+					if( ENG::core->getKeyState( SDL_SCANCODE_W ) == KEY_DOWN ){
 						green += 4;
 					}
-					else if( core.getKeyState( SDL_SCANCODE_S ) == KEY_DOWN ){
+					else if( ENG::core->getKeyState( SDL_SCANCODE_S ) == KEY_DOWN ){
 						green -= 4;
 					}
-					if( core.getKeyState( SDL_SCANCODE_E ) == KEY_DOWN ){
+					if( ENG::core->getKeyState( SDL_SCANCODE_E ) == KEY_DOWN ){
 						blue += 4;
 					}
-					else if( core.getKeyState( SDL_SCANCODE_D ) == KEY_DOWN ){
+					else if( ENG::core->getKeyState( SDL_SCANCODE_D ) == KEY_DOWN ){
 						blue -= 4;
 					}
 
@@ -246,11 +215,11 @@ int main( int argc, char* args[] ){
 				// ---
 				// Alpha fading example
 				else if( scene == 3 ){
-					if( core.getKeyState( SDL_SCANCODE_UP ) == KEY_DOWN ){
+					if( ENG::core->getKeyState( SDL_SCANCODE_UP ) == KEY_DOWN ){
 						if( alpha + 32 > 255 ) alpha = 255;
 						else alpha += 32;
 					}
-					else if( core.getKeyState( SDL_SCANCODE_DOWN ) == KEY_DOWN ){
+					else if( ENG::core->getKeyState( SDL_SCANCODE_DOWN ) == KEY_DOWN ){
 						if( alpha - 32 < 0 ) alpha = 0;
 						else alpha -= 32;
 					}
@@ -265,20 +234,20 @@ int main( int argc, char* args[] ){
 				// ---
 				// Texture flip and rotation example
 				else if( scene == 4 ){
-					if( core.getKeyState( SDL_SCANCODE_A ) == KEY_DOWN ){
+					if( ENG::core->getKeyState( SDL_SCANCODE_A ) == KEY_DOWN ){
 						angle -= 20;
 					}
-					else if ( core.getKeyState( SDL_SCANCODE_D ) == KEY_DOWN ){
+					else if ( ENG::core->getKeyState( SDL_SCANCODE_D ) == KEY_DOWN ){
 						angle += 20;
 					}
 
-					if( core.getKeyState( SDL_SCANCODE_LEFT ) == KEY_PRESSED
-					|| core.getKeyState( SDL_SCANCODE_RIGHT ) == KEY_PRESSED ){
+					if( ENG::core->getKeyState( SDL_SCANCODE_LEFT ) == KEY_PRESSED
+					|| ENG::core->getKeyState( SDL_SCANCODE_RIGHT ) == KEY_PRESSED ){
 						if( flipType != SDL_FLIP_HORIZONTAL ) flipType = SDL_FLIP_HORIZONTAL;
 						else flipType = SDL_FLIP_NONE;
 					}
-					if( core.getKeyState( SDL_SCANCODE_UP ) == KEY_PRESSED
-					|| core.getKeyState( SDL_SCANCODE_DOWN ) == KEY_PRESSED ){
+					if( ENG::core->getKeyState( SDL_SCANCODE_UP ) == KEY_PRESSED
+					|| ENG::core->getKeyState( SDL_SCANCODE_DOWN ) == KEY_PRESSED ){
 						if ( flipType != SDL_FLIP_VERTICAL ) flipType = SDL_FLIP_VERTICAL;
 						else flipType = SDL_FLIP_NONE;
 					}
@@ -290,20 +259,17 @@ int main( int argc, char* args[] ){
 				// ---
 				// Mouse button example
 				else if( scene == 5 ){
-					// Render all the buttons
-					for( int i = 0; i < TOTAL_BUTTONS; ++i){
-						gButtons[ i ].render( gRenderer );
-					}
+					
 				}
 
 				// ---
 				// Timer example
 				else if( scene == 6 ){
-					if( core.getKeyState( SDL_SCANCODE_S ) == KEY_PRESSED ){
+					if( ENG::core->getKeyState( SDL_SCANCODE_S ) == KEY_PRESSED ){
 						if( userTimer.isStarted() ) userTimer.stop();
 						else userTimer.start();
 					}
-					else if( core.getKeyState( SDL_SCANCODE_P ) == KEY_PRESSED ){
+					else if( ENG::core->getKeyState( SDL_SCANCODE_P ) == KEY_PRESSED ){
 						if( userTimer.isPaused() ) userTimer.unpause();
 						else userTimer.pause();
 					}
@@ -323,13 +289,14 @@ int main( int argc, char* args[] ){
 				// Render the text
 				if( scene ) gSceneGuideText.render( gRenderer, ( gResolution->x - gSceneGuideText.getWidth() ) / 2, ( gResolution->y - gSceneGuideText.getHeight() - 20 ) );
 
-				core.stopFrameTimer();
+				ENG::core->stopFrameTimer();
 
 				// Update screen
-				core.present();
+				//ENG::core->present();
+				ENG::core->render();
 
 				// Apply any frame rate capping
-				core.capFrameRate();
+				ENG::core->capFrameRate();
 
 				// -----
 				// End of draw call
@@ -348,7 +315,7 @@ int main( int argc, char* args[] ){
 	//
 	// -- Close engine --
 	//
-	core.close();
+	ENG::core->close();
 	cout << "Shutdown the core" << endl;
 
 	return 0;
@@ -359,16 +326,14 @@ bool loadMedia(){
 	bool success = true;
 
 	// Load title page
-	string path( "media/title.png" );
-	if( !gTitleTexture.loadFromFile( gRenderer, path.c_str() ) ){
-		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
+	if( !gTitleTexture.loadFromFile( gRenderer, string( "../media/title.png" ).c_str() ) ){
+		cout << "loadMedia Failure: " << SDL_GetError() << endl;
 		success = false;
 	}
 
 	// Load animation example media
-	path = string( "media/SpriteSheetTemplate.png" );
-	if( !gSpriteTextureSheet.loadFromFile( gRenderer, path.c_str() ) ){
-		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
+	if( !gSpriteTextureSheet.loadFromFile( gRenderer, string( "../media/SpriteSheetTemplate.png" ).c_str() ) ){
+		cout << "loadMedia Failure: " << SDL_GetError() << endl;
 		success = false;
 	}
 	gAnimSpriteClips[0] = { 0, 0, 100, 200 };
@@ -377,9 +342,8 @@ bool loadMedia(){
 	gAnimSpriteClips[3] = { 300, 0, 100, 200 };
 
 	// Load circle sprite sheet for colour mod example
-	path = string( "media/spriteSheet.png" );
-	if( !gColourCircleClipSheet.loadFromFile( gRenderer, path.c_str() ) ){
-		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
+	if( !gColourCircleClipSheet.loadFromFile( gRenderer, string( "../media/spriteSheet.png" ).c_str() ) ){
+		cout << "loadMedia Failure: " << SDL_GetError() << endl;
 		success = false;
 	}
 	gColourCircleClips[0] = { 0, 0, 200, 200 };
@@ -387,15 +351,13 @@ bool loadMedia(){
 	gColourCircleClips[2] = { 0, 200, 200, 200 };
 	gColourCircleClips[3] = { 200, 200, 200, 200 };
 
-	path = string( "media/background.png" );
-	if( !gBackground.loadFromFile( gRenderer, path.c_str() ) ){
-		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
+	// Load in the textures for the fade example
+	if( !gBackground.loadFromFile( gRenderer, string( "../media/fadeIn.png" ).c_str() ) ){
+		cout << "loadMedia Failure: " << SDL_GetError() << endl;
 		success = false;
 	}
-
-	path = string( "media/fadeIn.png" );
-	if( !gFadeTexture.loadFromFile( gRenderer, path.c_str() ) ){
-		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
+	if( !gFadeTexture.loadFromFile( gRenderer, string( "../media/background.png" ).c_str() ) ){
+		cout << "loadMedia Failure: " << SDL_GetError() << endl;
 		success = false;
 	}
 	else{
@@ -403,27 +365,28 @@ bool loadMedia(){
 		gFadeTexture.setBlendMode( SDL_BLENDMODE_BLEND );
 	}
 
-	TTF_Font* font = TTF_OpenFont(string( "media/lazy.ttf" ).c_str(), 18 );
+	// Load font for rendering text
+	TTF_Font* font = TTF_OpenFont( string( "../media/lazy.ttf" ).c_str(), 18 );
 	if( font == NULL ){
-		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
+		cout << "loadMedia Failure: " <<  SDL_GetError() << endl;
 		success = false;
 	}
 	else{
-		// Render text
+		// Render text colour
 		SDL_Color textColour = { 0, 0, 0 };
 
 		gSceneGuideText.mFont = font;
 		if( !gSceneGuideText.loadFromRenderedText( gRenderer, 
 		"1. Anim - 2. Colour Modulation - 3. Alpha fade - 4. Rotation and flipping - 5. Mouse", 
 		textColour ) ){
-			cout << "Failed to render text texture!" << endl;
+			cout << "Failed to render scene guide text texture!" << endl;
 			success = false;
 		}
 
 		gPromptTexture.mFont = font;
 		if( !gPromptTexture.loadFromRenderedText( gRenderer, 
 		"Press S to start, P to pause userTimer", textColour) ){
-			cout << "Failed to render text texture" << endl;
+			cout << "Failed to render prompt text texture" << endl;
 			success = false;
 		}
 
@@ -431,27 +394,8 @@ bool loadMedia(){
 		gFpsTimerTexture.mFont = font;
 	}
 
-	path = string( "media/compass.png" );
-	if( !gCompassTexture.loadFromFile( gRenderer, path.c_str() ) ){
-		cout << "loadMedia Failure: Couldn't load " << path.c_str() << endl;
-		success = false;
-	}
-
-
-	if( !gButtons[ 0 ].loadButtonSprites( gRenderer )){
-		cout << "Button failed to open" << endl;
-		success = false;
-	}
-	if( !gButtons[ 1 ].loadButtonSprites( gRenderer )){
-		cout << "Button failed to open" << endl;
-		success = false;
-	}
-	if( !gButtons[ 2 ].loadButtonSprites( gRenderer )){
-		cout << "Button failed to open" << endl;
-		success = false;
-	}
-	if( !gButtons[ 3 ].loadButtonSprites( gRenderer )){
-		cout << "Button failed to open" << endl;
+	if( !gCompassTexture.loadFromFile( gRenderer, string( "../media/compass.png" ).c_str() ) ){
+		cout << "loadMedia Failure: " << SDL_GetError() << endl;
 		success = false;
 	}
 

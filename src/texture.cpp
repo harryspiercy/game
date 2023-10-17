@@ -46,10 +46,15 @@ bool LTexture::loadFromFile( SDL_Renderer* renderer, string path ){
 
 #if defined(SDL_TTF_MAJOR_VERSION)
 bool LTexture::loadFromRenderedText( SDL_Renderer* renderer, string textureText, SDL_Color textColour ){
+	
 	// Remove exisitng texture
 	free();
 
 	// Render text surface
+	if ( mFont == NULL ){
+		cout << "mFont is NULL" << endl;
+	}
+
 	SDL_Surface* textSurface = TTF_RenderText_Solid( mFont, textureText.c_str(), textColour );
 	if ( textSurface == NULL ){
 		cout << "loadFromRenderedText Failure: Didn't load surface. " << SDL_GetError() << endl;

@@ -16,6 +16,8 @@ using std::array;
 #include <map>
 using std::map;
 using std::pair;
+#include <list>
+using std::list;
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>

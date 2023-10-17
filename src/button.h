@@ -32,7 +32,7 @@ public:
     //! Load the button clips
     /*!
     */
-   bool loadButtonSprites( SDL_Renderer* renderer, string path = string( "media/buttonSpriteSheet.png" ) );
+   bool loadButtonSprites( SDL_Renderer* renderer, string path );
 
     //! Set top left position
     /*!
