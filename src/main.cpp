@@ -289,10 +289,7 @@ int main( int argc, char* args[] ){
 				// Render the text
 				if( scene ) gSceneGuideText.render( gRenderer, ( gResolution->x - gSceneGuideText.getWidth() ) / 2, ( gResolution->y - gSceneGuideText.getHeight() - 20 ) );
 
-				ENG::core->stopFrameTimer();
-
 				// Update screen
-				//ENG::core->present();
 				ENG::core->render();
 
 				// Apply any frame rate capping

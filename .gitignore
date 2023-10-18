@@ -30,3 +30,15 @@
 *.exe
 *.out
 *.app
+
+# Exclude the cmake folder
+/cmake/*
+/build/Testing/*
+
+#----------------------
+# INCLUDES
+#----------------------
+# cmake file
+!/cmake/CMakeLists.txt
+!/cmake/game
+!/cmake/libengine.a

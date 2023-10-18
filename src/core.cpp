@@ -160,6 +160,8 @@ void Core::present(){
 
 void Core::render(){
 
+	stopFrameTimer();
+
 	if( renderButton ){
 		for( auto& button :  buttons ) {
 			button->render( renderer );
