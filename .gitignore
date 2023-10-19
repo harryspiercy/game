@@ -33,12 +33,13 @@
 
 # Exclude the cmake folder
 /cmake/*
-/build/Testing/*
+/build/*
 
 #----------------------
 # INCLUDES
 #----------------------
 # cmake file
 !/cmake/CMakeLists.txt
-!/cmake/game
-!/cmake/libengine.a
+!/build/a
+!/build/libengine.a
+!/build/Makefile
