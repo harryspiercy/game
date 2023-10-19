@@ -1,0 +1,191 @@
+\hypertarget{classCore}{}\doxysection{Core Class Reference}
+\label{classCore}\index{Core@{Core}}
+
+
+\mbox{\hyperlink{classCore}{Core}} engine class.  
+
+
+
+
+{\ttfamily \#include $<$core.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classCore_a749cbc22dd161d37ddeed8f92399daa8}{Core}} (int x=800, int y=600, int fpscap=-\/1)
+\begin{DoxyCompactList}\small\item\em Initialise variables. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classCore_a776f8c46504b14183883c6273f93eaed}\label{classCore_a776f8c46504b14183883c6273f93eaed}} 
+\mbox{\hyperlink{classCore_a776f8c46504b14183883c6273f93eaed}{$\sim$\+Core}} ()
+\begin{DoxyCompactList}\small\item\em Release variable memeory. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classCore_a2ad48b714f575d3f3c25c80ffa72afad}\label{classCore_a2ad48b714f575d3f3c25c80ffa72afad}} 
+bool \mbox{\hyperlink{classCore_a2ad48b714f575d3f3c25c80ffa72afad}{init}} ()
+\begin{DoxyCompactList}\small\item\em Initialise SDL and create window. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classCore_a83256a5e0135b299c100e88d1ee0f17e}{handle\+Events}} ()
+\begin{DoxyCompactList}\small\item\em Poll and handle events. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classCore_aacad64cad5df6dc343aa122a4756290b}\label{classCore_aacad64cad5df6dc343aa122a4756290b}} 
+void \mbox{\hyperlink{classCore_aacad64cad5df6dc343aa122a4756290b}{tick}} ()
+\begin{DoxyCompactList}\small\item\em Update the core. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classCore_a4dd78fd1061429cdccdb9d17f6e35d12}\label{classCore_a4dd78fd1061429cdccdb9d17f6e35d12}} 
+void \mbox{\hyperlink{classCore_a4dd78fd1061429cdccdb9d17f6e35d12}{close}} ()
+\begin{DoxyCompactList}\small\item\em Shutdown SDL and destroy window. \end{DoxyCompactList}\item 
+SDL\+\_\+\+Window $\ast$ \mbox{\hyperlink{classCore_a882e50553c35593ab67e090d5e17e2c6}{get\+Window}} ()
+\begin{DoxyCompactList}\small\item\em get the address of the game window \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classCore_a4668768d31f80ac100d266776ece1942}\label{classCore_a4668768d31f80ac100d266776ece1942}} 
+\mbox{\hyperlink{structResolution}{Resolution}} $\ast$ \mbox{\hyperlink{classCore_a4668768d31f80ac100d266776ece1942}{get\+Resolution}} ()
+\begin{DoxyCompactList}\small\item\em Return the resolution of the display. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classCore_a5c06b54ef5f56fdf4a3a103cfb872293}\label{classCore_a5c06b54ef5f56fdf4a3a103cfb872293}} 
+SDL\+\_\+\+Renderer $\ast$ \mbox{\hyperlink{classCore_a5c06b54ef5f56fdf4a3a103cfb872293}{get\+Renderer}} ()
+\begin{DoxyCompactList}\small\item\em Return the address of the game window renderer. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classCore_ac5771061f10d5dcee71e90c94d78b78b}{clear\+Renderer}} ()
+\begin{DoxyCompactList}\small\item\em Clear the renderer. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classCore_a841934cb8035522ca845eeb8ffb363fc}\label{classCore_a841934cb8035522ca845eeb8ffb363fc}} 
+void \mbox{\hyperlink{classCore_a841934cb8035522ca845eeb8ffb363fc}{set\+Draw\+Colour}} (Uint8 x, Uint8 y, Uint8 z, Uint8 a)
+\begin{DoxyCompactList}\small\item\em Set the renderer draw colour. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classCore_aa1f58f0b52dc461a61f52974fe5c7d74}\label{classCore_aa1f58f0b52dc461a61f52974fe5c7d74}} 
+void \mbox{\hyperlink{classCore_aa1f58f0b52dc461a61f52974fe5c7d74}{present}} ()
+\begin{DoxyCompactList}\small\item\em Present the renderer to the window. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classCore_a818e02782f3ebdd642cddcb1c666bced}\label{classCore_a818e02782f3ebdd642cddcb1c666bced}} 
+void \mbox{\hyperlink{classCore_a818e02782f3ebdd642cddcb1c666bced}{render}} ()
+\begin{DoxyCompactList}\small\item\em Render all of the core elements. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classCore_a69f735919b696133b5762b7a0e988728}{update\+Key\+State}} ()
+\begin{DoxyCompactList}\small\item\em Get the latest key states for the core. \end{DoxyCompactList}\item 
+Key\+State \mbox{\hyperlink{classCore_a06f5fcd7d83455f0ae6548435ffc6562}{get\+Key\+State}} (SDL\+\_\+\+Scancode scancode)
+\begin{DoxyCompactList}\small\item\em Get the pressed state of a spefified key scancode. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classCore_ae9d29c6aeecb93b963ddf0d148339fc3}\label{classCore_ae9d29c6aeecb93b963ddf0d148339fc3}} 
+int \mbox{\hyperlink{classCore_ae9d29c6aeecb93b963ddf0d148339fc3}{get\+Ticks\+Per\+Frame}} ()
+\begin{DoxyCompactList}\small\item\em Return the required ticks perframe. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classCore_ab7c77d8c049401ace96d36ce48749b19}\label{classCore_ab7c77d8c049401ace96d36ce48749b19}} 
+void {\bfseries toggle\+Fps\+Display} ()
+\item 
+\mbox{\Hypertarget{classCore_af6ff26a2bd76243b53d7f44753324ee5}\label{classCore_af6ff26a2bd76243b53d7f44753324ee5}} 
+void \mbox{\hyperlink{classCore_af6ff26a2bd76243b53d7f44753324ee5}{start\+Frame\+Timer}} ()
+\begin{DoxyCompactList}\small\item\em Start the frame timer. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classCore_adfb768fa59284fbe4cf2941ae9ce4748}\label{classCore_adfb768fa59284fbe4cf2941ae9ce4748}} 
+void \mbox{\hyperlink{classCore_adfb768fa59284fbe4cf2941ae9ce4748}{stop\+Frame\+Timer}} ()
+\begin{DoxyCompactList}\small\item\em Stop the frame timer. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classCore_a2afda7be9094bc5ba7086919702b6626}\label{classCore_a2afda7be9094bc5ba7086919702b6626}} 
+void \mbox{\hyperlink{classCore_a2afda7be9094bc5ba7086919702b6626}{cap\+Frame\+Rate}} ()
+\begin{DoxyCompactList}\small\item\em Cap the framerate. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classCore_a8136af2178f1593864593057c5efa220}\label{classCore_a8136af2178f1593864593057c5efa220}} 
+\mbox{\hyperlink{classLButton}{LButton}} $\ast$ {\bfseries make\+Button} (int x, int y, string path=string(\char`\"{}../media/button\+Sprite\+Sheet.\+png\char`\"{}))
+\item 
+\mbox{\Hypertarget{classCore_aa94241602138c3c791f9184bbfe39121}\label{classCore_aa94241602138c3c791f9184bbfe39121}} 
+const TTF\+\_\+\+Font $\ast$ \mbox{\hyperlink{classCore_aa94241602138c3c791f9184bbfe39121}{Get\+Font}} ()
+\begin{DoxyCompactList}\small\item\em Getter for the default font. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classCore_a722434c9873d07d6b26a74e40e08eb9c}\label{classCore_a722434c9873d07d6b26a74e40e08eb9c}} 
+static bool \mbox{\hyperlink{classCore_a722434c9873d07d6b26a74e40e08eb9c}{start}} ()
+\begin{DoxyCompactList}\small\item\em Initialise the core. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classCore_a4289b712de20117fe23b21243d0e9a2a}\label{classCore_a4289b712de20117fe23b21243d0e9a2a}} 
+bool \mbox{\hyperlink{classCore_a4289b712de20117fe23b21243d0e9a2a}{quit}} = false
+\begin{DoxyCompactList}\small\item\em Is the game loop still running. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classCore_a106ecba8e9a301fdab03ddb1ecf294d1}\label{classCore_a106ecba8e9a301fdab03ddb1ecf294d1}} 
+bool \mbox{\hyperlink{classCore_a106ecba8e9a301fdab03ddb1ecf294d1}{render\+Button}} = false
+\begin{DoxyCompactList}\small\item\em TEMP. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\mbox{\hyperlink{classCore}{Core}} engine class. 
+
+Class to handle engine interactions. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classCore_a749cbc22dd161d37ddeed8f92399daa8}\label{classCore_a749cbc22dd161d37ddeed8f92399daa8}} 
+\index{Core@{Core}!Core@{Core}}
+\index{Core@{Core}!Core@{Core}}
+\doxysubsubsection{\texorpdfstring{Core()}{Core()}}
+{\footnotesize\ttfamily Core\+::\+Core (\begin{DoxyParamCaption}\item[{int}]{x = {\ttfamily 800},  }\item[{int}]{y = {\ttfamily 600},  }\item[{int}]{fpscap = {\ttfamily -\/1} }\end{DoxyParamCaption})}
+
+
+
+Initialise variables. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & width of the window \\
+\hline
+{\em y} & height of the window \\
+\hline
+{\em fpscap} & frames per second. FPS\+\_\+\+VSYNC or FPS\+\_\+\+FREERUN \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classCore_ac5771061f10d5dcee71e90c94d78b78b}\label{classCore_ac5771061f10d5dcee71e90c94d78b78b}} 
+\index{Core@{Core}!clearRenderer@{clearRenderer}}
+\index{clearRenderer@{clearRenderer}!Core@{Core}}
+\doxysubsubsection{\texorpdfstring{clearRenderer()}{clearRenderer()}}
+{\footnotesize\ttfamily void Core\+::clear\+Renderer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Clear the renderer. 
+
+Use as the start of a new draw call \mbox{\Hypertarget{classCore_a06f5fcd7d83455f0ae6548435ffc6562}\label{classCore_a06f5fcd7d83455f0ae6548435ffc6562}} 
+\index{Core@{Core}!getKeyState@{getKeyState}}
+\index{getKeyState@{getKeyState}!Core@{Core}}
+\doxysubsubsection{\texorpdfstring{getKeyState()}{getKeyState()}}
+{\footnotesize\ttfamily Key\+State Core\+::get\+Key\+State (\begin{DoxyParamCaption}\item[{SDL\+\_\+\+Scancode}]{scancode }\end{DoxyParamCaption})}
+
+
+
+Get the pressed state of a spefified key scancode. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scancode} & the SDL scan code of a key \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the state of the queried key. \mbox{[} KEY\+\_\+\+PRESSED, KEY\+\_\+\+DOWN, KEY RELEASED, KEY\+\_\+\+UP \mbox{]} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classCore_a882e50553c35593ab67e090d5e17e2c6}\label{classCore_a882e50553c35593ab67e090d5e17e2c6}} 
+\index{Core@{Core}!getWindow@{getWindow}}
+\index{getWindow@{getWindow}!Core@{Core}}
+\doxysubsubsection{\texorpdfstring{getWindow()}{getWindow()}}
+{\footnotesize\ttfamily SDL\+\_\+\+Window$\ast$ Core\+::get\+Window (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+get the address of the game window 
+
+\begin{DoxyReturn}{Returns}
+window 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classCore_a83256a5e0135b299c100e88d1ee0f17e}\label{classCore_a83256a5e0135b299c100e88d1ee0f17e}} 
+\index{Core@{Core}!handleEvents@{handleEvents}}
+\index{handleEvents@{handleEvents}!Core@{Core}}
+\doxysubsubsection{\texorpdfstring{handleEvents()}{handleEvents()}}
+{\footnotesize\ttfamily void Core\+::handle\+Events (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Poll and handle events. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em event} & Reference to the polled SDL event \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classCore_a69f735919b696133b5762b7a0e988728}\label{classCore_a69f735919b696133b5762b7a0e988728}} 
+\index{Core@{Core}!updateKeyState@{updateKeyState}}
+\index{updateKeyState@{updateKeyState}!Core@{Core}}
+\doxysubsubsection{\texorpdfstring{updateKeyState()}{updateKeyState()}}
+{\footnotesize\ttfamily void Core\+::update\+Key\+State (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Get the latest key states for the core. 
+
+Set current\+Key\+States to a new value using SDL\+\_\+\+Keyboard\+State 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/core.\+h\item 
+src/core.\+cpp\end{DoxyCompactItemize}

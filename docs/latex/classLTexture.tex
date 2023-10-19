@@ -20,8 +20,6 @@ Texture wrapper class.\+texture.\+h.
 \begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
 bool \mbox{\hyperlink{classLTexture_ac3b47e0da6c110d64baf2c5bbf3bfaef}{load\+From\+File}} (SDL\+\_\+\+Renderer $\ast$renderer, string path)
 \begin{DoxyCompactList}\small\item\em Write to the hardware m\+Texture. \end{DoxyCompactList}\item 
-bool \mbox{\hyperlink{classLTexture_a9d59cb4948ae155691574919fd8ff118}{load\+From\+Rendered\+Text}} (SDL\+\_\+\+Renderer $\ast$renderer, string texture\+Text, SDL\+\_\+\+Color text\+Colour)
-\begin{DoxyCompactList}\small\item\em Load the required texture clips from the ttf file for the provided string. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classLTexture_abef558f0b920270079925548a3976a06}\label{classLTexture_abef558f0b920270079925548a3976a06}} 
 void \mbox{\hyperlink{classLTexture_abef558f0b920270079925548a3976a06}{free}} ()
 \begin{DoxyCompactList}\small\item\em Free the hardware texture. \end{DoxyCompactList}\item 
@@ -96,28 +94,6 @@ Load a texture from a png image at path. set m\+Texture, m\+Width and m\+Height
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 was the file successfully loaded 
-\end{DoxyReturn}
-\mbox{\Hypertarget{classLTexture_a9d59cb4948ae155691574919fd8ff118}\label{classLTexture_a9d59cb4948ae155691574919fd8ff118}} 
-\index{LTexture@{LTexture}!loadFromRenderedText@{loadFromRenderedText}}
-\index{loadFromRenderedText@{loadFromRenderedText}!LTexture@{LTexture}}
-\doxysubsubsection{\texorpdfstring{loadFromRenderedText()}{loadFromRenderedText()}}
-{\footnotesize\ttfamily bool LTexture\+::load\+From\+Rendered\+Text (\begin{DoxyParamCaption}\item[{SDL\+\_\+\+Renderer $\ast$}]{renderer,  }\item[{string}]{texture\+Text,  }\item[{SDL\+\_\+\+Color}]{text\+Colour }\end{DoxyParamCaption})}
-
-
-
-Load the required texture clips from the ttf file for the provided string. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em renderer} & Global renderer \\
-\hline
-{\em texture\+Text} & string of characters to render \\
-\hline
-{\em text\+Colour} & colour of the text to render \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-success of loading text 
 \end{DoxyReturn}
 \mbox{\Hypertarget{classLTexture_a057b7906c2117301639012d22c052085}\label{classLTexture_a057b7906c2117301639012d22c052085}} 
 \index{LTexture@{LTexture}!render@{render}}

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['getheight_1',['getHeight',['../classLTexture.html#a277f45af3dae7e35ca846a527039e59a',1,'LTexture']]],
-  ['getwidth_2',['getWidth',['../classLTexture.html#a542c1f81d98fd5659a04eb394d61a879',1,'LTexture']]]
+  ['free_4',['free',['../classLTexture.html#abef558f0b920270079925548a3976a06',1,'LTexture']]]
 ];

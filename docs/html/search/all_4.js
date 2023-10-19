@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['render_7',['render',['../classLTexture.html#a057b7906c2117301639012d22c052085',1,'LTexture']]]
+  ['init_16',['init',['../classCore.html#a2ad48b714f575d3f3c25c80ffa72afad',1,'Core']]],
+  ['ispaused_17',['isPaused',['../classLTimer.html#ae1d9b504da6ed0f42e10f2338a9f88bb',1,'LTimer']]],
+  ['isstarted_18',['isStarted',['../classLTimer.html#a102ca688eaa4109dd733b4b60a29d27c',1,'LTimer']]]
 ];

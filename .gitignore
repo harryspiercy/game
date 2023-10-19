@@ -32,8 +32,8 @@
 *.app
 
 # Exclude the cmake folder
-/cmake/*
-/build/*
+cmake/*
+build/*
 
 #----------------------
 # INCLUDES
