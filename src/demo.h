@@ -1,24 +1,33 @@
 #ifndef _DEMO_H_
 #define _DEMO_H_
 
-#include "common.h"
-#include "core.h"
+#include "level.h"
 #include "texture.h"
 #include "timer.h"
 #include "button.h"
 
+// -- Level Constants --
 const int COLOUR_CIRCLE_CLIPS = 4;
 const int WALKING_ANIMATION_FRAMES = 4;
 
-class Demo{
-
+//! Demo level class
+/*! Class to handle engine interactions.
+*/
+class Demo : private Level {
+    //
+    // -- Engine globals --
+    //
+private:
+    // Reference to the game core
     Core* gCore = NULL;
+    // 
     SDL_Renderer* gRenderer = NULL;
     Resolution* gViewport = NULL;
 
     //
-    // -- Game globals --
+    // -- Level content --
     //
+private:
     // Texture for the title
     LTexture gTitleTexture;
 
@@ -79,13 +88,27 @@ class Demo{
     bool showFps = true;
     int countedFrames = 0;
 
+    // 
+    // -- Level functions --
+    //
+private:
     // load media
     bool loadMedia();
 
 public:
+    // Construct the demo level
+    Demo();
+
+    // On demo level destroyed
+    ~Demo();
+
+    // initialise demo
     void init( Core* core );
+    
+    // tick demo
     void tick(); 
     
+    // close demo media down
     void closeMedia();
 
 };

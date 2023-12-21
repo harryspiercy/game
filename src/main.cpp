@@ -8,9 +8,11 @@
 SDL_Renderer* gRenderer = NULL;
 Resolution* gViewport = NULL;
 Demo demo;
+bool initDemo = true;
+bool runDemo = false;
 
 //
-// --- Program --//
+// --- Program --- //
 //
 int main( int argc, char* args[] ){
 
@@ -38,8 +40,19 @@ int main( int argc, char* args[] ){
 				ENG::core->quit = true;
 			}
 
+			// Go to the demo
+			if( ENG::core->getKeyState( SDL_SCANCODE_LALT ) == KEY_DOWN 
+			&& ENG::core->getKeyState( SDL_SCANCODE_D ) == KEY_PRESSED ){
+				
+				if(initDemo){
+					demo.init( ENG::core );
+					runDemo = true;
+					initDemo = false;
+				}
+			}
+
 			// demo tick
-			demo.tick();
+			if(runDemo) demo.tick();
 
 			// Update screen
 			ENG::core->render();

@@ -1,5 +1,12 @@
 #include "demo.h"
 
+Demo::Demo(){
+
+}
+
+Demo::~Demo(){
+    
+}
 
 void Demo::init( Core* core ){
 
