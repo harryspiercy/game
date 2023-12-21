@@ -17,6 +17,8 @@ ${SRC}/button.cpp
 ${SRC}/core.cpp
 ${SRC}/texture.cpp
 ${SRC}/timer.cpp
+${SRC}/demo.cpp
+
 
 ${SRC}/common.h
 ${SRC}/engine.h
@@ -24,6 +26,8 @@ ${SRC}/button.h
 ${SRC}/core.h
 ${SRC}/texture.h
 ${SRC}/timer.h
+${SRC}/demo.h
+
 )
 target_link_libraries(engine ${SDL_LIBS})
 

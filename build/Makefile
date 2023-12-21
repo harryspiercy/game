@@ -57,18 +57,18 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/harry/dev/game/cmake
+CMAKE_SOURCE_DIR = /home/harry/Desktop/game/cmake
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/harry/dev/game/build
+CMAKE_BINARY_DIR = /home/harry/Desktop/game/build
 
 #=============================================================================
 # Targets provided globally by CMake.
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
-	/usr/bin/cmake-gui -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/harry/dev/game/build/CMakeFiles /home/harry/dev/game/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/harry/Desktop/game/build/CMakeFiles /home/harry/Desktop/game/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/harry/dev/game/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/harry/Desktop/game/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -142,125 +142,149 @@ engine/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/build
 .PHONY : engine/fast
 
-home/harry/dev/game/src/button.o: home/harry/dev/game/src/button.cpp.o
-.PHONY : home/harry/dev/game/src/button.o
+home/harry/Desktop/game/src/button.o: home/harry/Desktop/game/src/button.cpp.o
+.PHONY : home/harry/Desktop/game/src/button.o
 
 # target to build an object file
-home/harry/dev/game/src/button.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/dev/game/src/button.cpp.o
-.PHONY : home/harry/dev/game/src/button.cpp.o
+home/harry/Desktop/game/src/button.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Desktop/game/src/button.cpp.o
+.PHONY : home/harry/Desktop/game/src/button.cpp.o
 
-home/harry/dev/game/src/button.i: home/harry/dev/game/src/button.cpp.i
-.PHONY : home/harry/dev/game/src/button.i
+home/harry/Desktop/game/src/button.i: home/harry/Desktop/game/src/button.cpp.i
+.PHONY : home/harry/Desktop/game/src/button.i
 
 # target to preprocess a source file
-home/harry/dev/game/src/button.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/dev/game/src/button.cpp.i
-.PHONY : home/harry/dev/game/src/button.cpp.i
+home/harry/Desktop/game/src/button.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Desktop/game/src/button.cpp.i
+.PHONY : home/harry/Desktop/game/src/button.cpp.i
 
-home/harry/dev/game/src/button.s: home/harry/dev/game/src/button.cpp.s
-.PHONY : home/harry/dev/game/src/button.s
+home/harry/Desktop/game/src/button.s: home/harry/Desktop/game/src/button.cpp.s
+.PHONY : home/harry/Desktop/game/src/button.s
 
 # target to generate assembly for a file
-home/harry/dev/game/src/button.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/dev/game/src/button.cpp.s
-.PHONY : home/harry/dev/game/src/button.cpp.s
+home/harry/Desktop/game/src/button.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Desktop/game/src/button.cpp.s
+.PHONY : home/harry/Desktop/game/src/button.cpp.s
 
-home/harry/dev/game/src/core.o: home/harry/dev/game/src/core.cpp.o
-.PHONY : home/harry/dev/game/src/core.o
+home/harry/Desktop/game/src/core.o: home/harry/Desktop/game/src/core.cpp.o
+.PHONY : home/harry/Desktop/game/src/core.o
 
 # target to build an object file
-home/harry/dev/game/src/core.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/dev/game/src/core.cpp.o
-.PHONY : home/harry/dev/game/src/core.cpp.o
+home/harry/Desktop/game/src/core.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Desktop/game/src/core.cpp.o
+.PHONY : home/harry/Desktop/game/src/core.cpp.o
 
-home/harry/dev/game/src/core.i: home/harry/dev/game/src/core.cpp.i
-.PHONY : home/harry/dev/game/src/core.i
+home/harry/Desktop/game/src/core.i: home/harry/Desktop/game/src/core.cpp.i
+.PHONY : home/harry/Desktop/game/src/core.i
 
 # target to preprocess a source file
-home/harry/dev/game/src/core.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/dev/game/src/core.cpp.i
-.PHONY : home/harry/dev/game/src/core.cpp.i
+home/harry/Desktop/game/src/core.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Desktop/game/src/core.cpp.i
+.PHONY : home/harry/Desktop/game/src/core.cpp.i
 
-home/harry/dev/game/src/core.s: home/harry/dev/game/src/core.cpp.s
-.PHONY : home/harry/dev/game/src/core.s
+home/harry/Desktop/game/src/core.s: home/harry/Desktop/game/src/core.cpp.s
+.PHONY : home/harry/Desktop/game/src/core.s
 
 # target to generate assembly for a file
-home/harry/dev/game/src/core.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/dev/game/src/core.cpp.s
-.PHONY : home/harry/dev/game/src/core.cpp.s
+home/harry/Desktop/game/src/core.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Desktop/game/src/core.cpp.s
+.PHONY : home/harry/Desktop/game/src/core.cpp.s
 
-home/harry/dev/game/src/main.o: home/harry/dev/game/src/main.cpp.o
-.PHONY : home/harry/dev/game/src/main.o
+home/harry/Desktop/game/src/demo.o: home/harry/Desktop/game/src/demo.cpp.o
+.PHONY : home/harry/Desktop/game/src/demo.o
 
 # target to build an object file
-home/harry/dev/game/src/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.dir/build.make CMakeFiles/a.dir/home/harry/dev/game/src/main.cpp.o
-.PHONY : home/harry/dev/game/src/main.cpp.o
+home/harry/Desktop/game/src/demo.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Desktop/game/src/demo.cpp.o
+.PHONY : home/harry/Desktop/game/src/demo.cpp.o
 
-home/harry/dev/game/src/main.i: home/harry/dev/game/src/main.cpp.i
-.PHONY : home/harry/dev/game/src/main.i
+home/harry/Desktop/game/src/demo.i: home/harry/Desktop/game/src/demo.cpp.i
+.PHONY : home/harry/Desktop/game/src/demo.i
 
 # target to preprocess a source file
-home/harry/dev/game/src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.dir/build.make CMakeFiles/a.dir/home/harry/dev/game/src/main.cpp.i
-.PHONY : home/harry/dev/game/src/main.cpp.i
+home/harry/Desktop/game/src/demo.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Desktop/game/src/demo.cpp.i
+.PHONY : home/harry/Desktop/game/src/demo.cpp.i
 
-home/harry/dev/game/src/main.s: home/harry/dev/game/src/main.cpp.s
-.PHONY : home/harry/dev/game/src/main.s
+home/harry/Desktop/game/src/demo.s: home/harry/Desktop/game/src/demo.cpp.s
+.PHONY : home/harry/Desktop/game/src/demo.s
 
 # target to generate assembly for a file
-home/harry/dev/game/src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.dir/build.make CMakeFiles/a.dir/home/harry/dev/game/src/main.cpp.s
-.PHONY : home/harry/dev/game/src/main.cpp.s
+home/harry/Desktop/game/src/demo.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Desktop/game/src/demo.cpp.s
+.PHONY : home/harry/Desktop/game/src/demo.cpp.s
 
-home/harry/dev/game/src/texture.o: home/harry/dev/game/src/texture.cpp.o
-.PHONY : home/harry/dev/game/src/texture.o
+home/harry/Desktop/game/src/main.o: home/harry/Desktop/game/src/main.cpp.o
+.PHONY : home/harry/Desktop/game/src/main.o
 
 # target to build an object file
-home/harry/dev/game/src/texture.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/dev/game/src/texture.cpp.o
-.PHONY : home/harry/dev/game/src/texture.cpp.o
+home/harry/Desktop/game/src/main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.dir/build.make CMakeFiles/a.dir/home/harry/Desktop/game/src/main.cpp.o
+.PHONY : home/harry/Desktop/game/src/main.cpp.o
 
-home/harry/dev/game/src/texture.i: home/harry/dev/game/src/texture.cpp.i
-.PHONY : home/harry/dev/game/src/texture.i
+home/harry/Desktop/game/src/main.i: home/harry/Desktop/game/src/main.cpp.i
+.PHONY : home/harry/Desktop/game/src/main.i
 
 # target to preprocess a source file
-home/harry/dev/game/src/texture.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/dev/game/src/texture.cpp.i
-.PHONY : home/harry/dev/game/src/texture.cpp.i
+home/harry/Desktop/game/src/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.dir/build.make CMakeFiles/a.dir/home/harry/Desktop/game/src/main.cpp.i
+.PHONY : home/harry/Desktop/game/src/main.cpp.i
 
-home/harry/dev/game/src/texture.s: home/harry/dev/game/src/texture.cpp.s
-.PHONY : home/harry/dev/game/src/texture.s
+home/harry/Desktop/game/src/main.s: home/harry/Desktop/game/src/main.cpp.s
+.PHONY : home/harry/Desktop/game/src/main.s
 
 # target to generate assembly for a file
-home/harry/dev/game/src/texture.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/dev/game/src/texture.cpp.s
-.PHONY : home/harry/dev/game/src/texture.cpp.s
+home/harry/Desktop/game/src/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.dir/build.make CMakeFiles/a.dir/home/harry/Desktop/game/src/main.cpp.s
+.PHONY : home/harry/Desktop/game/src/main.cpp.s
 
-home/harry/dev/game/src/timer.o: home/harry/dev/game/src/timer.cpp.o
-.PHONY : home/harry/dev/game/src/timer.o
+home/harry/Desktop/game/src/texture.o: home/harry/Desktop/game/src/texture.cpp.o
+.PHONY : home/harry/Desktop/game/src/texture.o
 
 # target to build an object file
-home/harry/dev/game/src/timer.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/dev/game/src/timer.cpp.o
-.PHONY : home/harry/dev/game/src/timer.cpp.o
+home/harry/Desktop/game/src/texture.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Desktop/game/src/texture.cpp.o
+.PHONY : home/harry/Desktop/game/src/texture.cpp.o
 
-home/harry/dev/game/src/timer.i: home/harry/dev/game/src/timer.cpp.i
-.PHONY : home/harry/dev/game/src/timer.i
+home/harry/Desktop/game/src/texture.i: home/harry/Desktop/game/src/texture.cpp.i
+.PHONY : home/harry/Desktop/game/src/texture.i
 
 # target to preprocess a source file
-home/harry/dev/game/src/timer.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/dev/game/src/timer.cpp.i
-.PHONY : home/harry/dev/game/src/timer.cpp.i
+home/harry/Desktop/game/src/texture.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Desktop/game/src/texture.cpp.i
+.PHONY : home/harry/Desktop/game/src/texture.cpp.i
 
-home/harry/dev/game/src/timer.s: home/harry/dev/game/src/timer.cpp.s
-.PHONY : home/harry/dev/game/src/timer.s
+home/harry/Desktop/game/src/texture.s: home/harry/Desktop/game/src/texture.cpp.s
+.PHONY : home/harry/Desktop/game/src/texture.s
 
 # target to generate assembly for a file
-home/harry/dev/game/src/timer.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/dev/game/src/timer.cpp.s
-.PHONY : home/harry/dev/game/src/timer.cpp.s
+home/harry/Desktop/game/src/texture.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Desktop/game/src/texture.cpp.s
+.PHONY : home/harry/Desktop/game/src/texture.cpp.s
+
+home/harry/Desktop/game/src/timer.o: home/harry/Desktop/game/src/timer.cpp.o
+.PHONY : home/harry/Desktop/game/src/timer.o
+
+# target to build an object file
+home/harry/Desktop/game/src/timer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Desktop/game/src/timer.cpp.o
+.PHONY : home/harry/Desktop/game/src/timer.cpp.o
+
+home/harry/Desktop/game/src/timer.i: home/harry/Desktop/game/src/timer.cpp.i
+.PHONY : home/harry/Desktop/game/src/timer.i
+
+# target to preprocess a source file
+home/harry/Desktop/game/src/timer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Desktop/game/src/timer.cpp.i
+.PHONY : home/harry/Desktop/game/src/timer.cpp.i
+
+home/harry/Desktop/game/src/timer.s: home/harry/Desktop/game/src/timer.cpp.s
+.PHONY : home/harry/Desktop/game/src/timer.s
+
+# target to generate assembly for a file
+home/harry/Desktop/game/src/timer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Desktop/game/src/timer.cpp.s
+.PHONY : home/harry/Desktop/game/src/timer.cpp.s
 
 # Help Target
 help:
@@ -272,21 +296,24 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... a"
 	@echo "... engine"
-	@echo "... home/harry/dev/game/src/button.o"
-	@echo "... home/harry/dev/game/src/button.i"
-	@echo "... home/harry/dev/game/src/button.s"
-	@echo "... home/harry/dev/game/src/core.o"
-	@echo "... home/harry/dev/game/src/core.i"
-	@echo "... home/harry/dev/game/src/core.s"
-	@echo "... home/harry/dev/game/src/main.o"
-	@echo "... home/harry/dev/game/src/main.i"
-	@echo "... home/harry/dev/game/src/main.s"
-	@echo "... home/harry/dev/game/src/texture.o"
-	@echo "... home/harry/dev/game/src/texture.i"
-	@echo "... home/harry/dev/game/src/texture.s"
-	@echo "... home/harry/dev/game/src/timer.o"
-	@echo "... home/harry/dev/game/src/timer.i"
-	@echo "... home/harry/dev/game/src/timer.s"
+	@echo "... home/harry/Desktop/game/src/button.o"
+	@echo "... home/harry/Desktop/game/src/button.i"
+	@echo "... home/harry/Desktop/game/src/button.s"
+	@echo "... home/harry/Desktop/game/src/core.o"
+	@echo "... home/harry/Desktop/game/src/core.i"
+	@echo "... home/harry/Desktop/game/src/core.s"
+	@echo "... home/harry/Desktop/game/src/demo.o"
+	@echo "... home/harry/Desktop/game/src/demo.i"
+	@echo "... home/harry/Desktop/game/src/demo.s"
+	@echo "... home/harry/Desktop/game/src/main.o"
+	@echo "... home/harry/Desktop/game/src/main.i"
+	@echo "... home/harry/Desktop/game/src/main.s"
+	@echo "... home/harry/Desktop/game/src/texture.o"
+	@echo "... home/harry/Desktop/game/src/texture.i"
+	@echo "... home/harry/Desktop/game/src/texture.s"
+	@echo "... home/harry/Desktop/game/src/timer.o"
+	@echo "... home/harry/Desktop/game/src/timer.i"
+	@echo "... home/harry/Desktop/game/src/timer.s"
 .PHONY : help
 
 
