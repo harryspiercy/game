@@ -13,17 +13,7 @@ const int WALKING_ANIMATION_FRAMES = 4;
 //! Demo level class
 /*! Class to handle engine interactions.
 */
-class Demo : private Level {
-    //
-    // -- Engine globals --
-    //
-private:
-    // Reference to the game core
-    Core* gCore = NULL;
-    // 
-    SDL_Renderer* gRenderer = NULL;
-    Resolution* gViewport = NULL;
-
+class Demo : private LLevel {
     //
     // -- Level content --
     //
@@ -91,25 +81,25 @@ private:
     // 
     // -- Level functions --
     //
-private:
-    // load media
-    bool loadMedia();
-
 public:
     // Construct the demo level
-    Demo();
+    Demo( Core* core );
 
     // On demo level destroyed
     ~Demo();
 
     // initialise demo
-    void init( Core* core );
-    
+    //void init( Core* core );
+    virtual bool init() override;
+//private:
+    // load media
+    virtual bool loadMedia() override;
+public:
     // tick demo
-    void tick(); 
+    virtual void tick() override; 
     
     // close demo media down
-    void closeMedia();
+    virtual void closeMedia() override;
 
 };
 

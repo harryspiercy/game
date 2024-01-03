@@ -13,8 +13,8 @@ set(SDL_LIBS SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 add_executable(a 
 ${GAMESRC}/main.cpp
 
-${GAMESRC}/demo.h
-${GAMESRC}/demo.cpp
+${GAMESRC}/levels/demo.h
+${GAMESRC}/levels/demo.cpp
 )
 
 add_library(engine

@@ -1,6 +1,6 @@
 #include "demo.h"
 
-Demo::Demo(){
+Demo::Demo( Core* core ) : LLevel( core ){
 
 }
 
@@ -8,16 +8,12 @@ Demo::~Demo(){
     
 }
 
-void Demo::init( Core* core ){
-
-    // Set engine globals once successfully initialised
-    gCore = core;
-    gRenderer = gCore->getRenderer();
-    gViewport = gCore->getResolution();
+bool Demo::init(){
 
     // Load in the demo media
     if( !loadMedia() ){
         cout << "Failed to load media" << endl;
+        return false;
     }
     else{
         // Make the buttons
@@ -29,6 +25,7 @@ void Demo::init( Core* core ){
 
     // Start the demo timer
     fpsTimer.start();
+    return true;
 }
 
 void Demo::tick(){

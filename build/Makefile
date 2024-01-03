@@ -238,29 +238,29 @@ home/harry/Desktop/game/src/engine/timer.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Desktop/game/src/engine/timer.cpp.s
 .PHONY : home/harry/Desktop/game/src/engine/timer.cpp.s
 
-home/harry/Desktop/game/src/game/demo.o: home/harry/Desktop/game/src/game/demo.cpp.o
-.PHONY : home/harry/Desktop/game/src/game/demo.o
+home/harry/Desktop/game/src/game/levels/demo.o: home/harry/Desktop/game/src/game/levels/demo.cpp.o
+.PHONY : home/harry/Desktop/game/src/game/levels/demo.o
 
 # target to build an object file
-home/harry/Desktop/game/src/game/demo.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.dir/build.make CMakeFiles/a.dir/home/harry/Desktop/game/src/game/demo.cpp.o
-.PHONY : home/harry/Desktop/game/src/game/demo.cpp.o
+home/harry/Desktop/game/src/game/levels/demo.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.dir/build.make CMakeFiles/a.dir/home/harry/Desktop/game/src/game/levels/demo.cpp.o
+.PHONY : home/harry/Desktop/game/src/game/levels/demo.cpp.o
 
-home/harry/Desktop/game/src/game/demo.i: home/harry/Desktop/game/src/game/demo.cpp.i
-.PHONY : home/harry/Desktop/game/src/game/demo.i
+home/harry/Desktop/game/src/game/levels/demo.i: home/harry/Desktop/game/src/game/levels/demo.cpp.i
+.PHONY : home/harry/Desktop/game/src/game/levels/demo.i
 
 # target to preprocess a source file
-home/harry/Desktop/game/src/game/demo.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.dir/build.make CMakeFiles/a.dir/home/harry/Desktop/game/src/game/demo.cpp.i
-.PHONY : home/harry/Desktop/game/src/game/demo.cpp.i
+home/harry/Desktop/game/src/game/levels/demo.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.dir/build.make CMakeFiles/a.dir/home/harry/Desktop/game/src/game/levels/demo.cpp.i
+.PHONY : home/harry/Desktop/game/src/game/levels/demo.cpp.i
 
-home/harry/Desktop/game/src/game/demo.s: home/harry/Desktop/game/src/game/demo.cpp.s
-.PHONY : home/harry/Desktop/game/src/game/demo.s
+home/harry/Desktop/game/src/game/levels/demo.s: home/harry/Desktop/game/src/game/levels/demo.cpp.s
+.PHONY : home/harry/Desktop/game/src/game/levels/demo.s
 
 # target to generate assembly for a file
-home/harry/Desktop/game/src/game/demo.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.dir/build.make CMakeFiles/a.dir/home/harry/Desktop/game/src/game/demo.cpp.s
-.PHONY : home/harry/Desktop/game/src/game/demo.cpp.s
+home/harry/Desktop/game/src/game/levels/demo.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.dir/build.make CMakeFiles/a.dir/home/harry/Desktop/game/src/game/levels/demo.cpp.s
+.PHONY : home/harry/Desktop/game/src/game/levels/demo.cpp.s
 
 home/harry/Desktop/game/src/game/main.o: home/harry/Desktop/game/src/game/main.cpp.o
 .PHONY : home/harry/Desktop/game/src/game/main.o
@@ -308,9 +308,9 @@ help:
 	@echo "... home/harry/Desktop/game/src/engine/timer.o"
 	@echo "... home/harry/Desktop/game/src/engine/timer.i"
 	@echo "... home/harry/Desktop/game/src/engine/timer.s"
-	@echo "... home/harry/Desktop/game/src/game/demo.o"
-	@echo "... home/harry/Desktop/game/src/game/demo.i"
-	@echo "... home/harry/Desktop/game/src/game/demo.s"
+	@echo "... home/harry/Desktop/game/src/game/levels/demo.o"
+	@echo "... home/harry/Desktop/game/src/game/levels/demo.i"
+	@echo "... home/harry/Desktop/game/src/game/levels/demo.s"
 	@echo "... home/harry/Desktop/game/src/game/main.o"
 	@echo "... home/harry/Desktop/game/src/game/main.i"
 	@echo "... home/harry/Desktop/game/src/game/main.s"

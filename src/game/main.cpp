@@ -1,5 +1,5 @@
 #include "engine.h"
-#include "demo.h"
+#include "levels/demo.h"
 
 //
 // -- Engine globals --
@@ -7,7 +7,7 @@
 // Create the core object
 SDL_Renderer* gRenderer = NULL;
 Resolution* gViewport = NULL;
-Demo demo;
+Demo* demo = NULL;
 bool initDemo = true;
 bool runDemo = false;
 
@@ -24,8 +24,8 @@ int main( int argc, char* args[] ){
 		cout << "Successfully initialised core" << endl;
 		
 		// Demo init
-		demo.init( ENG::core );
-		
+		//demo->init( ENG::core );
+
 		//
 		// -- Game loop --
 		//
@@ -45,14 +45,15 @@ int main( int argc, char* args[] ){
 			&& ENG::core->getKeyState( SDL_SCANCODE_D ) == KEY_PRESSED ){
 				
 				if(initDemo){
-					demo.init( ENG::core );
+					demo = new Demo( ENG::core );
+					if( demo ) demo->init();
 					runDemo = true;
 					initDemo = false;
 				}
 			}
 
 			// demo tick
-			if(runDemo) demo.tick();
+			if(runDemo) demo->tick();
 
 			// Update screen
 			ENG::core->render();
@@ -71,7 +72,7 @@ int main( int argc, char* args[] ){
 		//
 		// -- Close media --
 		//
-		demo.closeMedia();
+		if( demo ) demo->closeMedia();
 		cout << "Shutdown media" << endl;
 	}
 	//
