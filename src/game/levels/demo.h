@@ -13,7 +13,7 @@ const int WALKING_ANIMATION_FRAMES = 4;
 //! Demo level class
 /*! Class to handle engine interactions.
 */
-class Demo : private LLevel {
+class Demo : public LLevel {
     //
     // -- Level content --
     //
@@ -83,7 +83,7 @@ private:
     //
 public:
     // Construct the demo level
-    Demo( Core* core );
+    Demo();
 
     // On demo level destroyed
     ~Demo();

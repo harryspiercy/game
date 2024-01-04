@@ -5,6 +5,7 @@
 #include "texture.h"
 #include "timer.h"
 #include "button.h"
+#include "level.h"
 
 typedef int IButton;
 
@@ -243,6 +244,23 @@ public:
 
     //! TEMP
     bool renderButton = false;
+
+public:
+    //! Load a new level of type T.
+    template< typename T >
+    T* openLevel(){
+
+        T* rtn = new T();
+        loadedLevel = dynamic_cast< LLevel* >( rtn );
+        if ( loadedLevel ) initLevel();
+
+        return rtn;
+    }
+
+    void initLevel();
+
+    //! Currently loaded level
+    LLevel* loadedLevel;
 };
 
 #endif

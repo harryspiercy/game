@@ -1,4 +1,5 @@
 #include "core.h"
+#include "../game/levels/demo.h"
 
 Core::Core( int x, int y, int fpscap ) : 
 window( NULL ), resolution( x, y ), fps( fpscap ), renderer( NULL ),
@@ -110,25 +111,44 @@ void Core::handleEvents(){
 
 void Core::tick(){
 
-	// Calculate and correct the fps
+	// Start the frame timer to calculate the duration of this frame.
 	startFrameTimer();
 
 	// Handle input events
 	handleEvents();
 
-
 	// Update the keyboard inputs
 	updateKeyState();
 
-	KeyState fState = getKeyState( SDL_SCANCODE_F );
-	KeyState laltState = getKeyState( SDL_SCANCODE_LALT );
+	// If a level is attached, update it.
+	if( loadedLevel ) loadedLevel->tick(); 
+
+	// ----
+	// Engine level keyboard shortcuts
+	// ----
+
+	// Set exit flag
+	if( getKeyState( SDL_SCANCODE_ESCAPE ) == KEY_RELEASED ){
+		quit = true;
+	}
+	// Show FPS
+	KeyState fState = getKeyState( SDL_SCANCODE_F ); KeyState laltState = getKeyState( SDL_SCANCODE_LALT );
 	if( fState == KEY_PRESSED && ( laltState == KEY_DOWN || laltState == KEY_PRESSED ) ){
 		showFps = !showFps;
 	}
-
+	// Run the demo if alt+d is pressed
+	if( getKeyState( SDL_SCANCODE_LALT ) == KEY_DOWN 
+	&& getKeyState( SDL_SCANCODE_D ) == KEY_PRESSED ){
+		openLevel< Demo >();
+	} 
 }
 
 void Core::close(){
+	
+	// Shutdown the active level 
+	if( loadedLevel ) loadedLevel->closeMedia();
+	cout << "Shutdown media" << endl;
+
 	// Clear values from the down key map
     downKeys.clear();
 
@@ -260,4 +280,12 @@ LButton* Core::makeButton( int x, int y, string path ){
 	rtn->loadButtonSprites( renderer, path );
 	buttons.push_back( rtn );
 	return rtn;
+}
+
+void Core::initLevel(){
+
+	loadedLevel->gCore = this;
+	loadedLevel->gRenderer = getRenderer();
+	loadedLevel->gViewport = getResolution();
+	loadedLevel->init();
 }

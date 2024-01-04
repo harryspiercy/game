@@ -2,42 +2,39 @@
 #define _LEVEL_H_
 
 #include "common.h"
-#include "core.h"
+#include <SDL2/SDL.h> // remove this
 
 class LLevel{
     //
     // -- Engine globals --
     //
-protected:
+public:
     // Reference to the game core
-    Core* gCore = NULL;
+    class Core* gCore = NULL;
     // Reference to the game renderer
     SDL_Renderer* gRenderer = NULL;
     // Reference to the viewport size.
-    Resolution* gViewport = NULL;
+    struct Resolution* gViewport = NULL;
 
-   // 
+    // 
     // -- Level functions --
     //
 public:
     // Construct the demo level
-    LLevel( Core* core )
-    {
-        gCore = core;
-        gRenderer = core->getRenderer();
-        gViewport = core->getResolution();
-    }
+    LLevel() {}
+
+    // Set up references 
+    void setup( Core* core );
 
     // On demo level destroyed
     ~LLevel() {}
 
     // initialise demo
-    //void init( Core* core );
     virtual bool init() { return true; }
-//private:
+
     // load media
     virtual bool loadMedia() { return true; }
-public:
+
     // tick demo
     virtual void tick() {} 
     
@@ -51,6 +48,7 @@ public:
     bool onInit();
     void onTick();
     void onShutdown();
+
 };
 
 #endif

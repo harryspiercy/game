@@ -1,6 +1,7 @@
 #include "demo.h"
+#include "core.h"
 
-Demo::Demo( Core* core ) : LLevel( core ){
+Demo::Demo() : LLevel() {
 
 }
 
