@@ -11,18 +11,11 @@ Demo::~Demo(){
 
 bool Demo::init(){
 
-    // Load in the demo media
-    if( !loadMedia() ){
-        cout << "Failed to load media" << endl;
-        return false;
-    }
-    else{
-        // Make the buttons
-        gCore->makeButton( 0, 0 );
-        gCore->makeButton( gViewport->x / 2, 0 );
-        gCore->makeButton( 0, gViewport->y / 2 );
-        gCore->makeButton( gViewport->x / 2, gViewport->y / 2 );
-    }
+    // Make the buttons
+    makeButton( 0, 0 );
+    makeButton( gViewport->x / 2, 0 );
+    makeButton( 0, gViewport->y / 2 );
+    makeButton( gViewport->x / 2, gViewport->y / 2 );
 
     // Start the demo timer
     fpsTimer.start();
@@ -49,7 +42,7 @@ void Demo::tick(){
     }
     else if( gCore->getKeyState( SDL_SCANCODE_5 ) == KEY_PRESSED ){
         scene = 5;
-        gCore->renderButton = !gCore->renderButton;
+        renderButton = !renderButton;
     }
     else if( gCore->getKeyState( SDL_SCANCODE_6 ) == KEY_PRESSED ){
         scene = 6;

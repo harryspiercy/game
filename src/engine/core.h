@@ -229,10 +229,10 @@ public:
 
 private:
     //! List of buttons in the scene
-    list<LButton*> buttons;
+    //list<LButton*> buttons;
 
 public:
-    LButton* makeButton( int x, int y, string path = string( "../media/buttonSpriteSheet.png" ) );
+    //LButton* makeButton( int x, int y, string path = string( "../media/buttonSpriteSheet.png" ) );
 
 private:
     //! A global font for all others to be set against
@@ -243,7 +243,7 @@ public:
     inline const TTF_Font* GetFont() { return font; }
 
     //! TEMP
-    bool renderButton = false;
+    //bool renderButton = false;
 
 public:
     //! Load a new level of type T.

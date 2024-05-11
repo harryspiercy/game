@@ -60,6 +60,9 @@ public:
     */
     bool onInit();
 
+    //! Process for handling input events for a level
+    void onHandleEvent( SDL_Event* e );
+
     //! Process for ticking a level
     void onTick();
 
@@ -74,12 +77,14 @@ public:
     //
 private:
     //! List of buttons associated with the level.
-    //list< LButton* > buttons;
+    list< LButton* > buttons;
 
+public:
     //! Make a button and add to list in level.
-    //LButton* makeButton( int x, int y, string path = string( "../media/buttonSpriteSheet.png" ) );
+    LButton* makeButton( int x, int y, string path = string( "../media/buttonSpriteSheet.png" ) );
 
-
+    //! TEMP
+    bool renderButton = false;
 
 };
 

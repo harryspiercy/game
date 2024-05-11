@@ -100,11 +100,13 @@ void Core::handleEvents(){
 		if( event.type == SDL_QUIT ){
 			quit = true;
 		}
+
+		if ( loadedLevel ) loadedLevel->onHandleEvent( &event );
 	
-		// Update the buttons on screen
-		for( auto const& b : buttons ){
-			b->handleEvent( &event );
-		}
+//		// Update the buttons on screen
+//		for( auto const& b : buttons ){
+//			b->handleEvent( &event );
+//		}
 	}
 
 }
@@ -186,11 +188,11 @@ void Core::render(){
 	stopFrameTimer();
 
 	// MOVE THIS TO LLEVEL
-	if( renderButton ){
-		for( auto& button :  buttons ) {
-			button->render( renderer );
-		}
-	}
+//	if( renderButton ){
+//		for( auto& button :  buttons ) {
+//			button->render( renderer );
+//		}
+//	}
 
 	// Present the renderer to screen
 	present();
@@ -276,15 +278,6 @@ void Core::capFrameRate(){
 	if( frameTicks < getTicksPerFrame() ){
 		SDL_Delay( getTicksPerFrame() - frameTicks );
 	}
-}
-
-LButton* Core::makeButton( int x, int y, string path ){
-	// Create a button object and then add to buttons list
-	LButton* rtn = new LButton();
-	rtn->setPosition( x, y );
-	rtn->loadButtonSprites( renderer, path );
-	buttons.push_back( rtn );
-	return rtn;
 }
 
 void Core::initLevel(){
