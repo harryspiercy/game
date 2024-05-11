@@ -13,6 +13,8 @@ bool LLevel::onInit(){
 
     gRenderer = gCore->getRenderer();
     gViewport = gCore->getResolution();
+
+    return true;
 }
 
 void LLevel::onTick(){
@@ -20,8 +22,14 @@ void LLevel::onTick(){
     tick();
 }
 
+void LLevel::onRender(){
+
+    render();
+}
+
 void LLevel::onShutdown(){
     
     shutdown();
     closeMedia();
 }
+

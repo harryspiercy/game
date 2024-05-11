@@ -19,6 +19,11 @@ using std::pair;
 #include <list>
 using std::list;
 
+#include <memory>
+using std::shared_ptr;
+using std::weak_ptr;
+using std::make_shared;
+
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_ttf.h"

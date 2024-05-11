@@ -30,6 +30,7 @@ ${ENGSRC}/texture.h
 ${ENGSRC}/timer.h
 
 ${ENGSRC}/level.h
+${ENGSRC}/level.cpp
 ${ENGSRC}/button.h
 ${ENGSRC}/button.cpp
 

@@ -121,12 +121,11 @@ void Core::tick(){
 	updateKeyState();
 
 	// If a level is attached, update it.
-	if( loadedLevel ) loadedLevel->tick(); 
+	if( loadedLevel ) loadedLevel->onTick(); 
 
 	// ----
 	// Engine level keyboard shortcuts
 	// ----
-
 	// Set exit flag
 	if( getKeyState( SDL_SCANCODE_ESCAPE ) == KEY_RELEASED ){
 		quit = true;
@@ -146,7 +145,7 @@ void Core::tick(){
 void Core::close(){
 	
 	// Shutdown the active level 
-	if( loadedLevel ) loadedLevel->closeMedia();
+	if( loadedLevel ) loadedLevel->onShutdown();
 	cout << "Shutdown media" << endl;
 
 	// Clear values from the down key map
@@ -180,14 +179,20 @@ void Core::present(){
 
 void Core::render(){
 
+	// render the level.
+	if( loadedLevel ) loadedLevel->onRender();
+
+	// stop the timer monitoring the frame.
 	stopFrameTimer();
 
+	// MOVE THIS TO LLEVEL
 	if( renderButton ){
 		for( auto& button :  buttons ) {
 			button->render( renderer );
 		}
 	}
 
+	// Present the renderer to screen
 	present();
 }
 
@@ -287,5 +292,13 @@ void Core::initLevel(){
 	loadedLevel->gCore = this;
 	loadedLevel->gRenderer = getRenderer();
 	loadedLevel->gViewport = getResolution();
-	loadedLevel->init();
+	loadedLevel->onInit();
+}
+
+void Core::shutdownLevel(){
+
+	if (loadedLevel){
+		loadedLevel->onShutdown();
+	}
+
 }

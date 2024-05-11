@@ -14,6 +14,31 @@ const int WALKING_ANIMATION_FRAMES = 4;
 /*! Class to handle engine interactions.
 */
 class Demo : public LLevel {
+    // 
+    // -- Level functions --
+    //
+public:
+    // Construct the demo level
+    Demo();
+
+    // On demo level destroyed
+    ~Demo();
+
+    // initialise demo
+    virtual bool init() override;
+
+    // load media
+    virtual bool loadMedia() override;
+
+    // tick demo
+    virtual void tick() override; 
+
+    // render demo
+    virtual void render() override;
+    
+    // close demo media down
+    virtual void closeMedia() override;
+
     //
     // -- Level content --
     //
@@ -28,6 +53,7 @@ private:
     // Sprites: the animated man running
     LTexture gSpriteTextureSheet;
     SDL_Rect gAnimSpriteClips[ WALKING_ANIMATION_FRAMES ];
+    SDL_Rect* gCurrentAnimSpriteClip;
 
     // Overlay: example of alpha blending
     LTexture gBackground;
@@ -77,29 +103,6 @@ private:
     std::stringstream fpsTimerText;
     bool showFps = true;
     int countedFrames = 0;
-
-    // 
-    // -- Level functions --
-    //
-public:
-    // Construct the demo level
-    Demo();
-
-    // On demo level destroyed
-    ~Demo();
-
-    // initialise demo
-    //void init( Core* core );
-    virtual bool init() override;
-//private:
-    // load media
-    virtual bool loadMedia() override;
-public:
-    // tick demo
-    virtual void tick() override; 
-    
-    // close demo media down
-    virtual void closeMedia() override;
 
 };
 

@@ -2,52 +2,84 @@
 #define _LEVEL_H_
 
 #include "common.h"
-#include <SDL2/SDL.h> // remove this
+
+#include "button.h"
 
 class LLevel{
     //
     // -- Engine globals --
     //
 public:
-    // Reference to the game core
+    //! Reference to the game core
     class Core* gCore = NULL;
-    // Reference to the game renderer
+    //! Reference to the game renderer
     SDL_Renderer* gRenderer = NULL;
-    // Reference to the viewport size.
+    //! Reference to the viewport size.
     struct Resolution* gViewport = NULL;
 
     // 
     // -- Level functions --
     //
 public:
-    // Construct the demo level
+    //! Construct the demo level
     LLevel() {}
 
-    // Set up references 
+    //! Set up references 
+    /** \param core reference to the engine core 
+    */
     void setup( Core* core );
 
-    // On demo level destroyed
+    //! On demo level destroyed
     ~LLevel() {}
 
-    // initialise demo
+    //! Child defined initialisation function
+    /** \return success of initialisation
+    */ 
     virtual bool init() { return true; }
 
-    // load media
+    //! Child defined media loading function
+    /** \return success of loading media
+    */
     virtual bool loadMedia() { return true; }
 
-    // tick demo
+    //! Child defined tick function
     virtual void tick() {} 
-    
-    // shutdown the level properties
+
+    //! Child defined render function
+    virtual void render() {} 
+
+    //! Child defined shutdown function
     virtual void shutdown() {}
 
-    // close demo media down
+    //! Child defined media closing function
     virtual void closeMedia() {}
 
 public:
+    //! Process for initialising a level
+    /** \return success of level initiailisation process
+    */
     bool onInit();
+
+    //! Process for ticking a level
     void onTick();
+
+    //! Process for rendering a level
+    void onRender();
+
+    //! Process for shutingdown a level  
     void onShutdown();
+
+    //
+    // -- Level containers
+    //
+private:
+    //! List of buttons associated with the level.
+    //list< LButton* > buttons;
+
+    //! Make a button and add to list in level.
+    //LButton* makeButton( int x, int y, string path = string( "../media/buttonSpriteSheet.png" ) );
+
+
 
 };
 

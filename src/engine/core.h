@@ -248,19 +248,28 @@ public:
 public:
     //! Load a new level of type T.
     template< typename T >
-    T* openLevel(){
+    shared_ptr< T > openLevel(){
 
-        T* rtn = new T();
-        loadedLevel = dynamic_cast< LLevel* >( rtn );
+        // Close the open level
+        shutdownLevel();
+
+        shared_ptr< T > rtn = make_shared< T >();
+        //loadedLevel = dynamic_cast< LLevel* >( rtn );
+        //loadedLevel = std::dynaimc_pointer_cast< LLevel >( rtn );
+        loadedLevel = rtn;
         if ( loadedLevel ) initLevel();
 
         return rtn;
     }
 
+    //! Initialise a newly loaded level
     void initLevel();
 
+    //! Close down an open level
+    void shutdownLevel();
+
     //! Currently loaded level
-    LLevel* loadedLevel;
+    shared_ptr< LLevel > loadedLevel;
 };
 
 #endif

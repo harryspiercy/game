@@ -55,27 +55,16 @@ void Demo::tick(){
         scene = 6;
     }
 
-    // ------
-    // Start of draw call
-    // ------
-
-    // Clear the screen
-    gCore->setDrawColour( 0xFF, 0xFF, 0xFF, 0xFF );
-    gCore->clearRenderer();
-
     // ---
     // Title screen scene
     if( scene == 0 ){
-        // Draw the title
-        gTitleTexture.render( gRenderer, 0, 0 );
     }
 
     // ---
     // Sprite animation example
     else if( scene == 1 ){
         // Render the current frame
-        SDL_Rect* currentClip = &gAnimSpriteClips[ frame / 4 ];
-        gSpriteTextureSheet.render( gRenderer, ( gViewport->x - currentClip->w ) / 2, ( gViewport->y - currentClip->h) / 2, currentClip);
+        gCurrentAnimSpriteClip = &gAnimSpriteClips[ frame / 4 ];
 
         // Go te the next frame
         ++frame;
@@ -107,11 +96,6 @@ void Demo::tick(){
         }
 
         gColourCircleClipSheet.setColour( red, green, blue );
-
-        gColourCircleClipSheet.render( gRenderer, 0, 0, &gColourCircleClips[0] );
-        gColourCircleClipSheet.render( gRenderer, gViewport->x - gColourCircleClips[1].w, 0, &gColourCircleClips[1] );
-        gColourCircleClipSheet.render( gRenderer, 0, gViewport->y - gColourCircleClips[2].h, &gColourCircleClips[2] );
-        gColourCircleClipSheet.render( gRenderer, gViewport->x - gColourCircleClips[3].w, gViewport->y - gColourCircleClips[3].h, &gColourCircleClips[3] );
     }
 
     // ---
@@ -126,11 +110,7 @@ void Demo::tick(){
             else alpha -= 32;
         }
 
-        // Draw the background
-        gBackground.render( gRenderer, 0, 0);
-        // Draw the fader forground
         gFadeTexture.setAlpha( alpha );
-        gFadeTexture.render( gRenderer, 0, 0 );
     }
 
     // ---
@@ -153,9 +133,6 @@ void Demo::tick(){
             if ( flipType != SDL_FLIP_VERTICAL ) flipType = SDL_FLIP_VERTICAL;
             else flipType = SDL_FLIP_NONE;
         }
-
-        // Draw the compass texture
-        gCompassTexture.render( gRenderer, 0, 0, NULL, angle, NULL, flipType );
     }
 
     // ---
@@ -184,6 +161,72 @@ void Demo::tick(){
         if( !gUserTimerTexture.loadFromRenderedText( gRenderer, userTimerText.str().c_str(), textColour)){
             cout << "Unable to render user time texture" << endl;
         }
+    }
+
+    // Render the text
+    if( scene ){ }
+
+}
+
+void Demo::render(){
+    // ------
+    // Start of draw call
+    // ------
+    
+    // Clear the screen
+    gCore->setDrawColour( 0xFF, 0xFF, 0xFF, 0xFF );
+    gCore->clearRenderer();
+
+    // ---
+    // Title screen scene
+    if( scene == 0 ){
+        // Draw the title
+        gTitleTexture.render( gRenderer, 0, 0 );
+    }
+
+    // ---
+    // Sprite animation example
+    else if( scene == 1 ){
+        // Render the current frame
+        gSpriteTextureSheet.render( gRenderer, ( gViewport->x - gCurrentAnimSpriteClip->w ) / 2, ( gViewport->y - gCurrentAnimSpriteClip->h) / 2, gCurrentAnimSpriteClip);
+    }
+
+    // ---
+    // Colour mod example
+    else if( scene == 2 ){
+        gColourCircleClipSheet.render( gRenderer, 0, 0, &gColourCircleClips[0] );
+        gColourCircleClipSheet.render( gRenderer, gViewport->x - gColourCircleClips[1].w, 0, &gColourCircleClips[1] );
+        gColourCircleClipSheet.render( gRenderer, 0, gViewport->y - gColourCircleClips[2].h, &gColourCircleClips[2] );
+        gColourCircleClipSheet.render( gRenderer, gViewport->x - gColourCircleClips[3].w, gViewport->y - gColourCircleClips[3].h, &gColourCircleClips[3] );
+    }
+
+    // ---
+    // Alpha fading example
+    else if( scene == 3 ){
+
+        // Draw the background
+        gBackground.render( gRenderer, 0, 0);
+        // Draw the fader forground
+        gFadeTexture.render( gRenderer, 0, 0 );
+    }
+
+    // ---
+    // Texture flip and rotation example
+    else if( scene == 4 ){
+
+        // Draw the compass texture
+        gCompassTexture.render( gRenderer, 0, 0, NULL, angle, NULL, flipType );
+    }
+
+    // ---
+    // Mouse button example
+    else if( scene == 5 ){
+        
+    }
+
+    // ---
+    // Timer example
+    else if( scene == 6 ){
         gPromptTexture.render( gRenderer, ( gViewport->x - gPromptTexture.getWidth() ) / 2, 0 ); 
         gUserTimerTexture.render( gRenderer, ( gViewport->x - gUserTimerTexture.getWidth() ) / 2, gPromptTexture.getHeight() );
     }
