@@ -34,7 +34,7 @@ public:
     //! Load the button clips
     /*!
     */
-   bool loadButtonSprites( SDL_Renderer* renderer, string path );
+   bool loadButtonSprites( string path );
 
     //! Set top left position
     /*!

@@ -79,10 +79,8 @@ private:
     list< shared_ptr< LButton > > buttons;
 
 public:
-    //! Make an entity and add to list in level.
-    //shared_ptr< Entity > makeEntity( string name );
 
-    //! Load a new level of type T.
+    //! Load a new entity of type T.
     template< typename T >
     shared_ptr< T > makeEntity( string name ){
     

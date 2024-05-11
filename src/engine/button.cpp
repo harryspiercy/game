@@ -13,11 +13,11 @@ LButton::~LButton(){
     mButtonSpriteSheet.free();
 }
 
-bool LButton::loadButtonSprites( SDL_Renderer* renderer, string path ){
+bool LButton::loadButtonSprites( string path ){
     
     bool success = false;
     
-    if( mButtonSpriteSheet.loadFromFile( renderer, path ) ){
+    if( mButtonSpriteSheet.loadFromFile( core->getRenderer(), path ) ){
         int halfw = mButtonSpriteSheet.getWidth() / 2; 
         int halfh = mButtonSpriteSheet.getHeight() / 2;
         mButtonSpriteClips[ BUTTON_SPRITE_MOUSE_OUT ] = { 0, 0, halfw, halfh };
@@ -35,7 +35,7 @@ void LButton::setPosition( int x, int y ){
 
 void LButton::init( int x, int y, string path ){
 	setPosition( x, y );
-	loadButtonSprites( core->getRenderer(), path );  
+	loadButtonSprites( path );  
 }
 
 void LButton::handleEvents( SDL_Event* e ){

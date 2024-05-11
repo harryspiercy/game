@@ -66,7 +66,6 @@ private:
     LTexture gSceneGuideText;
 
     // Overlay: example of some mouse inputs
-    //LButton* gButtons[ TOTAL_BUTTONS ];
     shared_ptr< LButton > button1;
     shared_ptr< LButton > button2;
     shared_ptr< LButton > button3;
