@@ -27,16 +27,10 @@ void LLevel::onTick(){
 
 void LLevel::onHandleEvent( SDL_Event* e ){
 
-    // Update the buttons on screen
-//    for( auto const& b : buttons ){
-//        b->handleEvent( e );
-//    }
-
     // handle all entity events
     for( auto const& entity : entities ){
         entity->onHandleEvents( e );
     }
-
 }
 
 void LLevel::onRender(){
@@ -48,13 +42,6 @@ void LLevel::onRender(){
     for( auto& entity : entities ){
         entity->onRender();
     }
-
-    // Render all buttons
-//	if( renderButton ){
-//		for( auto& button :  buttons ) {
-//			button->render( gRenderer );
-//		}
-//	}
 }
 
 void LLevel::onShutdown(){

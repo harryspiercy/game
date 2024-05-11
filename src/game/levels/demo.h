@@ -73,7 +73,6 @@ private:
     shared_ptr< LButton > button4;
     void setButtonVisibility( bool visible );
 
-
     // Overlay: example of timers
     LTexture gPromptTexture;
     LTexture gUserTimerTexture;

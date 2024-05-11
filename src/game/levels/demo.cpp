@@ -173,14 +173,6 @@ void Demo::tick(){
 }
 
 void Demo::render(){
-    // ------
-    // Start of draw call
-    // ------
-    
-    // Clear the screen
-    gCore->setDrawColour( 0xFF, 0xFF, 0xFF, 0xFF );
-    gCore->clearRenderer();
-
     // ---
     // Title screen scene
     if( scene == 0 ){

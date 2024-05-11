@@ -177,6 +177,10 @@ void Core::present(){
 }
 
 void Core::render(){
+    
+    // Clear the screen
+    setDrawColour( 0xFF, 0xFF, 0xFF, 0xFF );
+    clearRenderer();
 
 	// render the level.
 	if( loadedLevel ) loadedLevel->onRender();
