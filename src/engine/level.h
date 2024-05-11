@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-#include "button.h"
+//#include "ecs/entities/button.h"
 #include "ecs/entity.h"
 
 class LLevel{
@@ -76,7 +76,7 @@ private:
     list< shared_ptr< Entity > > entities;
 
     //! List of buttons associated with the level.
-    list< shared_ptr< LButton > > buttons;
+    //list< shared_ptr< LButton > > buttons;
 
 public:
 

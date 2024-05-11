@@ -31,11 +31,12 @@ ${ENGSRC}/timer.h
 
 ${ENGSRC}/level.h
 ${ENGSRC}/level.cpp
-${ENGSRC}/button.h
-${ENGSRC}/button.cpp
 
 ${ENGSRC}/ecs/entity.h
 ${ENGSRC}/ecs/entity.cpp
+
+${ENGSRC}/ecs/entities/button.h
+${ENGSRC}/ecs/entities/button.cpp
 
 )
 target_link_libraries(engine ${SDL_LIBS})

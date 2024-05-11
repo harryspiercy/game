@@ -142,30 +142,6 @@ engine/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/build
 .PHONY : engine/fast
 
-home/harry/Documents/dev/game/src/engine/button.o: home/harry/Documents/dev/game/src/engine/button.cpp.o
-.PHONY : home/harry/Documents/dev/game/src/engine/button.o
-
-# target to build an object file
-home/harry/Documents/dev/game/src/engine/button.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Documents/dev/game/src/engine/button.cpp.o
-.PHONY : home/harry/Documents/dev/game/src/engine/button.cpp.o
-
-home/harry/Documents/dev/game/src/engine/button.i: home/harry/Documents/dev/game/src/engine/button.cpp.i
-.PHONY : home/harry/Documents/dev/game/src/engine/button.i
-
-# target to preprocess a source file
-home/harry/Documents/dev/game/src/engine/button.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Documents/dev/game/src/engine/button.cpp.i
-.PHONY : home/harry/Documents/dev/game/src/engine/button.cpp.i
-
-home/harry/Documents/dev/game/src/engine/button.s: home/harry/Documents/dev/game/src/engine/button.cpp.s
-.PHONY : home/harry/Documents/dev/game/src/engine/button.s
-
-# target to generate assembly for a file
-home/harry/Documents/dev/game/src/engine/button.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Documents/dev/game/src/engine/button.cpp.s
-.PHONY : home/harry/Documents/dev/game/src/engine/button.cpp.s
-
 home/harry/Documents/dev/game/src/engine/core.o: home/harry/Documents/dev/game/src/engine/core.cpp.o
 .PHONY : home/harry/Documents/dev/game/src/engine/core.o
 
@@ -189,6 +165,30 @@ home/harry/Documents/dev/game/src/engine/core.s: home/harry/Documents/dev/game/s
 home/harry/Documents/dev/game/src/engine/core.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Documents/dev/game/src/engine/core.cpp.s
 .PHONY : home/harry/Documents/dev/game/src/engine/core.cpp.s
+
+home/harry/Documents/dev/game/src/engine/ecs/entities/button.o: home/harry/Documents/dev/game/src/engine/ecs/entities/button.cpp.o
+.PHONY : home/harry/Documents/dev/game/src/engine/ecs/entities/button.o
+
+# target to build an object file
+home/harry/Documents/dev/game/src/engine/ecs/entities/button.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Documents/dev/game/src/engine/ecs/entities/button.cpp.o
+.PHONY : home/harry/Documents/dev/game/src/engine/ecs/entities/button.cpp.o
+
+home/harry/Documents/dev/game/src/engine/ecs/entities/button.i: home/harry/Documents/dev/game/src/engine/ecs/entities/button.cpp.i
+.PHONY : home/harry/Documents/dev/game/src/engine/ecs/entities/button.i
+
+# target to preprocess a source file
+home/harry/Documents/dev/game/src/engine/ecs/entities/button.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Documents/dev/game/src/engine/ecs/entities/button.cpp.i
+.PHONY : home/harry/Documents/dev/game/src/engine/ecs/entities/button.cpp.i
+
+home/harry/Documents/dev/game/src/engine/ecs/entities/button.s: home/harry/Documents/dev/game/src/engine/ecs/entities/button.cpp.s
+.PHONY : home/harry/Documents/dev/game/src/engine/ecs/entities/button.s
+
+# target to generate assembly for a file
+home/harry/Documents/dev/game/src/engine/ecs/entities/button.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Documents/dev/game/src/engine/ecs/entities/button.cpp.s
+.PHONY : home/harry/Documents/dev/game/src/engine/ecs/entities/button.cpp.s
 
 home/harry/Documents/dev/game/src/engine/ecs/entity.o: home/harry/Documents/dev/game/src/engine/ecs/entity.cpp.o
 .PHONY : home/harry/Documents/dev/game/src/engine/ecs/entity.o
@@ -344,12 +344,12 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... a"
 	@echo "... engine"
-	@echo "... home/harry/Documents/dev/game/src/engine/button.o"
-	@echo "... home/harry/Documents/dev/game/src/engine/button.i"
-	@echo "... home/harry/Documents/dev/game/src/engine/button.s"
 	@echo "... home/harry/Documents/dev/game/src/engine/core.o"
 	@echo "... home/harry/Documents/dev/game/src/engine/core.i"
 	@echo "... home/harry/Documents/dev/game/src/engine/core.s"
+	@echo "... home/harry/Documents/dev/game/src/engine/ecs/entities/button.o"
+	@echo "... home/harry/Documents/dev/game/src/engine/ecs/entities/button.i"
+	@echo "... home/harry/Documents/dev/game/src/engine/ecs/entities/button.s"
 	@echo "... home/harry/Documents/dev/game/src/engine/ecs/entity.o"
 	@echo "... home/harry/Documents/dev/game/src/engine/ecs/entity.i"
 	@echo "... home/harry/Documents/dev/game/src/engine/ecs/entity.s"

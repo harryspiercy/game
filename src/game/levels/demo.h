@@ -4,7 +4,7 @@
 #include "level.h"
 #include "texture.h"
 #include "timer.h"
-#include "button.h"
+#include "ecs/entities/button.h"
 
 // -- Level Constants --
 const int COLOUR_CIRCLE_CLIPS = 4;
