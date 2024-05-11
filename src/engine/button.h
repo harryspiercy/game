@@ -3,6 +3,7 @@
 
 #include "common.h"
 
+#include "ecs/entity.h"
 #include "texture.h"
 
 const int BUTTON_WIDTH = 400;
@@ -15,13 +16,14 @@ enum LButtonSprite{
 	BUTTON_SPRITE_TOTAL
 };
 
-class LButton{
+class LButton : public Entity{
 public:
     //! Initialise internal variables
     /*!
     *
     */
     LButton();
+    LButton( string name );
 
     //! Close down the button
     /*!
@@ -40,17 +42,20 @@ public:
     */
    void setPosition( int x, int y );
 
+   //! Init the button
+   virtual void init( int x, int y, string path = string( "../media/buttonSpriteSheet.png" ) );
+
     //! Handle mouse events
     /*!
     *
     */
-   void handleEvent( SDL_Event* e );
+    virtual void handleEvents( SDL_Event* e ) override;
 
     //! Shows button sprite
     /*!
     *
     */
-   void render( SDL_Renderer* renderer );
+   void virtual render() override;
 
 private:
 

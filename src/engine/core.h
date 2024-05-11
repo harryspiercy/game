@@ -247,8 +247,6 @@ public:
         shutdownLevel();
 
         shared_ptr< T > rtn = make_shared< T >();
-        //loadedLevel = dynamic_cast< LLevel* >( rtn );
-        //loadedLevel = std::dynaimc_pointer_cast< LLevel >( rtn );
         loadedLevel = rtn;
         if ( loadedLevel ) initLevel();
 

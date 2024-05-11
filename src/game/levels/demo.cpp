@@ -12,10 +12,18 @@ Demo::~Demo(){
 bool Demo::init(){
 
     // Make the buttons
-    makeButton( 0, 0 );
-    makeButton( gViewport->x / 2, 0 );
-    makeButton( 0, gViewport->y / 2 );
-    makeButton( gViewport->x / 2, gViewport->y / 2 );
+    button1 = makeEntity< LButton >( "button1" );
+    button1->init( 0, 0 );
+    button1->visible = false;
+    button2 = makeEntity< LButton >( "button2" );
+    button2->init( gViewport->x / 2, 0 );
+    button2->visible = false;
+    button3 = makeEntity< LButton >( "button3" );
+    button3->init( 0, gViewport->y / 2 );
+    button3->visible = false;
+    button4 = makeEntity< LButton >( "button4" );
+    button4->init( gViewport->x / 2, gViewport->y / 2 );
+    button4->visible = false;
 
     // Start the demo timer
     fpsTimer.start();
@@ -47,6 +55,9 @@ void Demo::tick(){
     else if( gCore->getKeyState( SDL_SCANCODE_6 ) == KEY_PRESSED ){
         scene = 6;
     }
+
+    // by default buttons are hidden
+    setButtonVisibility( false );
 
     // ---
     // Title screen scene
@@ -214,7 +225,7 @@ void Demo::render(){
     // ---
     // Mouse button example
     else if( scene == 5 ){
-        
+        setButtonVisibility( true );
     }
 
     // ---
@@ -322,4 +333,12 @@ void Demo::closeMedia(){
 
 	TTF_CloseFont( gSceneGuideText.mFont );
 	gSceneGuideText.mFont = NULL;
+}
+
+void Demo::setButtonVisibility( bool visible ){
+    button1->visible = visible;
+    button2->visible = visible;
+    button3->visible = visible;
+    button4->visible = visible;
+
 }

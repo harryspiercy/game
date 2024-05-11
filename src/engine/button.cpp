@@ -1,6 +1,11 @@
 #include "button.h"
+#include "core.h"
 
-LButton::LButton() : mPosition( SDL_Point({ 0, 0 }) ), 
+LButton::LButton() : Entity( "button" ), mPosition( SDL_Point({ 0, 0 }) ), 
+    mCurrentSprite( BUTTON_SPRITE_MOUSE_OUT ){
+}
+
+LButton::LButton(string name ) : Entity( name ), mPosition( SDL_Point({ 0, 0 }) ), 
     mCurrentSprite( BUTTON_SPRITE_MOUSE_OUT ){
 }
 
@@ -28,7 +33,12 @@ void LButton::setPosition( int x, int y ){
     mPosition = { x, y };
 }
 
-void LButton::handleEvent( SDL_Event* e ){
+void LButton::init( int x, int y, string path ){
+	setPosition( x, y );
+	loadButtonSprites( core->getRenderer(), path );  
+}
+
+void LButton::handleEvents( SDL_Event* e ){
     // If mouse event happened
     if( e->type == SDL_MOUSEMOTION || e->type == SDL_MOUSEBUTTONDOWN || e->type == SDL_MOUSEBUTTONUP ){
         // Get mouse position
@@ -68,7 +78,7 @@ void LButton::handleEvent( SDL_Event* e ){
     }
 }
 
-void LButton::render( SDL_Renderer* renderer ){
+void LButton::render(){
     // Show current sprite
-    mButtonSpriteSheet.render( renderer, mPosition.x, mPosition.y, &mButtonSpriteClips[ mCurrentSprite ] );
+    mButtonSpriteSheet.render( core->getRenderer(), mPosition.x, mPosition.y, &mButtonSpriteClips[ mCurrentSprite ] );
 }

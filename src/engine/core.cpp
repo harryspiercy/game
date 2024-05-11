@@ -31,9 +31,10 @@ bool Core::start(){
 }
 
 bool Core::init(){
+
 	// Inisitialise flag
 	bool success = true;
-
+ 
 	int imgFlags = IMG_INIT_PNG;
 
 	// Initialise SDL
@@ -182,13 +183,6 @@ void Core::render(){
 
 	// stop the timer monitoring the frame.
 	stopFrameTimer();
-
-	// MOVE THIS TO LLEVEL
-//	if( renderButton ){
-//		for( auto& button :  buttons ) {
-//			button->render( renderer );
-//		}
-//	}
 
 	// Present the renderer to screen
 	present();

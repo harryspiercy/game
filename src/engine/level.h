@@ -4,6 +4,7 @@
 #include "common.h"
 
 #include "button.h"
+#include "ecs/entity.h"
 
 class LLevel{
     //
@@ -23,11 +24,6 @@ public:
 public:
     //! Construct the demo level
     LLevel() {}
-
-    //! Set up references 
-    /** \param core reference to the engine core 
-    */
-    void setup( Core* core );
 
     //! On demo level destroyed
     ~LLevel() {}
@@ -76,12 +72,28 @@ public:
     // -- Level containers
     //
 private:
+    //! List of entities associated with the level.
+    list< shared_ptr< Entity > > entities;
+
     //! List of buttons associated with the level.
     list< shared_ptr< LButton > > buttons;
 
 public:
-    //! Make a button and add to list in level.
-    shared_ptr< LButton > makeButton( int x, int y, string path = string( "../media/buttonSpriteSheet.png" ) );
+    //! Make an entity and add to list in level.
+    //shared_ptr< Entity > makeEntity( string name );
+
+    //! Load a new level of type T.
+    template< typename T >
+    shared_ptr< T > makeEntity( string name ){
+    
+        // Create a button object and then add to buttons list
+        shared_ptr< T > rtn = make_shared< T >( name );
+        rtn->core = gCore;
+        rtn->onInit();
+    	entities.push_back( rtn );
+        cout << name << " make entity" << endl;
+    	return rtn;
+    }
 
     //! TEMP
     bool renderButton = false;

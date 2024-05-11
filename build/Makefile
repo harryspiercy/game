@@ -190,6 +190,30 @@ home/harry/Documents/dev/game/src/engine/core.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Documents/dev/game/src/engine/core.cpp.s
 .PHONY : home/harry/Documents/dev/game/src/engine/core.cpp.s
 
+home/harry/Documents/dev/game/src/engine/ecs/entity.o: home/harry/Documents/dev/game/src/engine/ecs/entity.cpp.o
+.PHONY : home/harry/Documents/dev/game/src/engine/ecs/entity.o
+
+# target to build an object file
+home/harry/Documents/dev/game/src/engine/ecs/entity.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Documents/dev/game/src/engine/ecs/entity.cpp.o
+.PHONY : home/harry/Documents/dev/game/src/engine/ecs/entity.cpp.o
+
+home/harry/Documents/dev/game/src/engine/ecs/entity.i: home/harry/Documents/dev/game/src/engine/ecs/entity.cpp.i
+.PHONY : home/harry/Documents/dev/game/src/engine/ecs/entity.i
+
+# target to preprocess a source file
+home/harry/Documents/dev/game/src/engine/ecs/entity.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Documents/dev/game/src/engine/ecs/entity.cpp.i
+.PHONY : home/harry/Documents/dev/game/src/engine/ecs/entity.cpp.i
+
+home/harry/Documents/dev/game/src/engine/ecs/entity.s: home/harry/Documents/dev/game/src/engine/ecs/entity.cpp.s
+.PHONY : home/harry/Documents/dev/game/src/engine/ecs/entity.s
+
+# target to generate assembly for a file
+home/harry/Documents/dev/game/src/engine/ecs/entity.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/engine.dir/build.make CMakeFiles/engine.dir/home/harry/Documents/dev/game/src/engine/ecs/entity.cpp.s
+.PHONY : home/harry/Documents/dev/game/src/engine/ecs/entity.cpp.s
+
 home/harry/Documents/dev/game/src/engine/level.o: home/harry/Documents/dev/game/src/engine/level.cpp.o
 .PHONY : home/harry/Documents/dev/game/src/engine/level.o
 
@@ -326,6 +350,9 @@ help:
 	@echo "... home/harry/Documents/dev/game/src/engine/core.o"
 	@echo "... home/harry/Documents/dev/game/src/engine/core.i"
 	@echo "... home/harry/Documents/dev/game/src/engine/core.s"
+	@echo "... home/harry/Documents/dev/game/src/engine/ecs/entity.o"
+	@echo "... home/harry/Documents/dev/game/src/engine/ecs/entity.i"
+	@echo "... home/harry/Documents/dev/game/src/engine/ecs/entity.s"
 	@echo "... home/harry/Documents/dev/game/src/engine/level.o"
 	@echo "... home/harry/Documents/dev/game/src/engine/level.i"
 	@echo "... home/harry/Documents/dev/game/src/engine/level.s"

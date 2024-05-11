@@ -66,7 +66,13 @@ private:
     LTexture gSceneGuideText;
 
     // Overlay: example of some mouse inputs
-    LButton* gButtons[ TOTAL_BUTTONS ];
+    //LButton* gButtons[ TOTAL_BUTTONS ];
+    shared_ptr< LButton > button1;
+    shared_ptr< LButton > button2;
+    shared_ptr< LButton > button3;
+    shared_ptr< LButton > button4;
+    void setButtonVisibility( bool visible );
+
 
     // Overlay: example of timers
     LTexture gPromptTexture;

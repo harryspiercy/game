@@ -34,6 +34,9 @@ ${ENGSRC}/level.cpp
 ${ENGSRC}/button.h
 ${ENGSRC}/button.cpp
 
+${ENGSRC}/ecs/entity.h
+${ENGSRC}/ecs/entity.cpp
+
 )
 target_link_libraries(engine ${SDL_LIBS})
 
