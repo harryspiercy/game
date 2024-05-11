@@ -228,13 +228,6 @@ public:
     void capFrameRate();
 
 private:
-    //! List of buttons in the scene
-    //list<LButton*> buttons;
-
-public:
-    //LButton* makeButton( int x, int y, string path = string( "../media/buttonSpriteSheet.png" ) );
-
-private:
     //! A global font for all others to be set against
     TTF_Font* font;
 

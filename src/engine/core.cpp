@@ -102,11 +102,7 @@ void Core::handleEvents(){
 		}
 
 		if ( loadedLevel ) loadedLevel->onHandleEvent( &event );
-	
-//		// Update the buttons on screen
-//		for( auto const& b : buttons ){
-//			b->handleEvent( &event );
-//		}
+
 	}
 
 }

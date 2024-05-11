@@ -4,15 +4,18 @@
 void LLevel::setup( Core* core ){
 
     gCore = core;
+    gRenderer = gCore->getRenderer();
+    gViewport = gCore->getResolution();
+
 }
 
 bool LLevel::onInit(){
 
-    init();
+    cout << "Load level media" << endl;
     loadMedia();
 
-    gRenderer = gCore->getRenderer();
-    gViewport = gCore->getResolution();
+    cout << "Initialise level" << endl;
+    init();
 
     return true;
 }
@@ -43,13 +46,17 @@ void LLevel::onRender(){
 
 void LLevel::onShutdown(){
     
+    cout << "Shutdown level" << endl;
     shutdown();
+
+    cout << "Close level media" << endl;
     closeMedia();
 }
 
-LButton* LLevel::makeButton( int x, int y, string path ){
+shared_ptr< LButton > LLevel::makeButton( int x, int y, string path ){
+
 	// Create a button object and then add to buttons list
-	LButton* rtn = new LButton();
+    shared_ptr< LButton > rtn = make_shared< LButton >();
 	rtn->setPosition( x, y );
 	rtn->loadButtonSprites( gRenderer, path );
 	buttons.push_back( rtn );

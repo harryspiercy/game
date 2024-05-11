@@ -25,19 +25,19 @@ public:
     ~Demo();
 
     // initialise demo
-    virtual bool init() override;
+    virtual bool init();
 
     // load media
-    virtual bool loadMedia() override;
+    virtual bool loadMedia();
 
     // tick demo
-    virtual void tick() override; 
+    virtual void tick(); 
 
     // render demo
-    virtual void render() override;
+    virtual void render();
     
     // close demo media down
-    virtual void closeMedia() override;
+    virtual void closeMedia();
 
     //
     // -- Level content --

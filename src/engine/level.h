@@ -77,15 +77,14 @@ public:
     //
 private:
     //! List of buttons associated with the level.
-    list< LButton* > buttons;
+    list< shared_ptr< LButton > > buttons;
 
 public:
     //! Make a button and add to list in level.
-    LButton* makeButton( int x, int y, string path = string( "../media/buttonSpriteSheet.png" ) );
+    shared_ptr< LButton > makeButton( int x, int y, string path = string( "../media/buttonSpriteSheet.png" ) );
 
     //! TEMP
     bool renderButton = false;
-
 };
 
 #endif
