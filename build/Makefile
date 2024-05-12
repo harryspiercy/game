@@ -310,6 +310,30 @@ home/harry/Documents/dev/game/src/game/levels/demo.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.dir/build.make CMakeFiles/a.dir/home/harry/Documents/dev/game/src/game/levels/demo.cpp.s
 .PHONY : home/harry/Documents/dev/game/src/game/levels/demo.cpp.s
 
+home/harry/Documents/dev/game/src/game/levels/level01.o: home/harry/Documents/dev/game/src/game/levels/level01.cpp.o
+.PHONY : home/harry/Documents/dev/game/src/game/levels/level01.o
+
+# target to build an object file
+home/harry/Documents/dev/game/src/game/levels/level01.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.dir/build.make CMakeFiles/a.dir/home/harry/Documents/dev/game/src/game/levels/level01.cpp.o
+.PHONY : home/harry/Documents/dev/game/src/game/levels/level01.cpp.o
+
+home/harry/Documents/dev/game/src/game/levels/level01.i: home/harry/Documents/dev/game/src/game/levels/level01.cpp.i
+.PHONY : home/harry/Documents/dev/game/src/game/levels/level01.i
+
+# target to preprocess a source file
+home/harry/Documents/dev/game/src/game/levels/level01.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.dir/build.make CMakeFiles/a.dir/home/harry/Documents/dev/game/src/game/levels/level01.cpp.i
+.PHONY : home/harry/Documents/dev/game/src/game/levels/level01.cpp.i
+
+home/harry/Documents/dev/game/src/game/levels/level01.s: home/harry/Documents/dev/game/src/game/levels/level01.cpp.s
+.PHONY : home/harry/Documents/dev/game/src/game/levels/level01.s
+
+# target to generate assembly for a file
+home/harry/Documents/dev/game/src/game/levels/level01.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a.dir/build.make CMakeFiles/a.dir/home/harry/Documents/dev/game/src/game/levels/level01.cpp.s
+.PHONY : home/harry/Documents/dev/game/src/game/levels/level01.cpp.s
+
 home/harry/Documents/dev/game/src/game/main.o: home/harry/Documents/dev/game/src/game/main.cpp.o
 .PHONY : home/harry/Documents/dev/game/src/game/main.o
 
@@ -365,6 +389,9 @@ help:
 	@echo "... home/harry/Documents/dev/game/src/game/levels/demo.o"
 	@echo "... home/harry/Documents/dev/game/src/game/levels/demo.i"
 	@echo "... home/harry/Documents/dev/game/src/game/levels/demo.s"
+	@echo "... home/harry/Documents/dev/game/src/game/levels/level01.o"
+	@echo "... home/harry/Documents/dev/game/src/game/levels/level01.i"
+	@echo "... home/harry/Documents/dev/game/src/game/levels/level01.s"
 	@echo "... home/harry/Documents/dev/game/src/game/main.o"
 	@echo "... home/harry/Documents/dev/game/src/game/main.i"
 	@echo "... home/harry/Documents/dev/game/src/game/main.s"

@@ -15,6 +15,10 @@ ${GAMESRC}/main.cpp
 
 ${GAMESRC}/levels/demo.h
 ${GAMESRC}/levels/demo.cpp
+
+${GAMESRC}/levels/level01.h
+${GAMESRC}/levels/level01.cpp
+
 )
 
 add_library(engine

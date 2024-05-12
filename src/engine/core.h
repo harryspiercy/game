@@ -247,6 +247,7 @@ public:
         shutdownLevel();
 
         shared_ptr< T > rtn = make_shared< T >();
+        //loadedLevel = std::dynamic_pointer_cast< T >( rtn );
         loadedLevel = rtn;
         if ( loadedLevel ) initLevel();
 

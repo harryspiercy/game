@@ -1,5 +1,6 @@
 #include "core.h"
 #include "../game/levels/demo.h"
+#include "../game/levels/level01.h"
 
 Core::Core( int x, int y, int fpscap ) : 
 window( NULL ), resolution( x, y ), fps( fpscap ), renderer( NULL ),
@@ -85,6 +86,8 @@ bool Core::init(){
 
 				fpsTimer.start();
 				capTimer.start();
+
+				//openLevel< Level01 >();
 			}
 		}
 	}
@@ -138,7 +141,12 @@ void Core::tick(){
 	if( getKeyState( SDL_SCANCODE_LALT ) == KEY_DOWN 
 	&& getKeyState( SDL_SCANCODE_D ) == KEY_PRESSED ){
 		openLevel< Demo >();
-	} 
+	}
+	// Run level 01 if alt+1 is pressed
+	if( getKeyState( SDL_SCANCODE_LALT ) == KEY_DOWN 
+	&& getKeyState( SDL_SCANCODE_1 ) == KEY_PRESSED ){
+		openLevel< Level01 >();
+	}
 }
 
 void Core::close(){
