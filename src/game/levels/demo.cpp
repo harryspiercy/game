@@ -13,16 +13,19 @@ bool Demo::init(){
 
     // Make the buttons
     button1 = makeEntity< LButton >( "button1" );
-    button1->init( 0, 0 );
+    button1->setPosition( 0, 0 );
     button1->visible = false;
+    
     button2 = makeEntity< LButton >( "button2" );
-    button2->init( gViewport->x / 2, 0 );
+    button2->setPosition( gViewport->x/2, 0 );
     button2->visible = false;
+    
     button3 = makeEntity< LButton >( "button3" );
-    button3->init( 0, gViewport->y / 2 );
+    button3->setPosition( 0, gViewport->y/2 );
     button3->visible = false;
+    
     button4 = makeEntity< LButton >( "button4" );
-    button4->init( gViewport->x / 2, gViewport->y / 2 );
+    button4->setPosition( gViewport->x/2, gViewport->y/2 ); 
     button4->visible = false;
 
     // Start the demo timer

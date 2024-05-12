@@ -5,15 +5,17 @@ LButton::LButton() : Entity( "button" ), mPosition( SDL_Point({ 0, 0 }) ),
     mCurrentSprite( BUTTON_SPRITE_MOUSE_OUT ){
 }
 
-LButton::LButton(string name ) : Entity( name ), mPosition( SDL_Point({ 0, 0 }) ), 
+LButton::LButton(string name, string path ) : Entity( name ), mediaPath( path ), mPosition( SDL_Point({ 0, 0 }) ), 
     mCurrentSprite( BUTTON_SPRITE_MOUSE_OUT ){
 }
 
 LButton::~LButton(){
-    mButtonSpriteSheet.free();
+    
 }
 
 bool LButton::loadButtonSprites( string path ){
+
+    mediaPath = path;
     
     bool success = false;
     
@@ -33,9 +35,11 @@ void LButton::setPosition( int x, int y ){
     mPosition = { x, y };
 }
 
-void LButton::init( int x, int y, string path ){
-	setPosition( x, y );
-	loadButtonSprites( path );  
+void LButton::init(){
+}
+
+void LButton::loadMedia(){
+    loadButtonSprites( mediaPath );
 }
 
 void LButton::handleEvents( SDL_Event* e ){
@@ -81,4 +85,8 @@ void LButton::handleEvents( SDL_Event* e ){
 void LButton::render(){
     // Show current sprite
     mButtonSpriteSheet.render( core->getRenderer(), mPosition.x, mPosition.y, &mButtonSpriteClips[ mCurrentSprite ] );
+}
+
+void LButton::shutdown(){
+    mButtonSpriteSheet.free();
 }

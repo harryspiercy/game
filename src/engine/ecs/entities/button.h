@@ -23,7 +23,7 @@ public:
     *
     */
     LButton();
-    LButton( string name );
+    LButton( string name, string path = string( "../media/buttonSpriteSheet.png" ));
 
     //! Close down the button
     /*!
@@ -34,16 +34,19 @@ public:
     //! Load the button clips
     /*!
     */
-   bool loadButtonSprites( string path );
+    bool loadButtonSprites( string path );
 
     //! Set top left position
     /*!
     *
     */
-   void setPosition( int x, int y );
+    void setPosition( int x, int y );
 
-   //! Init the button
-   virtual void init( int x, int y, string path = string( "../media/buttonSpriteSheet.png" ) );
+    //! Init the button
+    virtual void init();
+
+    //! Load the button spritesheet
+    virtual void loadMedia() override;
 
     //! Handle mouse events
     /*!
@@ -55,9 +58,15 @@ public:
     /*!
     *
     */
-   void virtual render() override;
+    virtual void render() override;
+
+    //! Shutdown the button
+    virtual void shutdown() override;
 
 private:
+
+    //! Path to media
+    string mediaPath;
 
     //! Top left position
     /*!
